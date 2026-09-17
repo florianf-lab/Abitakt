@@ -17,7 +17,7 @@ export const OPERATORS = ["angeben", "berechnen", "darstellen", "erkennen", "ide
   "erläutern", "erklären", "nutzen", "skizzieren", "untersuchen", "vergleichen", "zuordnen",
   "begründen", "beurteilen", "bewerten", "beweisen", "überprüfen"];
 
-export const lessonKey = (topicId: string, level: string) => `v1/${topicId}/${level}`;
+export const lessonKey = (topicId: string, level: string) => `v2/${topicId}/${level}`;   // v2 = with review pass
 
 export const SYSTEM_PROMPT = `Du bist eine erfahrene Mathematik-Lehrkraft an einem allgemeinbildenden Gymnasium in Baden-Württemberg und schreibst Lerneinheiten für die Abiturvorbereitung (Kursstufe, Bildungsplan 2016, Abitur 2027).
 
@@ -37,15 +37,16 @@ Aufbau
   - auditory: zum Vorlesen geschrieben, kurze Sätze, ein wiederholbarer Merksatz in <div class="audio-box">.
   - kinesthetic: die lernende Person probiert ZUERST selbst etwas aus (in <div class="kinetic-box">), erst danach folgt die Auflösung.
   - textual: präzise Prüfungssprache mit Definitionen und sauberer Notation.
-- Genau 9 Übungsaufgaben im Multiple-Choice-Format mit genau 4 verschiedenen Antworten. Die richtige Antwort ("a") muss zeichengenau einer der Optionen entsprechen.
+- GENAU 9 Übungsaufgaben (nicht 8, nicht 10 – zähle nach) im Multiple-Choice-Format mit genau 4 verschiedenen Antworten. Die richtige Antwort ("a") muss zeichengenau einer der Optionen entsprechen.
 - Schwierigkeit "d" zwischen 0 und 1, über die ganze Spanne verteilt: mindestens eine Aufgabe mit d ≤ 0.3 und mindestens eine mit d ≥ 0.75.
 - Falsche Optionen sind typische Denkfehler. Erkläre in "wrong" für jede falsche Option den Fehler in einem Satz.
-- "op" ist der Operator der Aufgabe (z. B. berechnen, bestimmen, begründen).
+- "op" ist der Operator der Aufgabe und muss aus dieser Liste stammen: angeben, berechnen, darstellen, erkennen, identifizieren, anwenden, auswerten, beschreiben, bestimmen, deuten, entnehmen, erläutern, nutzen, skizzieren, untersuchen, vergleichen, zuordnen, begründen, beurteilen, beweisen, überprüfen.
+- Rundungen: Die richtige Option muss exakt dem korrekt gerundeten Ergebnis entsprechen. Erklärungen in "wrong" müssen rechnerisch stimmen – beschreibe nur Denkfehler, die wirklich genau zu dieser Zahl führen.
 - "load" = kognitive Last des Themas von 1 (leicht) bis 10 (sehr schwer).
 
 Interessen einweben
 Die App ersetzt diese Platzhalter durch Interessen der Lernenden: {scen} (eine Situation, z. B. „der Flugbogen eines Basketballs zum Korb“), {obj} (Nominativ, z. B. „der Ball“), {objA} (Akkusativ, z. B. „den Ball“), {who} / {Who} (eine Person, z. B. „dein Mitspieler“), {unit} (eine Einheit, z. B. „Meter“).
-Nutze Platzhalter höchstens in 1–3 Stellen und NUR, wo der Kontext wirklich passt (Bahnen, Änderungsraten, Optimierung, Wachstum). Die Sätze müssen grammatisch mit jedem Beispielwert funktionieren. Im Zweifel keine Platzhalter.
+Nutze Platzhalter höchstens in 1–3 Stellen und NUR, wo der Kontext wirklich passt (Bahnen, Änderungsraten, Optimierung, Wachstum, Trefferquoten). Die Sätze müssen grammatisch und inhaltlich mit JEDEM Beispielwert funktionieren – nenne deshalb neben einem Platzhalter nie eine konkrete Sportart, ein Spiel oder ein Instrument. Im Zweifel keine Platzhalter.
 
 Formatregeln
 - Nur HTML-Fragmente: <p>, <strong>, <em>, <br>, <ul>, <ol>, <li>, <div>, <span>, <sub>, <sup>, <table>, <tr>, <td>, <th>, <code>, <svg> mit einfachen SVG-Elementen.
@@ -88,7 +89,7 @@ export const EMIT_LESSON_TOOL = {
     properties: {
       load: { type: "integer", minimum: 1, maximum: 10 },
       steps: { type: "array", items: stepSchema, minItems: 4, maxItems: 5 },
-      practice: { type: "array", items: practiceSchema, minItems: 9, maxItems: 9 },
+      practice: { type: "array", items: practiceSchema, minItems: 9, maxItems: 9, description: "Genau 9 Aufgaben" },
     },
     required: ["load", "steps", "practice"],
   },
@@ -98,6 +99,16 @@ const FORBIDDEN = [/<script/i, /<[^>]*\son\w+\s*=/i, /javascript:/i, /<iframe/i,
   /<object/i, /<embed/i, /<foreignObject/i, /<[^>]*\s(?:xlink:)?href\s*=/i, /<[^>]*\ssrc\s*=/i, /url\s*\(/i, /```/, /\$\$/];
 const ALLOWED_CLASSES = new Set(["visual-box", "kinetic-box", "audio-box", "mono"]);
 const MODES = ["visual", "auditory", "kinesthetic", "textual"] as const;
+
+// Models sometimes return 10–12 items instead of exactly 9. Keep 9 that still span the difficulty range.
+export function normalizeLesson(x: any): any {
+  if (!x || !Array.isArray(x.practice) || x.practice.length <= 9) return x;
+  const items = x.practice.slice().filter((p: any) => typeof p?.d === "number").sort((a: any, b: any) => a.d - b.d);
+  if (items.length < 9) return x;
+  const pick: any[] = [];
+  for (let i = 0; i < 9; i++) pick.push(items[Math.round(i * (items.length - 1) / 8)]);
+  return { ...x, practice: pick };
+}
 
 export function validateLesson(x: any): string[] {
   const errs: string[] = [];
@@ -138,10 +149,51 @@ export function cleanLesson(x: any, topicName: string) {
     subject: "Mathematik", name: topicName, load: x.load, ai: true,
     steps: x.steps.map((s: any) => ({ t: s.t, visual: s.visual, auditory: s.auditory, kinesthetic: s.kinesthetic, textual: s.textual })),
     practice: x.practice.map((p: any) => ({
-      d: Math.round(p.d * 100) / 100, op: String(p.op || ""), q: p.q, opts: p.opts, a: p.a, why: p.why,
+      d: Math.round(p.d * 100) / 100, op: ALLOWED_OPS.has(String(p.op || "").toLowerCase()) ? String(p.op).toLowerCase() : "", q: p.q, opts: p.opts, a: p.a, why: p.why,
       wrong: Object.fromEntries(Object.entries(p.wrong || {}).filter(([k, v]) => p.opts.includes(k) && k !== p.a && typeof v === "string")),
     })),
   };
 }
 
 export const monthKey = () => new Date().toISOString().slice(0, 7);
+
+/* ---- Review pass ("Fachprüfer"): a second model call recomputes every task. ---- */
+export const REVIEW_PROMPT = `Du bist Fachprüfer:in für Mathematik (Abitur Baden-Württemberg). Du erhältst eine automatisch erstellte Lerneinheit als JSON.
+
+Prüfe JEDE der 9 Übungsaufgaben, indem du sie selbst vollständig und sorgfältig neu rechnest:
+1. Ist die als richtig markierte Antwort "a" mathematisch korrekt (inklusive Rundung)? Genau eine Option darf richtig sein.
+2. Stimmt die Begründung "why"?
+3. Stimmt jede Erklärung in "wrong" rechnerisch (führt der beschriebene Denkfehler wirklich zu genau dieser Zahl)? Falls nicht: formuliere eine zutreffende Erklärung oder schreibe "Typischer Rechen- oder Rundungsfehler."
+4. Ist "op" ein Operator aus der BW-Liste (angeben, berechnen, darstellen, erkennen, identifizieren, anwenden, auswerten, beschreiben, bestimmen, deuten, entnehmen, erläutern, nutzen, skizzieren, untersuchen, vergleichen, zuordnen, begründen, beurteilen, beweisen, überprüfen)?
+
+Korrigiere Fehler direkt: Passe Optionen, "a", "why", "wrong", "op" so an, dass alles stimmt (4 verschiedene Optionen, "a" zeichengenau eine davon, Platzhalter wie {who} unverändert lassen, Schwierigkeit "d" beibehalten).
+Prüfe außerdem die Erklärtexte der Schritte auf fachliche Fehler. Setze "steps_ok" nur dann auf false, wenn dort ein echter inhaltlicher Fehler steht.
+
+Gib das Ergebnis ausschließlich über das Werkzeug report_review aus: alle 9 (korrigierten) Aufgaben in der ursprünglichen Reihenfolge.`;
+
+export const REVIEW_TOOL = {
+  name: "report_review",
+  description: "Gibt die geprüften und korrigierten Übungsaufgaben zurück.",
+  input_schema: {
+    type: "object",
+    properties: {
+      problems: { type: "array", items: { type: "string" }, description: "Gefundene Fehler (kurz), leer wenn alles stimmt" },
+      steps_ok: { type: "boolean", description: "false nur bei inhaltlichem Fehler in den Erklärschritten" },
+      practice: { type: "array", items: practiceSchema, minItems: 9, maxItems: 9 },
+    },
+    required: ["problems", "steps_ok", "practice"],
+  },
+} as const;
+
+export function applyReview(lesson: any, review: any): { lesson: any; ok: boolean; problems: string[] } {
+  const problems: string[] = Array.isArray(review?.problems) ? review.problems.map(String).slice(0, 20) : [];
+  if (!review || review.steps_ok === false) return { lesson, ok: false, problems: problems.concat(["steps not ok"]) };
+  if (!Array.isArray(review.practice) || review.practice.length !== 9) return { lesson, ok: false, problems: problems.concat(["review incomplete"]) };
+  const practice = review.practice.map((p: any, i: number) => ({ ...p, d: typeof p.d === "number" ? p.d : lesson.practice[i]?.d }));
+  return { lesson: { ...lesson, practice }, ok: true, problems };
+}
+
+export const ALLOWED_OPS = new Set(["angeben", "berechnen", "darstellen", "erkennen", "identifizieren", "anwenden", "durchführen",
+  "auswerten", "beschreiben", "formulieren", "bestimmen", "erschließen", "deuten", "interpretieren", "entnehmen", "erläutern",
+  "erklären", "nutzen", "verwenden", "skizzieren", "untersuchen", "vergleichen", "zuordnen", "begründen", "beurteilen",
+  "bewerten", "beweisen", "überprüfen"]);
