@@ -1,0 +1,17 @@
+{
+  "name": "abitakt",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/engine-guard.mjs && node tests/e2e.mjs",
+    "test:guard": "node tests/engine-guard.mjs",
+    "test:extra": "node tests/e2e.mjs --extra"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.126.0",
+    "@netlify/blobs": "11.1.0"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

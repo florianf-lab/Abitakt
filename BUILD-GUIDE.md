@@ -2,6 +2,8 @@
 
 > **Neu erstellt am 17.09.2026.** Diese Datei ersetzt die ältere `BUILD-GUIDE.md` (Next.js/Prisma-Variante) **nicht 1:1** – sie beschreibt den *aktuellen* Stand (Einzeldatei + Netlify Functions) und den Plan fürs Agent-Team. Wenn die alte Version wieder auftaucht, Abschnitte daraus bewusst übernehmen statt blind zu mischen.
 >
+> Aktueller Arbeitsstand und Code-Landkarte: siehe `HANDOFF.md`.
+>
 > Diese Datei ist das **gemeinsame Gedächtnis** aller Agents. Jeder Agent liest sie vor jeder Aufgabe.
 
 ---
@@ -105,6 +107,8 @@ Neue Logik (z. B. Wiederholungsmodul) wird **neben** der Engine gebaut und liest
 ```json
 { "topicId": "stochastik_binom", "level": "Leistungsfach" }
 ```
+
+> Umgesetzt als zwei Funktionen: `lesson.mts` (sofortige Antwort: ready/pending/failed/none, startet bei Bedarf) und `lesson-generate.mts` (Hintergrund, bis 15 Min). Der Client fragt alle 5 s nach.
 
 - `topicId` muss in einer **serverseitigen Whitelist** stehen (Kopie der Mathe-Themen aus `SUBJECTS_BW`). Unbekannte IDs → 400. Sonst kann jeder Fremde mit ausgedachten IDs das Budget leeren.
 - `level` ∈ `Leistungsfach` | `Basisfach` (Mathe kann beides sein: Tag `P3` = Basisfach, `P1`/`P2`/`LF` = Leistungsfach).
@@ -363,20 +367,21 @@ TODO → Planer → Builder / Content-Agent
 
 | # | Paket | Status |
 |---|---|---|
-| 0 | Inter-Schrift laden (Google-Fonts-Link 400–700); Minimal-Barrierefreiheit: `<nav aria-label>`, `<main>`, `aria-pressed` am Sprachumschalter, `:focus-visible` mit `--line-strong` | geplant |
-| 1 | Lektions-Function (5) inkl. Whitelist, Cache, Budget | geplant |
-| 2 | Anbindung in `index.html` (6) | geplant |
-| 3 | Tests ins Repo + Engine-Wächter | geplant |
-| 4 | Operatoren + Fehlerhinweise pro Option | geplant |
-| 5 | Wiederholungsmodul neben der Engine | geplant |
-| 6 | „Darstellungsform“ statt „Lerntyp“ in DE/EN/TR | geplant |
-| 7 | Prüfungsbereitschaft pro Fach (P1–P5) mit den 3 nächsten Lücken | geplant |
-| 8 | PWA: installierbar, gecachte Lektionen offline | geplant |
-| 9 | Schneller Start (erst Fächer + erste Session, Assessment später in Häppchen) | **wartet auf Florians Freigabe** |
+| 0 | Inter-Schrift laden (Google-Fonts-Link 400–700); Minimal-Barrierefreiheit: `<nav aria-label>`, `<main>`, `aria-pressed` am Sprachumschalter, `:focus-visible` mit `--line-strong` | ✅ erledigt |
+| 1 | Lektions-Function (5) inkl. Whitelist, Cache, Budget | ✅ gebaut (Hintergrund-Funktion + Polling), live erst nach Netlify-Verknüpfung |
+| 2 | Anbindung in `index.html` (6) | ✅ erledigt |
+| 3 | Tests ins Repo + Engine-Wächter | ✅ erledigt |
+| 4 | Operatoren + Fehlerhinweise pro Option | ✅ erledigt |
+| 5 | Wiederholungsmodul neben der Engine | ✅ im Lernbegleiter (fällige Wiederholungen) |
+| 6 | „Darstellungsform“ statt „Lerntyp“ in DE/EN/TR | ✅ erledigt |
+| 7 | Prüfungsbereitschaft pro Fach (P1–P5) mit den 3 nächsten Lücken | ✅ erledigt |
+| 8 | PWA: installierbar, gecachte Lektionen offline | ✅ erledigt |
+| 9 | Schneller Start (erst Fächer + erste Session, Profil später vervollständigen) | ✅ erledigt (freigegeben) |
 | 10 | Freitext-Aufgaben mit KI-Feedback nach Erwartungshorizont (Tageslimit, kostet pro Antwort) | **wartet auf Florians Freigabe** |
 | 11 | Trainer für mündliche Prüfung / Präsentationsprüfung (P4/P5) | später |
 | 12 | Weitere Fächer nach Mathe | später |
 | 13 | Konten + Sync (Backend, DSGVO-Projekt) | später |
+| 14 | Lernbegleiter: Stundenplan, Prüfungen, Aufgaben, Check-in, Tagesplan mit Begründung, Beobachtungen | ✅ erledigt (siehe HANDOFF 3.8) |
 
 ---
 

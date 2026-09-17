@@ -3,10 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <title>abitakt — Abitur Baden-Württemberg</title>
+<meta name="description" content="Adaptiver Lernplan fürs Abitur in Baden-Württemberg.">
+<meta name="theme-color" content="#08090e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
 /* ============================================================
    ABITAKT DESIGN SYSTEM
@@ -299,10 +303,87 @@ textarea.field{min-height:150px;resize:vertical;line-height:1.6;font-family:var(
   color:var(--tx-mute);transition:all .18s var(--ease)}
 .langbtn:hover{color:var(--tx)}
 .langbtn.on{background:var(--accent);color:#fff}
-.topbar{padding-left:150px}
-@media(max-width:640px){.langbar{top:10px;left:10px}.topbar{padding-left:132px}}
+.topbar,.focus-top{padding-left:150px}
+.mastery-row .bar,.mastery-row .bar-fill{display:block}
+@media(max-width:640px){.langbar{top:10px;left:10px}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 :is(button,a,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;box-shadow:0 0 0 5px var(--line-strong)}
+
+/* Version 2: paper, forest and a quieter study workspace. */
+:root{--bg:#f4f3ec;--bg-grad:none;--surface:#fffefa;--surface-2:#eeefe7;--surface-3:#e4e8dd;--line:#dddfd3;--line-strong:#a7b29f;--tx:#223a30;--tx-dim:#506255;--tx-mute:#62705f;--accent:#246448;--accent-soft:#e3edde;--accent-line:#96b69c;--teal:#256956;--teal-soft:#e4eee5;--amber:#925b24;--rose:#a13f53;--green:#277947;--r:14px;--r-lg:22px;--r-xl:28px;--sans:'Segoe UI',system-ui,sans-serif}
+body{background:var(--bg)}
+::selection{background:#c9dec2;color:var(--tx)}
+h1{font-weight:650;letter-spacing:-.045em}h2{letter-spacing:-.03em}
+.btn{border-radius:12px;min-height:46px;white-space:normal;text-align:center}
+.btn-primary{box-shadow:none}.btn-primary:hover{background:#194e37;box-shadow:0 5px 18px #24433120}
+.btn-ghost{background:transparent}.btn-quiet{color:var(--tx-dim)}
+.card,.stat{box-shadow:0 3px 0 #263f2903}.card-2{background:#eeefe7}
+.brand-mark{background:var(--accent);color:#fff;border-radius:10px;box-shadow:none}
+.langbar{background:#fffefaf2;border-color:var(--line);top:20px;left:24px;box-shadow:none}
+.langbtn{min-width:38px;min-height:32px}.langbtn.on{background:var(--accent)}
+.topbar{background:var(--surface);border-bottom:1px solid var(--line);padding:22px 32px 22px 180px;gap:24px;backdrop-filter:none}.screen{animation:fadeIn .2s ease both}
+.nav{gap:6px}.nav button{border-radius:10px;min-height:44px;color:var(--tx-dim)}
+.nav button.on{background:var(--accent-soft);color:var(--accent)}
+.nav-symbol{margin-right:8px;font-size:18px}.topbar-right{margin-left:auto}
+.dash{padding-top:40px;padding-bottom:64px}.stage-wide{max-width:1240px}
+.dash-hero{background:#e5eddf;border:1px solid #d6e1cf;border-radius:24px;padding:32px;margin-bottom:24px}
+.dash-hero h1{font-size:clamp(27px,3vw,38px);max-width:22ch}
+.stat{padding:24px 26px}.stat-v{font-size:40px}.stat-k,.sec-title{letter-spacing:.08em}
+.task{background:var(--surface);border-color:transparent;border-bottom-color:var(--line);border-radius:8px;padding:20px 12px}
+.task:hover{background:var(--accent-soft);transform:none}.task-time{color:var(--accent)}
+.task-title{display:block}.task.done{opacity:.65}.bar{background:#dfe5d9}.bar-fill{background:var(--accent)}
+.pill-peak{color:var(--accent)}.pill-low{background:#e7e9df}.chip.sel{color:var(--accent);font-weight:600}
+.opt-key{background:#e5e8dc}.load-dot{background:#cbd4c6}.opt.correct{border-color:#458358;background:#e6f0e2}.opt.wrong{border-color:#b35f70;background:#f9e8ea}
+.focus-screen{background:var(--bg)}.focus-top{border-bottom:1px solid var(--line);background:var(--surface);min-height:88px;padding-left:180px}
+.focus-body{padding-top:42px}.focus-card{max-width:760px;background:var(--surface);padding:40px;border:1px solid var(--line);border-radius:24px;box-shadow:0 12px 50px #263f2906}
+.teach{color:var(--tx)}.teach strong{color:var(--tx)}.teach [style*="color:#"]{color:var(--tx-dim)!important}.teach svg [fill="#a99cff"]{fill:var(--accent)}.teach svg [stroke^="rgba(255"]{stroke:#87957e}.teach svg [fill^="rgba(255"]{fill:#d7e0d0}.pip{background:#d1d9ca}.pip.on{box-shadow:none}.pip.done{background:#91af84}
+.reward{background:var(--surface);box-shadow:0 12px 44px #263f2925;max-width:calc(100vw - 32px);border-radius:16px}
+.center-wrap{padding-top:90px}.step-label{top:30px}.kv{gap:16px}.kv-v{text-align:right;flex-shrink:0}
+.sec-head{gap:12px;flex-wrap:wrap}.grid>*{min-width:0}.hint{max-width:70ch}
+.welcome-v2{max-width:1240px;width:100%;margin:auto;padding:96px 40px 40px}
+.welcome-brand{display:flex;gap:10px;align-items:center;font-size:23px;font-weight:700;margin-bottom:46px;letter-spacing:-.04em}
+.welcome-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:70px;align-items:center}
+.welcome-copy h1{font-family:Georgia,serif;font-size:clamp(44px,5.2vw,72px);font-weight:400;letter-spacing:-.045em;line-height:1.04;margin:22px 0}
+.welcome-copy .lede{font-size:18px;max-width:42ch}.welcome-copy .btn-row{align-items:stretch;flex-direction:column;max-width:360px}
+.welcome-note{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:650}
+.welcome-sheet{background:#e4eadb;border:1px solid #d2dcc8;border-radius:28px;padding:32px;position:relative;overflow:hidden}
+.rhythm-art{height:120px;display:flex;align-items:center;gap:10px;margin:18px 0 28px}
+.rhythm-art i{display:block;flex:1;border-radius:50px;background:#73946b}.rhythm-art i:nth-child(2n){background:#315c43}.rhythm-art i:nth-child(3n){background:#b1c698}
+.welcome-step{display:flex;gap:16px;padding:20px 0;border-top:1px solid #c6d3bd}.welcome-step b{font-family:Georgia,serif;font-size:25px;color:var(--accent);font-weight:400}.welcome-step h3{font-size:16px;margin:2px 0 6px}.welcome-step p{font-size:14px;color:var(--tx-dim)}
+.welcome-footer{border-top:1px solid var(--line);margin-top:48px;padding-top:20px;display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--tx-mute)}
+@media(min-width:961px){.g-3{grid-template-columns:repeat(3,minmax(0,1fr))}.g-2-1{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}}
+@media(max-width:800px){.welcome-grid{grid-template-columns:1fr;gap:32px}.welcome-v2{padding:84px 24px 32px}.welcome-brand{margin-bottom:30px}.welcome-copy h1{max-width:12ch}.welcome-copy .btn-row{max-width:none}.welcome-sheet{padding:24px}.rhythm-art{height:70px}.welcome-footer{flex-direction:column;gap:8px}.topbar-right{font-size:12px}.topbar .nav{position:fixed;bottom:0;left:0;right:0;z-index:80;display:grid;grid-template-columns:repeat(5,1fr);padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line)}.topbar .nav button{font-size:13px}.nav-symbol{display:block;margin:0;font-size:20px;line-height:1.2}.dash{padding-bottom:112px}.topbar{padding:18px 18px 18px 160px;min-height:84px}.topbar-right{display:none}.langbar{left:16px}.dash-hero{padding:24px}.dash-hero .btn{width:100%}.focus-card{padding:26px}.focus-top{padding:82px 16px 16px;gap:12px;flex-wrap:wrap}.focus-top .step-pips{order:3;flex-basis:100%;justify-content:center}.focus-top>span{max-width:65%;text-align:right}.focus-body{padding:24px 16px 40px}.center-wrap{padding:100px 18px 32px}.step-label{left:auto;right:20px;transform:none}.reward{bottom:95px}}
+@media(max-width:420px){.welcome-v2{padding-left:18px;padding-right:18px}.welcome-copy h1{font-size:48px}.card{padding:20px}.task{gap:9px;padding:16px 4px}.task-time{width:40px;font-size:11px}.task-meta{gap:5px}.kv{font-size:12px}.focus-card{padding:20px}.btn-row>.btn{max-width:100%}.g-3{gap:10px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Coach (planner, check-in, focus timer) */
+.coach-hero{background:#e5eddf;border:1px solid #d6e1cf;border-radius:24px;padding:32px;margin-bottom:24px}
+.coach-hero h1{font-size:clamp(26px,3vw,38px);max-width:26ch}
+.coach-why{margin:14px 0 0;padding-left:20px;color:var(--tx-dim);font-size:15px;line-height:1.6}
+.coach-why li{margin-bottom:4px}
+.coach-intent{margin-top:12px;padding:12px 14px;border-left:3px solid var(--accent);background:var(--surface);border-radius:8px;font-size:14.5px}
+.tl-row{display:flex;gap:14px;align-items:center;padding:14px 12px;margin-bottom:8px;border-radius:8px;background:var(--surface-2);opacity:.8}
+.focus-clock{font-size:clamp(56px,12vw,96px);font-weight:600;letter-spacing:-.04em;margin:18px 0 6px;color:var(--accent)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:22px 0 14px}
+.tab{padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--tx-dim);font-weight:560;min-height:44px}
+.tab.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-line)}
+.wk-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:16px}
+.wk-day{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;min-height:92px;font-size:12.5px;min-width:0}
+.wk-day.on{border-color:var(--accent-line);background:var(--accent-soft)}
+.wk-name{font-weight:650;margin-bottom:6px}
+.wk-ev{background:#f6e3e6;color:var(--rose);border-radius:6px;padding:3px 6px;margin-bottom:4px;overflow-wrap:anywhere}
+.wk-tk{background:var(--surface-3);border-radius:6px;padding:3px 6px;margin-bottom:4px;overflow-wrap:anywhere}
+.wk-meta{color:var(--tx-mute);font-size:11.5px;margin-top:4px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0 14px}
+.form-cell{min-width:0}
+.win-row{display:flex;align-items:center;gap:10px;padding:6px 0;flex-wrap:wrap}
+.win-row .field{width:auto;min-width:110px;padding:8px 10px}
+.win-day{display:flex;align-items:center;gap:8px;min-width:130px;font-weight:560}
+.scale-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--tx-mute);max-width:320px;margin-top:4px}
+textarea.field{resize:vertical;font:inherit;line-height:1.5}
+select.field{appearance:auto}
+@media(max-width:800px){.wk-strip{grid-template-columns:repeat(7,minmax(92px,1fr));overflow-x:auto;padding-bottom:6px}.coach-hero{padding:22px}.coach-hero .btn{width:100%}}
+
 </style>
 </head>
 <body>
@@ -333,7 +414,11 @@ const BLANK = () => ({
   lastActive: null,
   log: [],                    // {t, topicId, correct, ms, difficulty}
   rewardState: { sinceLast: 0, lastKind: null },
-  completedToday: []
+  completedToday: [],
+  quick: false,               // true = started via quick start, profile still incomplete
+  opStats: {},                // operator -> [correct, total] from the operator trainer
+  life: null,                 // personal coach data (see Coach.life)
+  lastPractice: {}            // topicId -> timestamp of the last practice answer (kept outside the engine)
 });
 
 let S = BLANK();
@@ -357,7 +442,7 @@ const Store = {
     const blob = new Blob([JSON.stringify(S, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "kairos-profile.json";
+    a.download = "abitakt-profil.json";
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   }
@@ -491,7 +576,7 @@ const I18N = {
     c_note: "Termine nach den offiziellen Angaben für BW 2027. Prüfe den genauen Fächerplan bei deiner Schule – die exakten Einzeltermine können abweichen.",
     /* done */
     d_title: "Alles bereit{name}.", d_lede: "Das weiß der Motor jetzt über dich:",
-    d_comp: "Kognitiver Gesamtwert", d_best: "Lernt am besten über",
+    d_comp: "Kognitiver Gesamtwert", d_best: "Bevorzugte Darstellung (Startwert)",
     d_span: "Fokusfenster", d_peak: "Hochphasen", d_topics: "Themen im Plan",
     d_int: "Eingewobene Interessen", d_open: "Dashboard öffnen",
     /* app chrome */
@@ -531,7 +616,7 @@ const I18N = {
     pf_cog: "Kognitives Profil",
     pf_cog_note: "Ein Kalibrierungssignal für das Tempo – kein klinischer Wert und keine Note.",
     pf_subj: "Prüfungsfächer & Termine", pf_edit: "Fächer ändern",
-    pf_how: "Wie du lernst", pf_focus: "Fokus & Regulation",
+    pf_how: "Bevorzugte Darstellungsformen", pf_focus: "Fokus & Regulation",
     pf_span: "Fokusfenster", pf_over: "Überforderungsneigung", pf_restart: "Wiedereinstieg",
     pf_nov: "Bedarf an Abwechslung",
     pf_focus_note: "Höhere Werte bei Überforderung und Abwechslung führen zu kürzeren Einheiten, kleineren Schritten und unvorhersehbareren Belohnungen.",
@@ -633,7 +718,7 @@ const I18N = {
     c_oral_p: "Oral exams", c_oral_v: "28 June – 8 July 2027",
     c_note: "Dates follow the official BW 2027 schedule. Check the exact per-subject plan with your school — individual dates can differ.",
     d_title: "You're set{name}.", d_lede: "Here's what the engine now knows about you:",
-    d_comp: "Cognitive composite", d_best: "Learns best through",
+    d_comp: "Cognitive composite", d_best: "Preferred format (starting point)",
     d_span: "Focus window", d_peak: "Peak hours", d_topics: "Topics tracked",
     d_int: "Interests woven in", d_open: "Open my dashboard",
     nav_today: "Today", nav_prog: "Progress", nav_prof: "Profile",
@@ -669,7 +754,7 @@ const I18N = {
     pf_cog: "Cognitive profile",
     pf_cog_note: "A calibration signal for pacing — not a clinical measure, and not a grade.",
     pf_subj: "Exam subjects & dates", pf_edit: "Change subjects",
-    pf_how: "How you learn", pf_focus: "Focus & regulation",
+    pf_how: "Preferred formats", pf_focus: "Focus & regulation",
     pf_span: "Focus window", pf_over: "Overwhelm sensitivity", pf_restart: "Restart difficulty",
     pf_nov: "Novelty need",
     pf_focus_note: "Higher overwhelm and novelty scores make sessions shorter, steps smaller, and rewards less predictable.",
@@ -768,7 +853,7 @@ const I18N = {
     c_oral_p: "Sözlü sınavlar", c_oral_v: "28 Haziran – 8 Temmuz 2027",
     c_note: "Tarihler BW 2027 resmî takvimine dayanır. Derse göre kesin tarihleri okulundan teyit et — tek tek tarihler değişebilir.",
     d_title: "Hazırsın{name}.", d_lede: "Motorun şu anda senin hakkında bildikleri:",
-    d_comp: "Bilişsel toplam", d_best: "En iyi şu yolla öğreniyor",
+    d_comp: "Bilişsel toplam", d_best: "Tercih edilen anlatım (başlangıç değeri)",
     d_span: "Odak penceresi", d_peak: "Zirve saatleri", d_topics: "Takip edilen konu",
     d_int: "İşlenen ilgi alanları", d_open: "Panelimi aç",
     nav_today: "Bugün", nav_prog: "İlerleme", nav_prof: "Profil",
@@ -804,7 +889,7 @@ const I18N = {
     pf_cog: "Bilişsel profil",
     pf_cog_note: "Tempo için bir ayar sinyali — klinik bir ölçüm değil, not da değil.",
     pf_subj: "Sınav dersleri ve tarihler", pf_edit: "Dersleri değiştir",
-    pf_how: "Nasıl öğrenirsin", pf_focus: "Odak ve düzenleme",
+    pf_how: "Tercih edilen anlatım biçimleri", pf_focus: "Odak ve düzenleme",
     pf_span: "Odak penceresi", pf_over: "Bunalma eğilimi", pf_restart: "Yeniden başlama",
     pf_nov: "Çeşitlilik ihtiyacı",
     pf_focus_note: "Yüksek bunalma ve çeşitlilik puanları oturumları kısaltır, adımları küçültür ve ödülleri daha öngörülemez yapar.",
@@ -841,6 +926,528 @@ const I18N = {
     toast_min3: "En az üç ilgi alanı seç",
   }
 };
+
+/* 3a-2. Strings for features added after the prototype (Sept 2026).
+   Kept in one place so additions are easy to review and translate. */
+Object.assign(I18N.de, {
+  w_quick: "Schnellstart – direkt lernen",
+  w_quick_h: "Nur Prüfungsfächer wählen und loslegen (1 Min). Das Profil holst du später nach – bis dahin arbeitet der Motor mit Standardwerten.",
+  q_head: "Schnellstart", q_build: "Loslernen",
+  prof_todo_title: "Dein Profil ist noch unvollständig",
+  prof_todo_t: "Gerade lernst du mit Standardwerten. Mit den Kurztests, deinen Vorlieben und deiner Energiekurve stellt abitakt Schwierigkeit, Tempo und Lernzeiten genauer auf dich ein.",
+  prof_todo_btn: "Profil vervollständigen (ca. 12 Min)",
+  pf_how_note: "Startwert aus deinen Angaben. Feste „Lerntypen“ sind wissenschaftlich nicht belegt – deshalb misst der Motor, welche Darstellung bei dir tatsächlich zu richtigen Antworten führt, und passt sich daran an.",
+  rd_title: "Prüfungsbereitschaft",
+  rd_sub: "Stand × wie frisch das Wissen ist",
+  rd_none: "Noch keine Übung – starte eine Einheit, dann erscheint hier deine Einschätzung.",
+  rd_last: "zuletzt geübt vor {n} T", rd_today: "heute geübt", rd_never: "noch nie geübt",
+  rd_gaps: "Als Nächstes schließen",
+  nav_ops: "Operatoren",
+  op_title: "Operatoren in Mathe",
+  op_lede: "Jede Abi-Aufgabe beginnt mit einem Operator – und der entscheidet, was du hinschreiben musst. Wer „angeben“ und „berechnen“ verwechselt, verschenkt Zeit oder Punkte.",
+  op_practice: "Operatoren üben (8 Fragen)", op_weak: "{n} Operator(en) zum Wiederholen – kommen beim Üben zuerst",
+  op_afb1: "Anforderungsbereich I", op_afb1_d: "Wiedergeben und geübte Verfahren anwenden",
+  op_afb2: "Anforderungsbereich II", op_afb2_d: "Bekanntes selbstständig bearbeiten und auf vergleichbare Situationen übertragen",
+  op_afb3: "Anforderungsbereich III", op_afb3_d: "Komplexes bearbeiten, Methoden selbst wählen, begründen, verallgemeinern, reflektieren",
+  op_example: "Beispiel",
+  op_source: "Definitionen nach dem Bildungsplan 2016 Baden-Württemberg (Gymnasium, Mathematik). Beispielaufgaben von abitakt formuliert, keine Original-Abituraufgaben. Maßgeblich ist, was deine Lehrkraft und die aktuellen Prüfungsvorgaben verwenden.",
+  op_q_expect: "Was verlangt diese Aufgabe?", op_q_name: "Welcher Operator ist gemeint?",
+  op_result: "{a} von {b} richtig", op_result_t: "Operatoren, die danebenlagen, kommen beim nächsten Durchgang zuerst dran.",
+  op_again: "Nochmal üben", op_back: "Zur Übersicht",
+  sess_loading: "Lektion wird vorbereitet…",
+  sess_loading_t: "Diese Lektion wird gerade zum ersten Mal erstellt und automatisch geprüft. Das dauert 1–3 Minuten – danach ist sie sofort da. Du kannst die App solange offen lassen.",
+  ai_note: "Von KI erstellt und automatisch geprüft, aber nicht von einer Lehrkraft. Im Zweifel gilt, was ihr im Unterricht gelernt habt.",
+  ai_failed: "Die KI-Lektion ist gerade nicht verfügbar – du siehst vorerst den Platzhalter.",
+  ai_budget: "Das Monatskontingent für neue KI-Lektionen ist aufgebraucht – du siehst vorerst den Platzhalter.",
+  off_now: "Offline – bereits geladene Lektionen funktionieren weiter.",
+  off_back: "Wieder online.",
+  rd_note: "Wissen verblasst ohne Wiederholung. Die Anzeige sinkt, wenn du ein Thema länger nicht übst – das ist Absicht, kein Fehler."
+});
+Object.assign(I18N.en, {
+  w_quick: "Quick start – learn right away",
+  w_quick_h: "Just pick your exam subjects and go (1 min). You can complete your profile later – until then the engine uses default values.",
+  q_head: "Quick start", q_build: "Start learning",
+  prof_todo_title: "Your profile isn't complete yet",
+  prof_todo_t: "You're currently learning with default values. With the short tests, your preferences and your energy curve, abitakt can tune difficulty, pace and study times to you much more precisely.",
+  prof_todo_btn: "Complete profile (about 12 min)",
+  pf_how_note: "Starting point from your answers. Fixed “learning styles” aren't supported by research – so the engine measures which format actually leads to correct answers for you and adapts to that.",
+  rd_title: "Exam readiness",
+  rd_sub: "mastery × how fresh the knowledge is",
+  rd_none: "No practice yet – start a session and your estimate appears here.",
+  rd_last: "last practised {n} d ago", rd_today: "practised today", rd_never: "never practised",
+  rd_gaps: "Close these next",
+  nav_ops: "Operators",
+  op_title: "Operators in maths",
+  op_lede: "Every Abitur task starts with an operator verb – and it decides what you have to write down. Mixing up “angeben” and “berechnen” costs time or points.",
+  op_practice: "Practise operators (8 questions)", op_weak: "{n} operator(s) to review – they come first when you practise",
+  op_afb1: "Requirement level I", op_afb1_d: "Reproduce and apply practised methods",
+  op_afb2: "Requirement level II", op_afb2_d: "Work independently on known content and transfer it to similar situations",
+  op_afb3: "Requirement level III", op_afb3_d: "Handle complex problems, choose methods yourself, justify, generalise, reflect",
+  op_example: "Example",
+  op_source: "Definitions from the Baden-Württemberg curriculum 2016 (Gymnasium, maths). Example tasks written by abitakt, not original exam tasks. What your teacher and the current exam rules use is what counts. Operators stay in German – they appear in German in the exam.",
+  op_q_expect: "What does this task require?", op_q_name: "Which operator is meant?",
+  op_result: "{a} of {b} correct", op_result_t: "Operators you missed come up first next time.",
+  op_again: "Practise again", op_back: "Back to overview",
+  sess_loading: "Preparing your lesson…",
+  sess_loading_t: "This lesson is being created and automatically checked for the first time. That takes 1–3 minutes – after that it's instant. Just keep the app open.",
+  ai_note: "Created by AI and checked automatically, but not by a teacher. If in doubt, what you learned in class counts.",
+  ai_failed: "The AI lesson isn't available right now – you're seeing the placeholder for now.",
+  ai_budget: "This month's allowance for new AI lessons is used up – you're seeing the placeholder for now.",
+  off_now: "Offline – lessons you've already loaded keep working.",
+  off_back: "Back online.",
+  rd_note: "Knowledge fades without review. The score drops when you leave a topic alone for a while – that's intended, not a bug."
+});
+Object.assign(I18N.tr, {
+  w_quick: "Hızlı başlangıç – hemen öğren",
+  w_quick_h: "Sadece sınav derslerini seç ve başla (1 dk). Profilini sonra tamamlarsın – o zamana kadar motor varsayılan değerlerle çalışır.",
+  q_head: "Hızlı başlangıç", q_build: "Öğrenmeye başla",
+  prof_todo_title: "Profilin henüz tamamlanmadı",
+  prof_todo_t: "Şu an varsayılan değerlerle öğreniyorsun. Kısa testler, tercihlerin ve enerji eğrinle abitakt zorluğu, tempoyu ve çalışma saatlerini sana çok daha iyi ayarlar.",
+  prof_todo_btn: "Profili tamamla (yaklaşık 12 dk)",
+  pf_how_note: "Cevaplarından gelen başlangıç değeri. Sabit “öğrenme tipleri” bilimsel olarak kanıtlanmamıştır – bu yüzden motor, sende hangi anlatımın gerçekten doğru cevaplara götürdüğünü ölçer ve ona uyum sağlar.",
+  rd_title: "Sınava hazırlık",
+  rd_sub: "seviye × bilginin tazeliği",
+  rd_none: "Henüz alıştırma yok – bir oturum başlat, tahminin burada görünür.",
+  rd_last: "en son {n} gün önce çalışıldı", rd_today: "bugün çalışıldı", rd_never: "hiç çalışılmadı",
+  rd_gaps: "Sıradaki eksikler",
+  nav_ops: "Operatörler",
+  op_title: "Matematikte operatörler",
+  op_lede: "Her Abitur görevi bir operatör fiiliyle başlar – ve ne yazman gerektiğini o belirler. „angeben“ ile „berechnen“i karıştırmak zaman ya da puan kaybettirir.",
+  op_practice: "Operatör çalış (8 soru)", op_weak: "Tekrar edilecek {n} operatör – çalışırken önce bunlar gelir",
+  op_afb1: "Gereklilik alanı I", op_afb1_d: "Bilgiyi aktarmak ve alışılmış yöntemleri uygulamak",
+  op_afb2: "Gereklilik alanı II", op_afb2_d: "Bilinen içeriği bağımsız işlemek ve benzer durumlara aktarmak",
+  op_afb3: "Gereklilik alanı III", op_afb3_d: "Karmaşık problemleri çözmek, yöntemi kendin seçmek, gerekçelendirmek, genellemek",
+  op_example: "Örnek",
+  op_source: "Tanımlar Baden-Württemberg 2016 öğretim programından (Gymnasium, matematik). Örnek görevler abitakt tarafından yazıldı, orijinal sınav görevi değildir. Geçerli olan öğretmeninin ve güncel sınav kurallarının kullandığıdır. Operatörler Almanca kalır – sınavda Almanca çıkarlar.",
+  op_q_expect: "Bu görev ne istiyor?", op_q_name: "Hangi operatör kastediliyor?",
+  op_result: "{b} sorudan {a} doğru", op_result_t: "Yanlış yaptığın operatörler bir sonraki turda önce gelir.",
+  op_again: "Tekrar çalış", op_back: "Genel bakışa dön",
+  sess_loading: "Ders hazırlanıyor…",
+  sess_loading_t: "Bu ders ilk kez oluşturuluyor ve otomatik olarak kontrol ediliyor. Bu 1–3 dakika sürer – sonrasında anında açılır. Uygulamayı açık bırakabilirsin.",
+  ai_note: "Yapay zekâ tarafından oluşturuldu ve otomatik kontrol edildi, ancak bir öğretmen tarafından değil. Şüphede kalırsan derste öğrendiğin geçerlidir.",
+  ai_failed: "Yapay zekâ dersi şu an kullanılamıyor – şimdilik yer tutucuyu görüyorsun.",
+  ai_budget: "Bu ayın yeni yapay zekâ dersi kotası doldu – şimdilik yer tutucuyu görüyorsun.",
+  off_now: "Çevrimdışı – daha önce yüklenen dersler çalışmaya devam eder.",
+  off_back: "Tekrar çevrimiçi.",
+  rd_note: "Bilgi tekrar edilmezse solar. Bir konuyu uzun süre çalışmazsan puan düşer – bu bilerek böyle, hata değil."
+});
+
+Object.assign(I18N.de, {
+  "v2_title": "Dein Abitur. Dein Takt.",
+  "v2_intro": "Ein Thema nach dem anderen. abitakt passt Schwierigkeit, Tempo und Darstellung an deine Antworten an.",
+  "v2_kicker": "Baden-Württemberg · Abitur 2027",
+  "v2_guide": "So findest du deinen Takt",
+  "v2_s1": "Fächer wählen",
+  "v2_d1": "Stelle deinen Plan für die Abiturvorbereitung zusammen.",
+  "v2_s2": "In kleinen Schritten lernen",
+  "v2_d2": "Verstehen, ausprobieren und mit eigenen Antworten üben.",
+  "v2_s3": "Den nächsten Schritt sehen",
+  "v2_d3": "Dein Lernplan orientiert sich an deinem Fortschritt.",
+  "v2_local": "Dein Profil bleibt in diesem Browser.",
+  "v2_scope": "Für volljährige Lernende · unabhängiges Lernprojekt",
+  "v2_dates": "Prüfungstermine bitte mit der Schule abgleichen.",
+  "v2_available": "Bereit zum Lernen",
+  "v2_library": "Drei ausgearbeitete Lektionen. Weitere Themen sind im Lernplan vorgemerkt.",
+  "v2_missing": "Noch kein Lerninhalt",
+  "v2_missing_body": "Für dieses Thema gibt es noch keine ausgearbeitete Lektion. Es wird deshalb nicht als Übung gewertet. Wähle eine der verfügbaren Lektionen auf deiner Startseite.",
+  "v2_back": "Zur Startseite",
+  "v2_energy": "Deine Lernzeiten",
+  "v2_energy_body": "Ergänze dein Profil, um deinen Plan auf deine bevorzugten Lernzeiten abzustimmen."
+});
+Object.assign(I18N.en, {
+  "v2_title": "Your Abitur. Your rhythm.",
+  "v2_intro": "One topic at a time. abitakt adapts difficulty, pace and presentation to your answers.",
+  "v2_kicker": "Baden-Württemberg · Abitur 2027",
+  "v2_guide": "Find your study rhythm",
+  "v2_s1": "Choose your subjects",
+  "v2_d1": "Put together your plan for preparing for the Abitur.",
+  "v2_s2": "Learn in small steps",
+  "v2_d2": "Understand, explore and practise with your own answers.",
+  "v2_s3": "See your next step",
+  "v2_d3": "Your study plan follows your progress.",
+  "v2_local": "Your profile stays in this browser.",
+  "v2_scope": "For adult learners · independent learning project",
+  "v2_dates": "Please confirm exam dates with your school.",
+  "v2_available": "Ready to study",
+  "v2_library": "Three complete lessons. Further topics are listed in your study plan.",
+  "v2_missing": "Content not yet available",
+  "v2_missing_body": "This topic does not yet have a complete lesson, so it will not count as practice. Choose an available lesson on your home page.",
+  "v2_back": "Back to home",
+  "v2_energy": "Your study times",
+  "v2_energy_body": "Complete your profile to match your plan to your preferred study times."
+});
+Object.assign(I18N.tr, {
+  "v2_title": "Senin Abitur’un. Senin ritmin.",
+  "v2_intro": "Her seferinde bir konu. abitakt zorluğu, tempoyu ve anlatımı cevaplarına göre uyarlar.",
+  "v2_kicker": "Baden-Württemberg · Abitur 2027",
+  "v2_guide": "Çalışma ritmini bul",
+  "v2_s1": "Derslerini seç",
+  "v2_d1": "Abitur hazırlığı için kendi planını oluştur.",
+  "v2_s2": "Küçük adımlarla öğren",
+  "v2_d2": "Anla, dene ve kendi cevaplarınla alıştırma yap.",
+  "v2_s3": "Sıradaki adımı gör",
+  "v2_d3": "Çalışma planın ilerlemene göre şekillenir.",
+  "v2_local": "Profilin bu tarayıcıda kalır.",
+  "v2_scope": "Yetişkin öğrenciler için · bağımsız öğrenme projesi",
+  "v2_dates": "Sınav tarihlerini lütfen okulunla doğrula.",
+  "v2_available": "Öğrenmeye hazır",
+  "v2_library": "Üç tamamlanmış ders. Diğer konular çalışma planında listelenmiştir.",
+  "v2_missing": "İçerik henüz hazır değil",
+  "v2_missing_body": "Bu konu için henüz tamamlanmış bir ders yok. Bu nedenle alıştırma olarak sayılmaz. Ana sayfadan hazır bir ders seç.",
+  "v2_back": "Ana sayfaya dön",
+  "v2_energy": "Çalışma saatlerin",
+  "v2_energy_body": "Planını tercih ettiğin çalışma saatlerine uyarlamak için profilini tamamla."
+});
+
+/* 3a-3. Strings for the personal coach (planner, check-in, focus timer, wizard). */
+Object.assign(I18N.de, {
+  nav_plan: "Planer",
+  co_own_material: "Mit eigenen Unterlagen lernen",
+  co_days: "Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag",
+  co_today: "heute", co_tomorrow: "morgen", co_overdue: "überfällig", co_in_days: "in {n} Tagen",
+  co_next: "Dein nächster Schritt", co_anytime: "heute, wann es passt",
+  co_do: "{n} Min: {what}",
+  co_start: "Jetzt starten",
+  co_starter: "Dein Startritual: {s}",
+  co_intention: "Plan für den Einstieg: Wenn es {time} ist, setze ich mich {place} hin und öffne nur „{what}“.",
+  co_place_default: "an meinen Schreibtisch",
+  co_nothing: "Für heute ist nichts Dringendes offen. Trag Prüfungen, Aufgaben und Lernzeiten ein – dann plant abitakt deinen Tag konkret.",
+  co_nothing_timed: "In deinen Lernzeiten ist heute kein Platz mehr frei. Du kannst trotzdem jederzeit eine Lektion öffnen.",
+  co_open_planner: "Planer öffnen", co_manage: "Termine & Aufgaben verwalten",
+  co_setup_title: "Lass abitakt deinen Alltag kennenlernen",
+  co_setup_t: "Ziele, Lernverhalten, Stundenplan, freie Lernzeiten und anstehende Prüfungen – dann sagt dir die App jeden Tag genau, was du wann wie lange machst und warum. Dauert etwa 5 Minuten, alles bleibt in diesem Browser.",
+  co_setup_btn: "Alltag einrichten (ca. 5 Min)",
+  co_adapt_abandon: "Du hast zuletzt mehrere Einheiten früh beendet – die Einheiten sind deshalb kürzer.",
+  co_adapt_hard: "Die letzten Einheiten waren anstrengend – heute etwas kürzer.",
+  co_adapt_energy: "Wenig Energie angegeben – heute kurze Einheiten und weniger Gesamtzeit.",
+  co_adapt_overload: "Ein Schritt nach dem anderen: Einheiten heute höchstens 15 Minuten.",
+  co_adapt_distraction: "Kurze, geschützte Einheiten: Handy weg, nur ein Tab offen.",
+  co_checkin: "Kurzer Check-in für heute", co_checkin_note: "Zwei Klicks – der Plan passt Länge und Menge daran an. Keine Diagnose, nur deine Tagesform.",
+  co_energy_q: "Wie viel Energie hast du heute?", co_barrier_q: "Was könnte dich heute bremsen?",
+  co_barriers: "Nichts Bestimmtes|Schwer anzufangen|Zu viel auf einmal|Ablenkung",
+  co_checkin_save: "Plan anpassen", co_checkin_skip: "Überspringen",
+  co_today_plan: "Dein Tag", co_plan_sum: "{a} Min geplant · {b} Min schon gelernt",
+  co_pending: "{n} weitere Themen passen heute nicht mehr rein – sie rutschen nach hinten, statt dich zu überladen.",
+  co_untimed_note: "Ohne eingetragene Lernzeiten gibt es noch keine Uhrzeiten. Trag sie im Planer unter „Woche“ ein.",
+  co_upcoming: "Demnächst", co_upcoming_empty: "Keine Prüfungen oder Abgaben eingetragen.",
+  co_kind_lesson: "Lektion in abitakt", co_kind_external: "Mit eigenen Unterlagen", co_kind_task: "Aufgabe", co_kind_review: "Kurze Wiederholung",
+  co_kind_school: "Unterricht", co_kind_fixed: "Fester Termin",
+  co_why_exam: "{title} ist {when}.",
+  co_why_gap: "Größte Lücke dafür: {topic} (Bereitschaft {n} %).",
+  co_why_need: "Geschätzt noch {n} Min Lernzeit, verteilt auf {d} Tag(e) – heute ist dein Anteil dran.",
+  co_why_today: "{title} ist heute – jetzt nichts Neues mehr, nur aktivieren.",
+  co_why_due: "{title} ist fällig: {when}.",
+  co_why_task: "Fällig {when}.", co_why_task_nodue: "Offene Aufgabe ohne Termin.",
+  co_why_now: "Ist gerade Thema im Unterricht.",
+  co_why_review: "Seit {n} Tagen nicht geübt – Wiederholen, bevor es verblasst.",
+  co_why_abi: "Baustein fürs Abitur – dein Stand: {n} %.",
+  co_why_goal: "Dein Ziel in {subject}: {p} Punkte.",
+  co_why_avoided: "Wurde zuletzt öfter verschoben – heute klein anfangen.",
+  co_final_title: "Letzte Aktivierung vor: {title}",
+  co_eve_title: "Generalprobe: {topic}",
+  co_review_title: "Wiederholen: {topic}",
+  co_tip_final: "Nur Abrufen: Schreib aus dem Kopf die 5 wichtigsten Punkte auf. Danach Pause, essen, Unterlagen packen.",
+  co_tip_eve: "Heute Abrufen statt Neues lernen: Aufgaben ohne Lösung versuchen, früh schlafen – Schlaf festigt das Gelernte.",
+  co_focus: "Fokuszeit", co_pause: "Pause", co_resume: "Weiter", co_finish: "Fertig",
+  co_focus_external: "Arbeite mit Schulbuch, Heft oder Arbeitsblättern. Ein Thema, ein Ziel – alles andere zu.",
+  co_focus_task: "Nur diese Aufgabe. Wenn du hängst: notiere die Frage und mach mit dem nächsten Teil weiter.",
+  co_focus_review: "Ohne Unterlagen: Was weißt du? Erst danach nachschauen, was fehlte.",
+  co_phone_tip: "Tipp: Handy in einen anderen Raum – das hilft nachweislich mehr als Willenskraft.",
+  co_timeup: "Die geplante Zeit ist um. Kurz festhalten, was hängen geblieben ist.",
+  co_focus_done: "{n} Minuten erledigt",
+  co_recall: "Was kannst du jetzt ohne Nachschauen erklären? Und was ist noch unklar?",
+  co_recall_ph: "Wichtigste Erkenntnis … / Offene Frage …",
+  co_save_back: "Speichern & zurück",
+  co_task_q: "Ist die Aufgabe damit fertig?", co_task_done: "Ja, erledigt", co_task_notyet: "Noch nicht",
+  co_external_note: "Zeit mit eigenen Unterlagen zählt als Lernzeit – deinen fachlichen Stand misst abitakt nur über echte Übungsantworten.",
+  co_rate_q: "Wie war die Einheit?", co_rate_hard: "Zu anstrengend", co_rate_fit: "Passte", co_rate_easy: "Zu leicht",
+  co_rate_note: "Deine Rückmeldung verändert die Länge künftiger Einheiten.",
+  co_rated: "Danke – der Plan berücksichtigt das.",
+  co_planner_title: "Planer", co_planner_lede: "Prüfungen, Aufgaben, Stundenplan und Unterrichtsstoff an einem Ort. Daraus entsteht dein Tagesplan.",
+  co_tab_events: "Prüfungen", co_tab_tasks: "Aufgaben", co_tab_week: "Woche", co_tab_topics: "Unterricht",
+  co_week_ahead: "Die nächsten 7 Tage", co_wk_lessons: "{n}× fest", co_wk_free: "{n} Min Lernzeit",
+  co_add_event: "Prüfung oder Termin eintragen", co_type: "Art", co_subject: "Fach", co_date: "Datum", co_title: "Bezeichnung",
+  co_title_ph: "z. B. 2. Klausur Mathe",
+  co_type_klausur: "Klausur", co_type_test: "Test", co_type_abi: "Abiturprüfung", co_type_gfs: "GFS / Präsentation", co_type_abgabe: "Abgabe",
+  co_event_topics: "Welche Themen kommen dran?", co_event_topics_note: "Ohne Auswahl plant abitakt alle Themen des Fachs ein.",
+  co_add: "Hinzufügen", co_save: "Speichern", co_saved: "Gespeichert – dein Plan ist aktualisiert.",
+  co_events: "Anstehend", co_events_empty: "Noch nichts eingetragen.",
+  co_done: "Erledigt", co_reopen: "Wieder öffnen", co_remove: "Entfernen",
+  co_add_task: "Aufgabe eintragen", co_task_title: "Was ist zu tun?", co_task_ph: "z. B. Arbeitsblatt Integrale S. 3",
+  co_due: "Fällig am", co_minutes: "Geschätzte Minuten", co_no_subject: "– kein Fach –",
+  co_tasks: "Deine Aufgaben", co_tasks_empty: "Keine Aufgaben eingetragen.", co_spent: "{n} Min investiert",
+  co_windows: "Wann kannst du lernen?", co_windows_note: "Nur Zeiten, in denen du wirklich lernen willst. Unterricht und feste Termine werden automatisch ausgespart.",
+  co_from: "von", co_to: "bis", co_budget: "Höchstens pro Tag (Min)", co_break: "Pause zwischen Einheiten (Min)",
+  co_timetable: "Stundenplan & feste Termine", co_timetable_note: "Unterricht, Training, Nebenjob – alles, was feststeht.",
+  co_day: "Tag", co_tt_label: "Was?", co_tt_ph: "z. B. Mathe, Fußballtraining", co_tt_kind: "Art",
+  co_tt_copy: "Gewählten Tag auf leere Wochentage kopieren", co_tt_copy_none: "Für diesen Tag ist noch nichts eingetragen.",
+  co_tt_empty: "Noch keine festen Termine.",
+  co_topics_title: "Was läuft gerade im Unterricht?", co_topics_note: "„Aktuell“ wird bevorzugt eingeplant, „abgeschlossen“ vorerst nicht.",
+  co_cur_now: "Aktuell", co_cur_later: "Später", co_cur_done: "Abgeschlossen",
+  co_no_subjects: "Wähle zuerst deine Prüfungsfächer.",
+  co_invalid_event: "Bitte Fach und Datum angeben.", co_invalid_task: "Bitte eine Beschreibung und 5–240 Minuten angeben.",
+  co_invalid_time: "Das Ende muss nach dem Beginn liegen.", co_invalid_budget: "Tageszeit 10–480 Min, Pause 0–60 Min.",
+  co_goals: "Deine Ziele", co_goal_avg: "Abi-Schnitt, den du anpeilst", co_goal_study: "Was willst du danach machen?",
+  co_goal_study_ph: "z. B. Medizin, Ausbildung, Auslandsjahr",
+  co_goal_why: "Warum ist dir das wichtig?", co_goal_why_ph: "Das zeigt dir abitakt, wenn es zäh wird.",
+  co_goal_subjects: "Zielpunkte pro Fach (0–15)", co_goal_subjects_note: "Fächer mit hohem Ziel bekommen im Plan etwas mehr Gewicht.",
+  co_points: "Punkte",
+  co_habits: "Wie du lernst – ehrlich", co_habits_note: "Keine Bewertung, keine Diagnose. Die Antworten ändern nur, wie dein Plan aufgebaut ist.",
+  co_hab_proc: "Wie schwer fällt dir das Anfangen?", co_hab_proc_lo: "fange sofort an", co_hab_proc_hi: "schiebe oft auf",
+  co_hab_phone: "Wie oft lenkt dich dein Handy ab?", co_hab_phone_lo: "kaum", co_hab_phone_hi: "ständig",
+  co_hab_len: "Wie lange kannst du am Stück gut lernen?", co_hab_place: "Wo lernst du am besten?",
+  co_hab_starter: "Was hilft dir beim Anfangen?", co_hab_starter_ph: "z. B. Tee machen, Playlist an, Timer stellen",
+  co_insights: "Was abitakt über dich gelernt hat", co_insights_note: "Nur aus deiner echten Nutzung der letzten 30 Tage – keine Persönlichkeitsbewertung.",
+  co_ins_empty: "Noch zu wenig Daten. Nach ein paar Einheiten stehen hier echte Beobachtungen.",
+  co_ins_sessions: "{a} abgeschlossene und {b} abgebrochene Einheiten an {d} Lerntagen.",
+  co_ins_median: "Deine abgeschlossenen Einheiten dauern typischerweise {n} Minuten – der Plan nutzt diesen Wert.",
+  co_ins_best: "Um {h} antwortest du am treffsichersten ({n} %) – schwere Themen landen bevorzugt dort.",
+  co_ins_late: "Du startest geplante Einheiten meist {n} Min später als geplant – der Einstieg wird deshalb kleiner geplant.",
+  co_ins_early: "Du startest geplante Einheiten meist {n} Min früher als geplant.",
+  co_ins_abandon: "Zuletzt wurden mehrere Einheiten früh beendet – die Einheiten sind jetzt kürzer.",
+  co_ins_hard: "Mehrere Einheiten waren zu anstrengend – die Länge wird reduziert.",
+  co_ins_easy: "Mehrere Einheiten waren zu leicht – probier längere Einheiten im Profil.",
+  co_ins_avoided: "{s} wird im Plan oft verschoben – dort starten die Einheiten bewusst klein.",
+  co_your_why: "Dein Warum",
+  co_wiz_head: "Alltag einrichten",
+  co_wiz_about: "Worauf arbeitest du hin?", co_wiz_about_t: "Ziele und ehrliche Angaben zu deinem Lernverhalten. Alles ist freiwillig und jederzeit änderbar.",
+  co_wiz_week: "Wie sieht deine Woche aus?", co_wiz_week_t: "Wann du lernen kannst und was feststeht. Daraus entstehen die Uhrzeiten in deinem Plan.",
+  co_wiz_events: "Was steht an?", co_wiz_events_t: "Klausuren, Tests, GFS und Abgaben. Je näher ein Termin, desto mehr Gewicht bekommt er – und am Tag davor wird nur noch wiederholt.",
+  co_wiz_skip: "Überspringen", co_wiz_later: "Später eintragen", co_wiz_finish: "Fertig – zu meinem Plan",
+  v2_none_available: "Für deinen Plan gibt es gerade keine Lektion in der App. Nutze den Tagesplan – dort sind Einheiten mit eigenen Unterlagen eingeplant."
+});
+Object.assign(I18N.en, {
+  nav_plan: "Planner",
+  co_own_material: "Study with my own materials",
+  co_days: "Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday",
+  co_today: "today", co_tomorrow: "tomorrow", co_overdue: "overdue", co_in_days: "in {n} days",
+  co_next: "Your next step", co_anytime: "today, whenever it suits you",
+  co_do: "{n} min: {what}",
+  co_start: "Start now",
+  co_starter: "Your starting ritual: {s}",
+  co_intention: "Plan for getting started: when it's {time}, I sit down {place} and open only “{what}”.",
+  co_place_default: "at my desk",
+  co_nothing: "Nothing urgent for today. Add exams, tasks and study times – then abitakt plans your day in detail.",
+  co_nothing_timed: "There's no free slot left in your study times today. You can still open a lesson any time.",
+  co_open_planner: "Open planner", co_manage: "Manage dates & tasks",
+  co_setup_title: "Let abitakt get to know your everyday life",
+  co_setup_t: "Goals, study habits, timetable, free study times and upcoming exams – then the app tells you every day exactly what to do, when, for how long and why. Takes about 5 minutes; everything stays in this browser.",
+  co_setup_btn: "Set up my week (about 5 min)",
+  co_adapt_abandon: "You stopped several sessions early recently – sessions are shorter now.",
+  co_adapt_hard: "Your last sessions were tough – a bit shorter today.",
+  co_adapt_energy: "Low energy today – short sessions and less total time.",
+  co_adapt_overload: "One step at a time: sessions are 15 minutes max today.",
+  co_adapt_distraction: "Short, protected sessions: phone away, one tab open.",
+  co_checkin: "Quick check-in for today", co_checkin_note: "Two clicks – the plan adjusts length and amount. Not a diagnosis, just how your day is going.",
+  co_energy_q: "How much energy do you have today?", co_barrier_q: "What might hold you back today?",
+  co_barriers: "Nothing in particular|Hard to get started|Too much at once|Distractions",
+  co_checkin_save: "Adjust my plan", co_checkin_skip: "Skip",
+  co_today_plan: "Your day", co_plan_sum: "{a} min planned · {b} min studied so far",
+  co_pending: "{n} more topics don't fit today – they move back instead of overloading you.",
+  co_untimed_note: "Without study times there are no clock times yet. Add them in the planner under “Week”.",
+  co_upcoming: "Coming up", co_upcoming_empty: "No exams or deadlines added.",
+  co_kind_lesson: "Lesson in abitakt", co_kind_external: "With your own materials", co_kind_task: "Task", co_kind_review: "Short review",
+  co_kind_school: "Class", co_kind_fixed: "Fixed appointment",
+  co_why_exam: "{title} is {when}.",
+  co_why_gap: "Biggest gap for it: {topic} (readiness {n} %).",
+  co_why_need: "About {n} min of study left, spread over {d} day(s) – today's share is due.",
+  co_why_today: "{title} is today – nothing new now, just activate what you know.",
+  co_why_due: "{title} is due {when}.",
+  co_why_task: "Due {when}.", co_why_task_nodue: "Open task without a due date.",
+  co_why_now: "Currently covered in class.",
+  co_why_review: "Not practised for {n} days – review before it fades.",
+  co_why_abi: "Building block for the Abitur – your level: {n} %.",
+  co_why_goal: "Your goal in {subject}: {p} points.",
+  co_why_avoided: "Was postponed often lately – start small today.",
+  co_final_title: "Final warm-up before: {title}",
+  co_eve_title: "Dress rehearsal: {topic}",
+  co_review_title: "Review: {topic}",
+  co_tip_final: "Recall only: write down the 5 most important points from memory. Then take a break, eat, pack your things.",
+  co_tip_eve: "Today recall instead of new material: try tasks without the solution, go to bed early – sleep consolidates learning.",
+  co_focus: "Focus time", co_pause: "Pause", co_resume: "Resume", co_finish: "Done",
+  co_focus_external: "Work with your textbook, notes or worksheets. One topic, one goal – everything else closed.",
+  co_focus_task: "Only this task. If you get stuck: note the question and continue with the next part.",
+  co_focus_review: "No notes: what do you know? Only afterwards check what was missing.",
+  co_phone_tip: "Tip: put your phone in another room – that helps more than willpower.",
+  co_timeup: "Planned time is up. Quickly note what stuck.",
+  co_focus_done: "{n} minutes done",
+  co_recall: "What can you now explain without looking it up? And what is still unclear?",
+  co_recall_ph: "Key insight … / Open question …",
+  co_save_back: "Save & go back",
+  co_task_q: "Is the task finished?", co_task_done: "Yes, done", co_task_notyet: "Not yet",
+  co_external_note: "Time with your own materials counts as study time – abitakt measures your subject level only through real practice answers.",
+  co_rate_q: "How was the session?", co_rate_hard: "Too tough", co_rate_fit: "About right", co_rate_easy: "Too easy",
+  co_rate_note: "Your feedback changes the length of future sessions.",
+  co_rated: "Thanks – the plan takes that into account.",
+  co_planner_title: "Planner", co_planner_lede: "Exams, tasks, timetable and class topics in one place. Your daily plan is built from this.",
+  co_tab_events: "Exams", co_tab_tasks: "Tasks", co_tab_week: "Week", co_tab_topics: "Class topics",
+  co_week_ahead: "The next 7 days", co_wk_lessons: "{n} fixed", co_wk_free: "{n} min study time",
+  co_add_event: "Add an exam or deadline", co_type: "Type", co_subject: "Subject", co_date: "Date", co_title: "Name",
+  co_title_ph: "e.g. 2nd maths exam",
+  co_type_klausur: "Written exam (Klausur)", co_type_test: "Test", co_type_abi: "Abitur exam", co_type_gfs: "GFS / presentation", co_type_abgabe: "Submission",
+  co_event_topics: "Which topics are covered?", co_event_topics_note: "Without a selection abitakt plans all topics of the subject.",
+  co_add: "Add", co_save: "Save", co_saved: "Saved – your plan is updated.",
+  co_events: "Upcoming", co_events_empty: "Nothing added yet.",
+  co_done: "Done", co_reopen: "Reopen", co_remove: "Remove",
+  co_add_task: "Add a task", co_task_title: "What needs doing?", co_task_ph: "e.g. integrals worksheet p. 3",
+  co_due: "Due on", co_minutes: "Estimated minutes", co_no_subject: "– no subject –",
+  co_tasks: "Your tasks", co_tasks_empty: "No tasks added.", co_spent: "{n} min invested",
+  co_windows: "When can you study?", co_windows_note: "Only times when you really want to study. Classes and fixed appointments are left out automatically.",
+  co_from: "from", co_to: "to", co_budget: "Maximum per day (min)", co_break: "Break between sessions (min)",
+  co_timetable: "Timetable & fixed appointments", co_timetable_note: "Classes, training, a part-time job – everything that's fixed.",
+  co_day: "Day", co_tt_label: "What?", co_tt_ph: "e.g. Maths, football training", co_tt_kind: "Type",
+  co_tt_copy: "Copy selected day to empty weekdays", co_tt_copy_none: "Nothing added for this day yet.",
+  co_tt_empty: "No fixed appointments yet.",
+  co_topics_title: "What's happening in class right now?", co_topics_note: "“Current” is planned with priority, “finished” is left out for now.",
+  co_cur_now: "Current", co_cur_later: "Later", co_cur_done: "Finished",
+  co_no_subjects: "Choose your exam subjects first.",
+  co_invalid_event: "Please choose a subject and a date.", co_invalid_task: "Please add a description and 5–240 minutes.",
+  co_invalid_time: "The end must be after the start.", co_invalid_budget: "Daily time 10–480 min, break 0–60 min.",
+  co_goals: "Your goals", co_goal_avg: "Abitur grade you're aiming for", co_goal_study: "What do you want to do afterwards?",
+  co_goal_study_ph: "e.g. medicine, apprenticeship, gap year",
+  co_goal_why: "Why does this matter to you?", co_goal_why_ph: "abitakt shows you this when things get tough.",
+  co_goal_subjects: "Target points per subject (0–15)", co_goal_subjects_note: "Subjects with a high target get a little more weight in the plan.",
+  co_points: "points",
+  co_habits: "How you study – honestly", co_habits_note: "No rating, no diagnosis. The answers only change how your plan is built.",
+  co_hab_proc: "How hard is it for you to get started?", co_hab_proc_lo: "start right away", co_hab_proc_hi: "often put it off",
+  co_hab_phone: "How often does your phone distract you?", co_hab_phone_lo: "rarely", co_hab_phone_hi: "constantly",
+  co_hab_len: "How long can you study well in one go?", co_hab_place: "Where do you study best?",
+  co_hab_starter: "What helps you get started?", co_hab_starter_ph: "e.g. make tea, start a playlist, set a timer",
+  co_insights: "What abitakt has learned about you", co_insights_note: "Only from your real use in the last 30 days – no personality assessment.",
+  co_ins_empty: "Not enough data yet. After a few sessions you'll see real observations here.",
+  co_ins_sessions: "{a} completed and {b} stopped sessions on {d} study days.",
+  co_ins_median: "Your completed sessions typically last {n} minutes – the plan uses this value.",
+  co_ins_best: "Around {h} you answer most accurately ({n} %) – hard topics are preferably placed there.",
+  co_ins_late: "You usually start planned sessions {n} min later than planned – so the first step is planned smaller.",
+  co_ins_early: "You usually start planned sessions {n} min earlier than planned.",
+  co_ins_abandon: "Several sessions were stopped early recently – sessions are shorter now.",
+  co_ins_hard: "Several sessions were too tough – their length is reduced.",
+  co_ins_easy: "Several sessions were too easy – try longer sessions in your profile.",
+  co_ins_avoided: "{s} is often postponed in your plan – sessions there deliberately start small.",
+  co_your_why: "Your why",
+  co_wiz_head: "Set up your week",
+  co_wiz_about: "What are you working towards?", co_wiz_about_t: "Goals and honest answers about how you study. Everything is optional and can be changed at any time.",
+  co_wiz_week: "What does your week look like?", co_wiz_week_t: "When you can study and what is fixed. This turns into the clock times of your plan.",
+  co_wiz_events: "What's coming up?", co_wiz_events_t: "Exams, tests, presentations and deadlines. The closer a date, the more weight it gets – and the day before, you only review.",
+  co_wiz_skip: "Skip", co_wiz_later: "Add later", co_wiz_finish: "Done – show my plan",
+  v2_none_available: "There's no in-app lesson for your plan right now. Use the daily plan – it includes sessions with your own materials."
+});
+Object.assign(I18N.tr, {
+  nav_plan: "Planlayıcı",
+  co_own_material: "Kendi materyallerimle çalış",
+  co_days: "Pazartesi|Salı|Çarşamba|Perşembe|Cuma|Cumartesi|Pazar",
+  co_today: "bugün", co_tomorrow: "yarın", co_overdue: "gecikti", co_in_days: "{n} gün sonra",
+  co_next: "Sıradaki adımın", co_anytime: "bugün, sana uygun olduğunda",
+  co_do: "{n} dk: {what}",
+  co_start: "Şimdi başla",
+  co_starter: "Başlama ritüelin: {s}",
+  co_intention: "Başlangıç planı: Saat {time} olduğunda {place} oturup yalnızca „{what}“ açıyorum.",
+  co_place_default: "masama",
+  co_nothing: "Bugün acil bir şey yok. Sınavları, görevleri ve çalışma saatlerini ekle – abitakt gününü somut olarak planlasın.",
+  co_nothing_timed: "Bugün çalışma saatlerinde boş yer kalmadı. Yine de istediğin zaman bir ders açabilirsin.",
+  co_open_planner: "Planlayıcıyı aç", co_manage: "Tarihleri ve görevleri yönet",
+  co_setup_title: "abitakt günlük hayatını tanısın",
+  co_setup_t: "Hedefler, çalışma alışkanlıkları, ders programı, boş çalışma saatleri ve yaklaşan sınavlar – sonra uygulama sana her gün tam olarak ne, ne zaman, ne kadar ve neden yapacağını söyler. Yaklaşık 5 dakika sürer, her şey bu tarayıcıda kalır.",
+  co_setup_btn: "Haftamı ayarla (yakl. 5 dk)",
+  co_adapt_abandon: "Son zamanlarda birkaç oturumu erken bitirdin – oturumlar artık daha kısa.",
+  co_adapt_hard: "Son oturumlar yorucuydu – bugün biraz daha kısa.",
+  co_adapt_energy: "Bugün enerjin düşük – kısa oturumlar ve daha az toplam süre.",
+  co_adapt_overload: "Adım adım: bugün oturumlar en fazla 15 dakika.",
+  co_adapt_distraction: "Kısa, korunaklı oturumlar: telefon uzakta, tek sekme açık.",
+  co_checkin: "Bugün için kısa kontrol", co_checkin_note: "İki tık – plan süreyi ve miktarı buna göre ayarlar. Teşhis değil, sadece günlük hâlin.",
+  co_energy_q: "Bugün ne kadar enerjin var?", co_barrier_q: "Bugün seni ne yavaşlatabilir?",
+  co_barriers: "Özel bir şey yok|Başlamak zor|Bir anda çok fazla|Dikkat dağınıklığı",
+  co_checkin_save: "Planımı ayarla", co_checkin_skip: "Atla",
+  co_today_plan: "Günün", co_plan_sum: "{a} dk planlandı · şimdiye kadar {b} dk çalışıldı",
+  co_pending: "{n} konu daha bugün sığmıyor – seni yormak yerine ileriye kayıyorlar.",
+  co_untimed_note: "Çalışma saatleri girilmeden henüz saat yok. Bunları planlayıcıda „Hafta“ altında ekle.",
+  co_upcoming: "Yaklaşanlar", co_upcoming_empty: "Eklenmiş sınav veya teslim yok.",
+  co_kind_lesson: "abitakt dersi", co_kind_external: "Kendi materyallerinle", co_kind_task: "Görev", co_kind_review: "Kısa tekrar",
+  co_kind_school: "Ders", co_kind_fixed: "Sabit randevu",
+  co_why_exam: "{title}: {when}.",
+  co_why_gap: "Bunun için en büyük eksik: {topic} (hazırlık {n} %).",
+  co_why_need: "Tahminen {n} dk çalışma kaldı, {d} güne yayıldı – bugünkü payın sırada.",
+  co_why_today: "{title} bugün – artık yeni bir şey yok, sadece bildiklerini canlandır.",
+  co_why_due: "{title} teslim: {when}.",
+  co_why_task: "Teslim: {when}.", co_why_task_nodue: "Tarihi olmayan açık görev.",
+  co_why_now: "Şu an derste işleniyor.",
+  co_why_review: "{n} gündür çalışılmadı – solmadan tekrar et.",
+  co_why_abi: "Abitur için yapı taşı – seviyen: {n} %.",
+  co_why_goal: "{subject} hedefin: {p} puan.",
+  co_why_avoided: "Son zamanlarda sık ertelendi – bugün küçük başla.",
+  co_final_title: "Son hazırlık: {title}",
+  co_eve_title: "Genel prova: {topic}",
+  co_review_title: "Tekrar: {topic}",
+  co_tip_final: "Sadece hatırla: En önemli 5 noktayı ezbere yaz. Sonra mola ver, ye, eşyalarını hazırla.",
+  co_tip_eve: "Bugün yeni konu yerine hatırlama: Görevleri çözüme bakmadan dene, erken yat – uyku öğrendiklerini pekiştirir.",
+  co_focus: "Odak zamanı", co_pause: "Duraklat", co_resume: "Devam", co_finish: "Bitti",
+  co_focus_external: "Ders kitabın, defterin veya çalışma kağıtlarınla çalış. Bir konu, bir hedef – geri kalan her şey kapalı.",
+  co_focus_task: "Sadece bu görev. Takılırsan soruyu not al ve sonraki kısımla devam et.",
+  co_focus_review: "Notlara bakmadan: Ne biliyorsun? Eksikleri ancak sonra kontrol et.",
+  co_phone_tip: "İpucu: Telefonu başka bir odaya koy – bu irade gücünden daha çok işe yarar.",
+  co_timeup: "Planlanan süre doldu. Aklında ne kaldığını kısaca not et.",
+  co_focus_done: "{n} dakika tamamlandı",
+  co_recall: "Şimdi bakmadan neyi açıklayabilirsin? Ve ne hâlâ belirsiz?",
+  co_recall_ph: "En önemli bilgi … / Açık soru …",
+  co_save_back: "Kaydet ve geri dön",
+  co_task_q: "Görev bitti mi?", co_task_done: "Evet, bitti", co_task_notyet: "Henüz değil",
+  co_external_note: "Kendi materyallerinle geçen süre çalışma süresi sayılır – abitakt ders seviyeni yalnızca gerçek alıştırma cevaplarıyla ölçer.",
+  co_rate_q: "Oturum nasıldı?", co_rate_hard: "Çok yorucu", co_rate_fit: "Uygundu", co_rate_easy: "Çok kolay",
+  co_rate_note: "Geri bildirimin gelecekteki oturumların süresini değiştirir.",
+  co_rated: "Teşekkürler – plan bunu dikkate alıyor.",
+  co_planner_title: "Planlayıcı", co_planner_lede: "Sınavlar, görevler, ders programı ve ders konuları tek yerde. Günlük planın bunlardan oluşur.",
+  co_tab_events: "Sınavlar", co_tab_tasks: "Görevler", co_tab_week: "Hafta", co_tab_topics: "Derste",
+  co_week_ahead: "Önümüzdeki 7 gün", co_wk_lessons: "{n} sabit", co_wk_free: "{n} dk çalışma",
+  co_add_event: "Sınav veya teslim ekle", co_type: "Tür", co_subject: "Ders", co_date: "Tarih", co_title: "Ad",
+  co_title_ph: "örn. 2. matematik sınavı",
+  co_type_klausur: "Yazılı sınav (Klausur)", co_type_test: "Test", co_type_abi: "Abitur sınavı", co_type_gfs: "GFS / sunum", co_type_abgabe: "Teslim",
+  co_event_topics: "Hangi konular geliyor?", co_event_topics_note: "Seçim yapmazsan abitakt dersin tüm konularını planlar.",
+  co_add: "Ekle", co_save: "Kaydet", co_saved: "Kaydedildi – planın güncellendi.",
+  co_events: "Yaklaşan", co_events_empty: "Henüz bir şey eklenmedi.",
+  co_done: "Tamamlandı", co_reopen: "Yeniden aç", co_remove: "Kaldır",
+  co_add_task: "Görev ekle", co_task_title: "Ne yapılacak?", co_task_ph: "örn. integral çalışma kağıdı s. 3",
+  co_due: "Teslim tarihi", co_minutes: "Tahmini dakika", co_no_subject: "– ders yok –",
+  co_tasks: "Görevlerin", co_tasks_empty: "Eklenmiş görev yok.", co_spent: "{n} dk harcandı",
+  co_windows: "Ne zaman çalışabilirsin?", co_windows_note: "Sadece gerçekten çalışmak istediğin saatler. Dersler ve sabit randevular otomatik olarak çıkarılır.",
+  co_from: "başlangıç", co_to: "bitiş", co_budget: "Günde en fazla (dk)", co_break: "Oturumlar arası mola (dk)",
+  co_timetable: "Ders programı ve sabit randevular", co_timetable_note: "Dersler, antrenman, yarı zamanlı iş – sabit olan her şey.",
+  co_day: "Gün", co_tt_label: "Ne?", co_tt_ph: "örn. Matematik, futbol antrenmanı", co_tt_kind: "Tür",
+  co_tt_copy: "Seçili günü boş hafta içi günlerine kopyala", co_tt_copy_none: "Bu gün için henüz bir şey eklenmedi.",
+  co_tt_empty: "Henüz sabit randevu yok.",
+  co_topics_title: "Şu an derste ne işleniyor?", co_topics_note: "„Güncel“ öncelikli planlanır, „tamamlandı“ şimdilik planlanmaz.",
+  co_cur_now: "Güncel", co_cur_later: "Sonra", co_cur_done: "Tamamlandı",
+  co_no_subjects: "Önce sınav derslerini seç.",
+  co_invalid_event: "Lütfen ders ve tarih seç.", co_invalid_task: "Lütfen bir açıklama ve 5–240 dakika gir.",
+  co_invalid_time: "Bitiş başlangıçtan sonra olmalı.", co_invalid_budget: "Günlük süre 10–480 dk, mola 0–60 dk.",
+  co_goals: "Hedeflerin", co_goal_avg: "Hedeflediğin Abitur notu", co_goal_study: "Sonrasında ne yapmak istiyorsun?",
+  co_goal_study_ph: "örn. tıp, meslek eğitimi, yurt dışı yılı",
+  co_goal_why: "Bu senin için neden önemli?", co_goal_why_ph: "İşler zorlaştığında abitakt sana bunu gösterir.",
+  co_goal_subjects: "Ders başına hedef puan (0–15)", co_goal_subjects_note: "Hedefi yüksek dersler planda biraz daha ağırlık alır.",
+  co_points: "puan",
+  co_habits: "Nasıl çalışıyorsun – dürüstçe", co_habits_note: "Değerlendirme yok, teşhis yok. Cevaplar sadece planının nasıl kurulduğunu değiştirir.",
+  co_hab_proc: "Başlamak sana ne kadar zor geliyor?", co_hab_proc_lo: "hemen başlarım", co_hab_proc_hi: "sık sık ertelerim",
+  co_hab_phone: "Telefonun dikkatini ne sıklıkla dağıtıyor?", co_hab_phone_lo: "nadiren", co_hab_phone_hi: "sürekli",
+  co_hab_len: "Tek seferde ne kadar iyi çalışabilirsin?", co_hab_place: "En iyi nerede çalışırsın?",
+  co_hab_starter: "Başlamana ne yardımcı olur?", co_hab_starter_ph: "örn. çay yapmak, çalma listesi açmak, zamanlayıcı kurmak",
+  co_insights: "abitakt'ın seninle ilgili öğrendikleri", co_insights_note: "Sadece son 30 gündeki gerçek kullanımından – kişilik değerlendirmesi değil.",
+  co_ins_empty: "Henüz yeterli veri yok. Birkaç oturumdan sonra burada gerçek gözlemler göreceksin.",
+  co_ins_sessions: "{d} çalışma gününde {a} tamamlanmış ve {b} yarıda bırakılmış oturum.",
+  co_ins_median: "Tamamlanan oturumların genellikle {n} dakika sürüyor – plan bu değeri kullanır.",
+  co_ins_best: "{h} civarında en isabetli cevapları veriyorsun ({n} %) – zor konular tercihen oraya yerleştirilir.",
+  co_ins_late: "Planlanan oturumlara genellikle {n} dk geç başlıyorsun – bu yüzden ilk adım daha küçük planlanır.",
+  co_ins_early: "Planlanan oturumlara genellikle {n} dk erken başlıyorsun.",
+  co_ins_abandon: "Son zamanlarda birkaç oturum erken bitirildi – oturumlar artık daha kısa.",
+  co_ins_hard: "Birkaç oturum çok yorucuydu – süreleri kısaltıldı.",
+  co_ins_easy: "Birkaç oturum çok kolaydı – profilinde daha uzun oturumları dene.",
+  co_ins_avoided: "{s} planında sık erteleniyor – oradaki oturumlar bilerek küçük başlıyor.",
+  co_your_why: "Senin nedenin",
+  co_wiz_head: "Haftanı ayarla",
+  co_wiz_about: "Neyin peşindesin?", co_wiz_about_t: "Hedefler ve çalışma şeklin hakkında dürüst cevaplar. Her şey isteğe bağlı ve istediğin zaman değiştirilebilir.",
+  co_wiz_week: "Haftan nasıl geçiyor?", co_wiz_week_t: "Ne zaman çalışabildiğin ve neyin sabit olduğu. Planındaki saatler bundan oluşur.",
+  co_wiz_events: "Neler yaklaşıyor?", co_wiz_events_t: "Sınavlar, testler, sunumlar ve teslimler. Tarih yaklaştıkça ağırlığı artar – bir gün öncesinde sadece tekrar yapılır.",
+  co_wiz_skip: "Atla", co_wiz_later: "Sonra ekle", co_wiz_finish: "Bitti – planımı göster",
+  v2_none_available: "Şu an planın için uygulamada ders yok. Günlük planı kullan – orada kendi materyallerinle oturumlar planlandı."
+});
 
 let LANG = "de";
 /* t("key", {n: 3}) — falls back to German, then to the key itself, so a
@@ -1065,7 +1672,8 @@ const ABI = {
    the UI tells the user to confirm exact dates with their school. */
 const SUBJECTS_BW = {
   deutsch:   { l: "Deutsch", lf: true, written: "2027-04-20", topics: ["lyrik", "drama", "eroerterung"] },
-  mathe:     { l: "Mathematik", lf: true, written: "2027-05-05", topics: ["analysis_extrem", "stochastik_binom", "geometrie_ebenen"] },
+  mathe:     { l: "Mathematik", lf: true, written: "2027-05-05", topics: ["analysis_extrem", "analysis_integral", "analysis_exp",
+               "stochastik_binom", "geometrie_ebenen", "geometrie_lage", "geometrie_abstand"] },
   englisch:  { l: "Englisch", lf: true, written: "2027-04-23", topics: ["en_textanalyse", "en_mediation"] },
   franzoesisch: { l: "Französisch", lf: true, written: "2027-04-23", topics: ["fr_textanalyse"] },
   latein:    { l: "Latein", lf: true, written: "2027-04-23", topics: ["la_uebersetzung"] },
@@ -1087,6 +1695,9 @@ const SUBJECTS_BW = {
 const TOPIC_NAMES = {
   lyrik: "Lyrikanalyse", drama: "Dramenanalyse", eroerterung: "Erörterung literarischer Texte",
   stochastik_binom: "Stochastik: Binomialverteilung", geometrie_ebenen: "Analytische Geometrie: Ebenen",
+  analysis_integral: "Analysis: Integralrechnung", analysis_exp: "Analysis: Exponentialfunktionen und Wachstum",
+  geometrie_lage: "Analytische Geometrie: Lagebeziehungen von Geraden und Ebenen",
+  geometrie_abstand: "Analytische Geometrie: Abstände und Winkel",
   en_textanalyse: "Text analysis", en_mediation: "Mediation",
   fr_textanalyse: "Analyse de texte", la_uebersetzung: "Übersetzung & Interpretation",
   es_textanalyse: "Análisis de textos",
@@ -1488,8 +2099,35 @@ function genericTopic(name, subject) {
     ]
   };
 }
+/* AI-generated lessons (Mathematik only). Generated once per topic+level by
+   netlify/functions/lesson*.mts, cached server-side (Netlify Blobs) and here
+   in localStorage under its own key, so a profile reset keeps them.
+   getTopic() must stay synchronous – the engine calls it – so lessons are
+   fetched *before* a session starts (openLesson) and read from AI_CACHE. */
+const AI_KEY = "abitakt.lessons.v1";
+const AI_TOPICS = ["analysis_integral", "analysis_exp", "stochastik_binom", "geometrie_ebenen", "geometrie_lage", "geometrie_abstand"];
+let AI_CACHE = {};
+function loadAiCache() {
+  try { AI_CACHE = JSON.parse(localStorage.getItem(AI_KEY) || "{}") || {}; } catch (e) { AI_CACHE = {}; }
+}
+function saveAiCache() { try { localStorage.setItem(AI_KEY, JSON.stringify(AI_CACHE)); } catch (e) {} }
+function mathLevel(topicId) {
+  const s = S.subjects.find(x => x.topics.some(tp => tp.id === topicId));
+  if (!s || s.id !== "s_mathe") return null;
+  return (s.tag === "P1" || s.tag === "P2" || s.tag === "LF") ? "Leistungsfach" : "Basisfach";
+}
+function aiKey(topicId) { const lv = mathLevel(topicId); return lv ? topicId + "/" + lv : null; }
+function hasContent(topicId) {
+  if (TOPICS[topicId]) return true;
+  if (!needsAi(topicId)) return false;
+  return !!AI_CACHE[aiKey(topicId)] || aiAvailable();
+}
+function needsAi(topicId) { return !TOPICS[topicId] && AI_TOPICS.indexOf(topicId) !== -1 && !!mathLevel(topicId); }
+
 function getTopic(id) {
   if (TOPICS[id]) return TOPICS[id];
+  const k = needsAi(id) ? aiKey(id) : null;
+  if (k && AI_CACHE[k]) return AI_CACHE[k];
   const found = S.subjects.flatMap(s => s.topics.map(t => ({ t: t, s: s }))).find(x => x.t.id === id);
   return found ? genericTopic(found.t.name, found.s.name) : null;
 }
@@ -1840,31 +2478,39 @@ function rail(step) {
 }
 ACT.setLang = (el, d) => {
   setLang(d.v);
-  if (S.stage === "app") render(); else if (FLOW.redraw) FLOW.redraw(); else scrWelcome();
+  if (SES) refreshSessionLanguage(); else if (FLOW.redraw) FLOW.redraw(); else if (S.stage === "app") render(); else scrWelcome();
 };
 
 /* 5.0 Welcome ------------------------------------------------ */
 function scrWelcome() {
   stopTick(); FLOW.redraw = scrWelcome;
-  mount(`<div class="center-wrap"><div class="stage" style="text-align:center">
-    <div class="brand-mark" style="width:56px;height:56px;border-radius:18px;margin:0 auto 22px;font-size:24px">a</div>
-    <h1>${t("w_title")}</h1>
-    <div class="eyebrow" style="margin-top:8px">${t("brand_tag")}</div>
-    <p class="lede" style="margin:18px auto 0">${t("w_lede")}</p>
-    <div class="card" style="margin-top:32px;text-align:left">
-      <div class="sec-title" style="margin-bottom:14px">${t("w_next")}</div>
-      <div class="kv"><span class="kv-k">${t("w_s1")}</span><span class="kv-v">${t("w_s1t")}</span></div>
-      <div class="kv"><span class="kv-k">${t("w_s2")}</span><span class="kv-v">${t("w_s2t")}</span></div>
-      <div class="kv"><span class="kv-k">${t("w_s3")}</span><span class="kv-v">${t("w_s3t")}</span></div>
-      <div class="kv"><span class="kv-k">${t("w_s4")}</span><span class="kv-v">${t("w_s4t")}</span></div>
+  mount(`
+  <div class="welcome-v2">
+    <div class="welcome-brand"><span class="brand-mark">a</span>abitakt</div>
+    <div class="welcome-grid">
+      <section class="welcome-copy">
+        <div class="welcome-note">${t("v2_kicker")}</div>
+        <h1>${t("v2_title")}</h1>
+        <p class="lede">${t("v2_intro")}</p>
+        <div class="btn-row">
+          <button class="btn btn-primary btn-lg" data-act="quickStart">${t("w_quick")} <span aria-hidden="true">↗</span></button>
+          <button class="btn btn-ghost" data-act="begin">${t("w_begin")}</button>
+        </div>
+        <p class="hint">${t("w_quick_h")}</p>
+        <p class="hint">${t("v2_local")}</p>
+        ${LANG !== "de" ? '<p class="hint">' + t("content_note") + '</p>' : ""}
+      </section>
+      <section class="welcome-sheet">
+        <div class="eyebrow">${t("v2_guide")}</div>
+        <div class="rhythm-art" aria-hidden="true">${[30,60,90,65,100,80,45,70,35].map(h=>'<i style="height:'+h+'%"></i>').join("")}</div>
+        ${[1,2,3].map(n=>'<div class="welcome-step"><b aria-hidden="true">0'+n+'</b><div><h3>'+t('v2_s'+n)+'</h3><p>'+t('v2_d'+n)+'</p></div></div>').join("")}
+      </section>
     </div>
-    <div class="btn-row" style="justify-content:center">
-      <button class="btn btn-primary btn-lg" data-act="begin">${t("w_begin")}</button></div>
-    <p class="hint" style="max-width:48ch;margin:22px auto 0">${t("w_privacy")}</p>
-    ${LANG !== "de" ? `<p class="hint" style="max-width:48ch;margin:10px auto 0;color:var(--teal)">${t("content_note")}</p>` : ""}
-  </div></div>`);
+    <footer class="welcome-footer"><span>${t("v2_scope")}</span><span>${t("v2_dates")}</span></footer>
+  </div>`);
 }
-ACT.begin = () => { FLOW = {}; scrAssessIntro(); };
+ACT.begin = () => { FLOW = { mode: "full" }; scrAssessIntro(); };
+ACT.quickStart = () => { FLOW = { mode: "quick" }; scrAbi(); };
 
 /* 5.1 Assessment intro -------------------------------------- */
 function scrAssessIntro() {
@@ -2240,13 +2886,14 @@ ACT.saveEnergy = () => { Store.save(); scrAbi(); };
 /* 5.9 Abitur subject picker (Baden-Württemberg) -------------- */
 function scrAbi() {
   stopTick(); FLOW.redraw = scrAbi;
-  if (!FLOW.abi) FLOW.abi = { lf: [], p3: null, oral: [] };
+  if (!FLOW.abi) FLOW.abi = abiFromSubjects();
   const a = FLOW.abi;
+  const quick = FLOW.mode === "quick";
   const keys = Object.keys(SUBJECTS_BW);
   const lfKeys = keys.filter(k => SUBJECTS_BW[k].lf);
 
-  mount(rail(11) + `<div class="center-wrap"><div class="stage" style="max-width:700px">
-    <div class="eyebrow">${t("c_head")}</div>
+  mount((quick ? "" : rail(11)) + `<div class="center-wrap"><div class="stage" style="max-width:700px">
+    <div class="eyebrow">${quick ? t("q_head") : t("c_head")}</div>
     <h1 style="margin-top:10px">${t("c_title")}</h1>
     <p class="lede" style="margin-top:12px">${t("c_lede")}</p>
 
@@ -2269,7 +2916,7 @@ function scrAbi() {
       <p class="hint" style="margin-top:10px">${t("c_note")}</p>
     </div>
 
-    <div class="btn-row"><button class="btn btn-primary" id="abtn" data-act="saveAbi">${t("c_build")}</button>
+    <div class="btn-row"><button class="btn btn-primary" id="abtn" data-act="saveAbi">${quick ? t("q_build") : t("c_build")}</button>
       <span class="mute" style="font-size:13px" id="ahint"></span></div>
   </div></div>`);
   syncAbi();
@@ -2299,6 +2946,19 @@ ACT.togOral = (el, d) => {
   if (i === -1) { if (a.oral.length >= 2) return; a.oral.push(d.v); } else a.oral.splice(i, 1);
   scrAbi();
 };
+/* Pre-select the picker from an existing plan (profile edit, or completing
+   a quick-start profile) so nobody has to pick their subjects twice. */
+function abiFromSubjects() {
+  const a = { lf: [], p3: null, oral: [] };
+  S.subjects.forEach(s => {
+    const k = s.id.replace(/^s_/, "");
+    if (!SUBJECTS_BW[k]) return;
+    if (s.tag === "P3") a.p3 = k;
+    else if (s.tag === "P4" || s.tag === "P5") a.oral.push(k);
+    else a.lf.push(k);
+  });
+  return a;
+}
 function topicName(id) {
   return (TOPICS[id] && TOPICS[id].name) || TOPIC_NAMES[id] || id;
 }
@@ -2316,8 +2976,14 @@ ACT.saveAbi = () => {
   S.subjects = out;
   S.stage = "app";
   S.lastActive = new Date().toDateString();
+  const mode = FLOW.mode;
+  if (mode === "quick") S.quick = true;
+  if (mode === "full") S.quick = false;
   Store.save();
-  scrDone();
+  FLOW = {};
+  if (mode === "quick") { VIEW = "dash"; ACT.startNext(); }
+  else if (mode === "edit") { VIEW = "prof"; render(); }
+  else scrDone();
 };
 
 function scrDone() {
@@ -2330,7 +2996,7 @@ function scrDone() {
     <h1>${t("d_title", { name: S.name ? ", " + esc(S.name) : "" })}</h1>
     <p class="lede" style="margin:14px auto 0">${t("d_lede")}</p>
     <div class="card" style="margin-top:26px;text-align:left">
-      <div class="kv"><span class="kv-k">${t("d_comp")}</span><span class="kv-v mono">${S.cog.composite}</span></div>
+      <div class="kv"><span class="kv-k">${t("d_comp")}</span><span class="kv-v mono">${S.cog.composite == null ? "—" : S.cog.composite}</span></div>
       <div class="kv"><span class="kv-k">${t("d_best")}</span>
         <span class="kv-v">${t("mode_" + blend[0].m)} (${pct(blend[0].v)}%)</span></div>
       <div class="kv"><span class="kv-k">${t("d_span")}</span><span class="kv-v">${S.attention.span} min</span></div>
@@ -2346,11 +3012,11 @@ function scrDone() {
 /* ---------- 6. APP VIEWS ---------------------------------- */
 let VIEW = "dash";
 function chrome(inner) {
-  const nav = [["dash", "nav_today"], ["prog", "nav_prog"], ["prof", "nav_prof"]];
+  const nav = [["dash", "nav_today"], ["plan", "nav_plan"], ["prog", "nav_prog"], ["ops", "nav_ops"], ["prof", "nav_prof"]];
   return `<nav class="topbar" aria-label="abitakt">
     <div class="brand"><span class="brand-mark">a</span><span>abitakt</span></div>
     <div class="nav">${nav.map(([k, lk]) =>
-      `<button type="button" class="${VIEW === k ? "on" : ""}"${VIEW === k ? ' aria-current="page"' : ""} data-act="go" data-v="${k}">${t(lk)}</button>`).join("")}</div>
+      `<button type="button" class="${VIEW === k ? "on" : ""}"${VIEW === k ? ' aria-current="page"' : ""} data-act="go" data-v="${k}">${({dash:"<span class=\"nav-symbol\" aria-hidden=\"true\">◷</span>",prog:"<span class=\"nav-symbol\" aria-hidden=\"true\">▥</span>",plan:"<span class=\"nav-symbol\" aria-hidden=\"true\">▦</span>",ops:"<span class=\"nav-symbol\" aria-hidden=\"true\">§</span>",prof:"<span class=\"nav-symbol\" aria-hidden=\"true\">○</span>"})[k] || ""}${t(lk)}</button>`).join("")}</div>
     <div class="topbar-right">
       <span class="streak">🔥 ${S.streak}</span>
       <span class="mono mute" style="font-size:13px">Lv ${S.level} · ${S.xp} XP</span>
@@ -2362,10 +3028,108 @@ function render() {
   stopTick(); FLOW.redraw = null;
   if (VIEW === "dash") scrDash();
   else if (VIEW === "prog") scrProgress();
+  else if (VIEW === "ops") scrOperators();
+  else if (VIEW === "plan") scrPlanner();
   else scrProfile();
 }
 function paceWhy(p) { return t(p.why); }
+function profileTodoCard() {
+  if (!S.quick) return "";
+  return `<div class="card-2" style="margin-bottom:16px;border-color:var(--accent-line)">
+    <div class="sec-title" style="margin-bottom:8px">${t("prof_todo_title")}</div>
+    <p class="dim" style="font-size:14px;line-height:1.6;margin:0">${t("prof_todo_t")}</p>
+    <div class="btn-row" style="margin-top:14px"><button class="btn btn-primary" data-act="begin">${t("prof_todo_btn")}</button></div>
+  </div>`;
+}
 function abiDaysLeft() { return daysUntil(ABI.writtenStart); }
+
+/* 6.0 Exam readiness ------------------------------------------
+   Read-only view on engine state. readiness = mastery × freshness.
+   Freshness halves every 21 days without practice (floor 0.35) – a
+   deliberately simple forgetting heuristic, not a fitted model.
+   Exam urgency is NOT part of the score (a near exam doesn't make you
+   more ready); it only decides the order of the "close next" list. */
+const Readiness = {
+  HALF_LIFE_DAYS: 21,
+  daysSince(topicId) {
+    const ts = S.lastPractice[topicId];
+    return ts ? Math.floor((Date.now() - ts) / 864e5) : null;
+  },
+  freshness(topicId) {
+    const d = this.daysSince(topicId);
+    if (d === null) return 0;
+    return Math.max(0.35, Math.pow(0.5, d / this.HALF_LIFE_DAYS));
+  },
+  topic(topicId) {
+    const r = S.progress[topicId];
+    if (!r || !r.attempts) return 0;
+    return clamp(r.mastery * this.freshness(topicId), 0, 1);
+  },
+  subject(s) {
+    return s.topics.length ? mean(s.topics.map(tp => this.topic(tp.id))) : 0;
+  },
+  level(v) { return v >= 0.7 ? "high" : v >= 0.4 ? "mid" : "low"; },
+  gaps(n) {
+    const all = [];
+    S.subjects.forEach(s => s.topics.forEach(tp => {
+      const d = daysUntil(tp.exam);
+      all.push({ id: tp.id, name: tp.name, subject: s.name, r: this.topic(tp.id), days: d == null ? 999 : d });
+    }));
+    return all.filter(x => x.days >= 0)
+      .sort((a, b) => (a.r - b.r) || (a.days - b.days)).slice(0, n);
+  }
+};
+/* profiles created before a subject gained topics get the new topics too */
+function syncTopicCatalogue() {
+  let changed = false;
+  S.subjects.forEach(s => {
+    const def = SUBJECTS_BW[s.id.replace(/^s_/, "")];
+    if (!def) return;
+    const exam = s.topics[0] ? s.topics[0].exam : def.written;
+    def.topics.forEach(tid => {
+      if (!s.topics.some(tp => tp.id === tid)) { s.topics.push({ id: tid, name: topicName(tid), exam: exam }); changed = true; }
+    });
+  });
+  if (changed) Store.save();
+}
+/* backfill for profiles created before lastPractice existed */
+function backfillLastPractice() {
+  if (!S.lastPractice) S.lastPractice = {};
+  S.log.forEach(l => {
+    if (l.topicId && (!S.lastPractice[l.topicId] || S.lastPractice[l.topicId] < l.t)) S.lastPractice[l.topicId] = l.t;
+  });
+}
+function readinessCard() {
+  if (!S.subjects.length) return "";
+  const any = Object.keys(S.lastPractice).length > 0;
+  const color = { high: "var(--teal)", mid: "var(--amber)", low: "var(--rose)" };
+  const rows = S.subjects.map(s => {
+    const v = Readiness.subject(s), lv = Readiness.level(v);
+    return `<div class="mastery-row">
+      <span class="mastery-name" title="${esc(s.name)}">${esc(s.name)} ${s.tag ? `<span class="mute mono" style="font-size:11px">${esc(s.tag)}</span>` : ""}</span>
+      <span style="flex:1"><span class="bar"><span class="bar-fill" style="width:${pct(v)}%;background:${color[lv]}"></span></span></span>
+      <span class="mastery-pct">${pct(v)}%</span>
+    </div>`;
+  }).join("");
+  const gaps = Readiness.gaps(3);
+  const fresh = id => {
+    const d = Readiness.daysSince(id);
+    return d === null ? t("rd_never") : d === 0 ? t("rd_today") : t("rd_last", { n: d });
+  };
+  return `<div class="card" style="margin-top:16px">
+    <div class="sec-head"><span class="sec-title">${t("rd_title")}</span>
+      <span class="mute" style="font-size:12.5px">${t("rd_sub")}</span></div>
+    ${any ? rows : `<div class="empty" style="padding:16px">${t("rd_none")}</div>`}
+    ${gaps.length ? `<div class="sec-title" style="margin:18px 0 10px">${t("rd_gaps")}</div>
+      ${gaps.map(g => `<div style="margin-bottom:8px">
+        <button class="task" data-act="openTopic" data-v="${esc(g.id)}">
+          <span class="task-body"><span class="task-title">${esc(g.name)}</span>
+            <span class="task-meta"><span>${esc(g.subject)}</span><span>·</span><span>${fresh(g.id)}</span></span></span>
+          <span class="mono mute" style="font-size:12.5px">${pct(g.r)}%</span>
+        </button></div>`).join("")}` : ""}
+    <p class="hint" style="margin-top:10px">${t("rd_note")}</p>
+  </div>`;
+}
 
 /* 6.1 Dashboard --------------------------------------------- */
 function scrDash() {
@@ -2379,71 +3143,53 @@ function scrDash() {
     .sort((a, b) => daysUntil(a.exam) - daysUntil(b.exam))[0];
   const doneCount = plan.filter(p => p.done).length;
   const dLeft = abiDaysLeft();
+  const hasEnergy = Object.keys(S.energy).length > 0;   // quick-start users have no curve yet
+  TODAY_PLAN = Coach.plan();
 
   mount(chrome(`<div class="dash stage-wide">
-    <div class="dash-hero">
-      <div>
-        <div class="eyebrow">${new Date().toLocaleDateString(LANG === "de" ? "de-DE" : LANG === "tr" ? "tr-TR" : "en-GB",
-          { weekday: "long", day: "numeric", month: "long" })}</div>
-        <h1 style="margin-top:8px">${esc(Engine.line("greet"))}</h1>
-        <p class="dim" style="margin-top:8px;font-size:15px">
-          ${t("db_energy_now", { c: eColor, lvl: eLabel })}${eNow >= 4 ? t("db_energy_hi") : eNow <= 2 ? t("db_energy_lo") : "."}</p>
+    ${coachNextCard(TODAY_PLAN)}
+    ${coachCheckinCard()}
+    ${setupPromptCard()}
+    <div class="grid g-2-1">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        ${coachTimeline(TODAY_PLAN)}
       </div>
-      ${plan.length ? `<button class="btn btn-primary btn-lg" data-act="startNext">
-        ${doneCount >= plan.length ? t("db_extra") : t("db_start")}</button>` : ""}
-    </div>
 
+      <div style="display:flex;flex-direction:column;gap:16px">
+        ${coachUpcomingCard()}
+      </div>
+    </div>
+    <div style="height:20px"></div>
+    <section class="card" style="margin-bottom:20px">
+      <div class="sec-title">${t("v2_available")}</div>
+      <p class="hint" style="margin:8px 0 18px">${t("v2_library")}</p>
+      <div class="grid g-3">${Object.entries(TOPICS).map(([id,tp])=>'<button class="task" data-act="openTopic" data-v="'+id+'"><span class="task-body"><span class="eyebrow">'+esc(tp.subject)+'</span><span class="task-title" style="margin-top:8px">'+esc(tp.name)+'</span></span><span aria-hidden="true">↗</span></button>').join("")}</div>
+    </section>
+    ${profileTodoCard()}
     <div class="grid g-3" style="margin-bottom:16px">
       <div class="stat" style="border-color:${dLeft <= 90 ? "rgba(242,120,154,.3)" : "var(--line)"}">
         <div class="stat-k">${t("db_countdown")}</div>
         <div class="stat-v" style="color:${dLeft <= 90 ? "var(--rose)" : "inherit"}">${dLeft}<span style="font-size:19px;color:var(--tx-mute)"> ${t("db_days")}</span></div>
-        <div class="stat-sub">${t("db_until_written")}</div></div>
+        <div class="stat-sub">${t("db_until_written")}</div><p class="hint">${t("v2_dates")}</p></div>
       <div class="stat"><div class="stat-k">${t("db_avg")}</div>
         <div class="stat-v">${pct(avg)}<span style="font-size:19px;color:var(--tx-mute)">%</span></div>
         <div class="bar" style="margin-top:11px"><div class="bar-fill" style="width:${pct(avg)}%"></div></div>
         <div class="stat-sub">${t("db_across", { n: topics.length })}</div></div>
       <div class="stat"><div class="stat-k">${t("db_today")}</div>
-        <div class="stat-v">${doneCount}<span style="font-size:19px;color:var(--tx-mute)"> / ${plan.length}</span></div>
-        <div class="stat-sub" style="margin-top:14px">${t("db_done")}</div></div>
+        <div class="stat-v">${TODAY_PLAN.spent}<span style="font-size:19px;color:var(--tx-mute)"> min</span></div>
+        <div class="stat-sub" style="margin-top:14px">${t("co_plan_sum", { a: sum(TODAY_PLAN.items.map(i => i.minutes)), b: TODAY_PLAN.spent })}</div></div>
     </div>
 
-    <div class="grid g-2-1">
-      <div class="card">
-        <div class="sec-head"><span class="sec-title">${t("db_plan")}</span>
-          <span class="mute" style="font-size:12.5px">${t("db_plan_sub")}</span></div>
-        ${plan.length ? plan.map(p => `<div style="margin-bottom:9px">
-          <button class="task ${p.done ? "done" : ""}" data-act="openTopic" data-v="${esc(p.topic.id)}">
-            <span class="task-time">${hourLabel(p.hour)}</span>
-            <span class="task-body">
-              <span class="task-title">${esc(p.topic.name)}</span>
-              <span class="task-meta">
-                <span>${esc(p.topic.subject)}</span><span>·</span><span>${p.mins} min</span>
-                <span class="load-dots">${[1, 2, 3, 4, 5].map(i =>
-                  `<span class="load-dot ${i <= p.topic.load ? "on" : ""}"></span>`).join("")}</span>
-                ${p.peak ? `<span class="pill pill-peak">${t("db_peak")}</span>` : ""}
-                ${p.energy <= 2 ? `<span class="pill pill-low">${t("db_low")}</span>` : ""}
-                ${p.topic.exam && daysUntil(p.topic.exam) <= 60 && daysUntil(p.topic.exam) >= 0
-                  ? `<span class="pill pill-exam">${t("db_exam_in", { n: daysUntil(p.topic.exam) })}</span>` : ""}
-              </span></span>
-            <span class="mono mute" style="font-size:12.5px">${pct(p.topic.mastery)}%</span>
-          </button></div>`).join("")
-          : `<div class="empty">${t("db_empty")}</div>`}
-        ${plan.length ? `<div class="card-2" style="margin-top:14px;background:transparent;border-style:dashed">
-          <div class="sec-title" style="margin-bottom:7px">${t("db_why")}</div>
-          <p class="mute" style="font-size:13.2px;line-height:1.6;margin:0">
-            ${t("db_why_t", { peaks: Engine.peakBlocks().map(hourLabel).join(", ") })}</p></div>` : ""}
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="grid g-2-1" style="margin-bottom:16px;align-items:start">
         <div class="card">
-          <div class="sec-title" style="margin-bottom:9px">${t("db_curve")}</div>
+          ${hasEnergy ? `<div class="sec-title" style="margin-bottom:9px">${t("db_curve")}</div>
           <div class="estrip">${BLOCKS.map(b => {
             const v = S.energy[b] == null ? 3 : S.energy[b];
             const isNow = Engine.blockFor(new Date().getHours()) === b;
             return `<div class="ebar ${isNow ? "now" : ""}" title="${hourLabel(b)} · ${v}/5"
-              style="height:${18 + v * 16}%;background:${v >= 4 ? "var(--accent)" : v === 3 ? "#3c4157" : "#262a38"}"></div>`;
+              style="height:${18 + v * 16}%;background:${v >= 4 ? "var(--accent)" : v === 3 ? "var(--accent-line)" : "var(--line-strong)"}"></div>`;
           }).join("")}</div>
-          <div class="estrip-x"><span>6</span><span>12</span><span>18</span><span>22</span></div>
+          <div class="estrip-x"><span>6</span><span>12</span><span>18</span><span>22</span></div>` : `<div class="sec-title">${t("v2_energy")}</div><p class="hint">${t("v2_energy_body")}</p>`}
         </div>
         <div class="card">
           <div class="sec-title" style="margin-bottom:13px">${t("db_mastery")}</div>
@@ -2454,16 +3200,20 @@ function scrDash() {
               <span class="mastery-pct">${pct(x.mastery)}%</span>
             </div>`).join("") : `<div class="empty" style="padding:20px">—</div>`}
         </div>
-      </div>
     </div>
+
+    ${readinessCard()}
   </div>`));
 }
 ACT.startNext = () => {
   const plan = Engine.schedule();
-  const next = plan.filter(p => !p.done)[0] || plan[0];
-  if (next) startSession(next.topic.id);
+  const available = plan.filter(p => hasContent(p.topic.id));
+  const next = available.filter(p => !p.done)[0] || available[0];
+  if (next) return openLesson(next.topic.id);
+  VIEW = "dash"; render();
+  toast(`<span>○</span><span>${esc(t("v2_none_available"))}</span>`, 4200);
 };
-ACT.openTopic = (el, d) => startSession(d.v);
+ACT.openTopic = (el, d) => openLesson(d.v);
 
 /* 6.2 Progress ---------------------------------------------- */
 function scrProgress() {
@@ -2551,7 +3301,12 @@ function scrProfile() {
   mount(chrome(`<div class="dash stage-wide">
     <h1>${t("pf_title")}</h1>
     <p class="lede" style="margin-top:8px">${t("pf_lede")}</p>
-    <div class="grid g-2-1" style="margin-top:26px">
+    <div style="margin-top:22px">${profileTodoCard()}</div>
+    <div class="grid g-2-1" style="margin-top:16px">
+      <div>${aboutForms()}</div>
+      <div>${insightsCard()}</div>
+    </div>
+    <div class="grid g-2-1" style="margin-top:${S.quick ? 4 : 26}px">
       <div style="display:flex;flex-direction:column;gap:16px">
         <div class="card">
           <div class="sec-title" style="margin-bottom:14px">${t("pf_cog")}</div>
@@ -2584,6 +3339,7 @@ function scrProfile() {
             <div style="display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:6px">
               <span>${t("mode_" + b.m)}</span><span class="mono mute">${pct(b.v)}%</span></div>
             <div class="bar"><div class="bar-fill" style="width:${pct(b.v)}%"></div></div></div>`).join("")}
+          <p class="hint">${t("pf_how_note")}</p>
         </div>
         <div class="card">
           <div class="sec-title" style="margin-bottom:11px">${t("pf_focus")}</div>
@@ -2617,13 +3373,122 @@ function scrProfile() {
 }
 ACT.exportProfile = () => { Store.export(); toast(t("pf_downloaded")); };
 ACT.resetAll = () => { if (!confirm(t("pf_reset_q"))) return; const l = LANG; Store.reset(); setLang(l); scrWelcome(); };
-ACT.editAbi = () => { FLOW.abi = null; scrAbi(); };
+ACT.editAbi = () => { FLOW = { mode: "edit" }; scrAbi(); };
+
+/* 6.4a Lesson loader (AI lessons) --------------------------- */
+const LESSON_API = "/api/lesson";
+let LOADING = null;
+const ALLOWED_TAGS = new Set(["p", "strong", "em", "b", "i", "br", "ul", "ol", "li", "div", "span", "sub", "sup",
+  "table", "thead", "tbody", "tr", "td", "th", "code", "svg", "g", "path", "line", "rect", "circle", "ellipse",
+  "polyline", "polygon", "text", "tspan", "defs", "marker"]);
+const ALLOWED_ATTRS = new Set(["class", "style", "viewbox", "width", "height", "x", "y", "x1", "y1", "x2", "y2",
+  "cx", "cy", "r", "rx", "ry", "d", "points", "fill", "stroke", "stroke-width", "stroke-dasharray", "stroke-linecap",
+  "stroke-linejoin", "opacity", "fill-opacity", "transform", "text-anchor", "dominant-baseline", "font-size",
+  "font-weight", "font-family", "marker-end", "marker-start", "id", "refx", "refy", "markerwidth", "markerheight",
+  "orient", "xmlns", "preserveaspectratio", "dx", "dy", "role", "aria-label"]);
+const ALLOWED_CLASSES = ["visual-box", "kinetic-box", "audio-box", "mono"];
+/* defence in depth: the server validates too, but lesson HTML is rendered with innerHTML */
+function cleanHtml(html) {
+  const doc = new DOMParser().parseFromString("<div>" + String(html) + "</div>", "text/html");
+  const walk = node => {
+    Array.from(node.children).forEach(el => {
+      const tag = el.tagName.toLowerCase();
+      if (!ALLOWED_TAGS.has(tag)) { el.remove(); return; }
+      Array.from(el.attributes).forEach(a => {
+        const n = a.name.toLowerCase(), v = a.value;
+        if (!ALLOWED_ATTRS.has(n) || /url\s*\(|javascript:|expression\s*\(/i.test(v)) el.removeAttribute(a.name);
+        else if (n === "class") el.setAttribute("class", v.split(/\s+/).filter(c => ALLOWED_CLASSES.indexOf(c) !== -1).join(" "));
+      });
+      walk(el);
+    });
+  };
+  const root = doc.body.firstChild;
+  walk(root);
+  return root.innerHTML;
+}
+function acceptLesson(x, topicId) {
+  if (!x || !Array.isArray(x.steps) || x.steps.length < 4 || x.steps.length > 5) return null;
+  if (!Array.isArray(x.practice) || x.practice.length !== 9) return null;
+  const steps = [];
+  for (const st of x.steps) {
+    const o = { t: String(st.t || "") };
+    for (const m of MODES) { o[m] = cleanHtml(st[m] || ""); if (!o[m].replace(/<[^>]*>/g, "").trim()) return null; }
+    if (!o.t) return null;
+    steps.push(o);
+  }
+  const practice = [];
+  for (const q of x.practice) {
+    if (!Array.isArray(q.opts) || q.opts.length !== 4 || new Set(q.opts).size !== 4 || q.opts.indexOf(q.a) === -1) return null;
+    if (typeof q.d !== "number" || q.d < 0 || q.d > 1) return null;
+    const wrong = {};
+    Object.keys(q.wrong || {}).forEach(k => { if (q.opts.indexOf(k) !== -1 && k !== q.a) wrong[k] = cleanHtml(q.wrong[k]); });
+    practice.push({ d: q.d, op: String(q.op || ""), q: cleanHtml(q.q), opts: q.opts.map(String), a: String(q.a),
+      why: cleanHtml(q.why || ""), wrong: wrong });
+  }
+  return { subject: "Mathematik", name: topicName(topicId), load: clamp(Math.round((+x.load || 5) / 2), 1, 5),
+    ai: true, level: x.level || null, steps: steps, practice: practice };
+}
+function aiAvailable() { return /^https?:$/.test(location.protocol) && navigator.onLine !== false; }
+async function lessonCall(method, topicId, level) {
+  const url = method === "GET" ? `${LESSON_API}?topicId=${encodeURIComponent(topicId)}&level=${encodeURIComponent(level)}` : LESSON_API;
+  const res = await fetch(url, method === "GET" ? { cache: "no-store" } : {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topicId: topicId, level: level }) });
+  let body = {};
+  try { body = await res.json(); } catch (e) {}
+  if (res.status === 429) return { status: "budget" };
+  if (!res.ok && res.status !== 202) return { status: "failed" };
+  return body;
+}
+async function openLesson(topicId) {
+  if (!needsAi(topicId) || AI_CACHE[aiKey(topicId)] || !aiAvailable()) return startSession(topicId);
+  const level = mathLevel(topicId), key = aiKey(topicId);
+  const token = LOADING = { topicId: topicId, t0: Date.now() };
+  renderLessonLoading(topicId);
+  let r;
+  try {
+    r = await lessonCall("POST", topicId, level);
+    while (LOADING === token && r.status === "pending" && Date.now() - token.t0 < 5 * 60 * 1000) {
+      await new Promise(res => setTimeout(res, 5000));
+      if (LOADING !== token) return;
+      r = await lessonCall("GET", topicId, level);
+      if (r.status === "none") r = await lessonCall("POST", topicId, level);
+    }
+  } catch (e) { r = { status: "failed" }; }
+  if (LOADING !== token) return;            // user left the loading screen
+  LOADING = null;
+  const lesson = r && r.status === "ready" ? acceptLesson(r.lesson, topicId) : null;
+  if (lesson) { AI_CACHE[key] = lesson; saveAiCache(); }
+  else toast(`<span>○</span><span>${esc(t(r && r.status === "budget" ? "ai_budget" : "ai_failed"))}</span>`, 4200);
+  startSession(topicId);
+}
+function renderLessonLoading(topicId) {
+  stopTick(); FLOW.redraw = () => renderLessonLoading(topicId);
+  mount(`<div class="focus-top">
+      <button class="btn btn-quiet" data-act="cancelLoading">${t("s_exit")}</button>
+      <span></span>
+      <span class="mute" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:640">${esc(topicName(topicId))}</span>
+    </div>
+    <div class="focus-body"><div class="focus-card" style="text-align:center">
+      <div style="font-size:34px;margin-bottom:10px">✦</div>
+      <h2 role="status" aria-live="polite">${t("sess_loading")}</h2>
+      <p class="lede" style="margin:12px auto 0">${t("sess_loading_t")}</p>
+    </div></div>`, "focus-screen");
+}
+ACT.cancelLoading = () => { LOADING = null; VIEW = "dash"; render(); };
 
 /* 6.4 Session player ---------------------------------------- */
 let SES = null;
 function startSession(topicId) {
   const topic = getTopic(topicId);
   if (!topic) return;
+  if (topic.generic) {
+    SES = null;
+    FLOW.redraw = () => startSession(topicId);
+    mount('<div class="center-wrap"><div class="focus-card"><div class="eyebrow">'+t("v2_missing")+'</div><h1 style="margin-top:14px">'+esc(topic.name)+'</h1><p class="lede" style="margin-top:18px">'+t("v2_missing_body")+'</p><div class="btn-row"><button class="btn btn-primary" data-act="ownMaterial" data-v="'+esc(topicId)+'">'+t("co_own_material")+'</button><button class="btn btn-ghost" data-act="go" data-v="dash">'+t("v2_back")+'</button></div><p class="hint">'+t("co_external_note")+'</p></div></div>');
+    return;
+  }
+  if (!Coach.active || Coach.active.topicId !== topicId) Coach.begin({ key: "topic:" + topicId, kind: "lesson", topicId: topicId,
+    subjectId: (S.subjects.find(x => x.topics.some(tp => tp.id === topicId)) || {}).id });
   const r = Engine.rec(topicId);
   const n = Engine.microSteps(topicId);
   const steps = [];
@@ -2642,6 +3507,30 @@ function pips() {
   return `<div class="step-pips">${Array.from({ length: total }, (_, i) =>
     `<span class="pip ${i < cur ? "done" : i === cur ? "on" : ""}"></span>`).join("")}</div>`;
 }
+// Translate session controls in place: keep question, option order and timer intact.
+function refreshSessionLanguage() {
+  const bar = document.querySelector(".langbar");
+  if (bar) bar.outerHTML = langSwitcher();
+  const exit = document.querySelector('[data-act="quitSession"]');
+  if (exit) exit.textContent = t("s_exit");
+  const tag = document.querySelector(".micro-tag");
+  if (SES.phase === "teach") {
+    if (tag) tag.textContent = t("s_step", {mode:t("mode_"+SES.mode),n:SES.pos+1,t:SES.steps.length});
+    const next = document.querySelector('[data-act="nextTeach"]');
+    if (next) next.textContent = t(SES.pos+1 < SES.steps.length ? "s_next" : "s_toq");
+    const mode = document.querySelector('[data-act="switchMode"]');
+    if (mode) mode.textContent = t("s_other");
+  } else {
+    const active = !!document.querySelector('[data-act="ansPractice"]');
+    if (tag) tag.textContent = t("s_q", {n:SES.pDone+(active?1:0),t:SES.nPractice,d:SES.cur.d.toFixed(2)});
+    const heading = document.querySelector(".focus-top > span");
+    if (heading) heading.textContent = t("s_practice");
+    const hint = document.querySelector(".focus-card > .hint");
+    if (hint) hint.textContent = paceWhy(Engine.pace(SES.topicId));
+    const feedback = document.querySelector(".focus-card > .card-2 strong");
+    if (feedback) feedback.textContent = t(SES.lastWrong ? "s_wrong" : "s_correct");
+  }
+}
 function focusTop(label) {
   return `<div class="focus-top">
     <button class="btn btn-quiet" data-act="quitSession">${t("s_exit")}</button>
@@ -2658,6 +3547,7 @@ function renderTeach() {
     <div class="micro-tag">${t("s_step", { mode: t("mode_" + mode), n: SES.pos + 1, t: SES.steps.length })}</div>
     <h2 style="margin-bottom:18px">${esc(step.t)}</h2>
     <div class="teach">${Engine.weave(step[mode] || step.textual, SES.flavor)}</div>
+    ${SES.topic.ai ? `<p class="hint">${t("ai_note")}</p>` : ""}
     <div class="btn-row">
       <button class="btn btn-primary" data-act="nextTeach">
         ${SES.pos + 1 < SES.steps.length ? t("s_next") : t("s_toq")}</button>
@@ -2708,7 +3598,8 @@ ACT.ansPractice = (el, d) => {
   const q = SES.cur, ms = Date.now() - SES.t0;
   const correct = d.v === q.a;
   FLOW.redraw = null;
-  Engine.updateMastery(SES.topicId, correct, ms, q.d, SES.mode);
+  S.lastPractice[SES.topicId] = Date.now();
+  Engine.updateMastery(SES.topicId, correct, ms, q.d, SES.mode);   // saves state
   if (correct) SES.correct++;
   document.querySelectorAll(".opt").forEach(o => {
     if (o.dataset.v === q.a) o.classList.add("correct");
@@ -2723,14 +3614,15 @@ ACT.ansPractice = (el, d) => {
       (correct ? "rgba(111,224,140,.3)" : "rgba(242,177,121,.32)");
     n.innerHTML = `<div style="font-size:14.5px;line-height:1.6">
       <strong style="color:${correct ? "var(--green)" : "var(--amber)"}">${correct ? t("s_correct") : t("s_wrong")}</strong>
-      — ${Engine.weave(q.why, SES.flavor)}</div>`;
+      — ${!correct && q.wrong && q.wrong[d.v] ? Engine.weave(q.wrong[d.v], SES.flavor) + " " : ""}${Engine.weave(q.why, SES.flavor)}</div>`;
     card.appendChild(n);
   }
   const rw = Engine.reward({ correct: correct, comeback: correct && SES.lastWrong });
   if (rw) showReward(rw);
   SES.lastWrong = !correct;
   SES.pDone++;
-  setTimeout(() => { if (SES.pDone < SES.nPractice) renderPractice(); else finishSession(); },
+  const answeredSession = SES;
+  setTimeout(() => { if (SES !== answeredSession) return; if (SES.pDone < SES.nPractice) renderPractice(); else finishSession(); },
     correct ? 1500 : 2600);
 };
 const REWARD_TXT = {
@@ -2767,8 +3659,9 @@ function finishSession() {
   const mins = Math.max(1, Math.round((Date.now() - SES.started) / 60000));
   if (S.completedToday.indexOf(SES.topicId) === -1) S.completedToday.push(SES.topicId);
   const rw = Engine.reward({ sessionDone: true });
+  Coach.record({ kind: "lesson", topicId: SES.topicId, minutes: (Date.now() - SES.started) / 60000, done: true,
+    correct: SES.correct, answered: SES.nPractice });
   Store.save();
-  const nextT = Engine.schedule().filter(x => !x.done)[0];
   mount(`<div class="center-wrap"><div class="stage" style="text-align:center">
     <div style="font-size:34px;margin-bottom:8px">${gain > 0.04 ? "✦" : "✓"}</div>
     <h1>${esc(Engine.line("done"))}</h1>
@@ -2789,17 +3682,1028 @@ function finishSession() {
     </div>
     <div class="btn-row" style="justify-content:center">
       <button class="btn btn-primary" data-act="go" data-v="dash">${t("s_back")}</button>
-      ${nextT ? `<button class="btn btn-ghost" data-act="openTopic" data-v="${esc(nextT.topic.id)}">
-        ${t("s_nextt", { topic: esc(nextT.topic.name) })}</button>` : ""}
     </div>
+    ${ratingCard()}
   </div></div>`);
   SES = null;
 }
-ACT.quitSession = () => { Store.save(); SES = null; VIEW = "dash"; render(); };
+ACT.quitSession = () => {
+  if (SES && !SES.topic.generic) {
+    const mins = (Date.now() - SES.started) / 60000;
+    if (mins >= 0.5 || SES.pDone) Coach.record({ kind: "lesson", topicId: SES.topicId, minutes: mins, done: false, correct: SES.correct, answered: SES.pDone });
+    else Coach.active = null;
+  }
+  Store.save(); SES = null; VIEW = "dash"; render();
+};
+
+
+/* 6.5 Operators (Mathematik, BW) ----------------------------
+   Source: Bildungsplan 2016 BW, Gymnasium, Mathematik, "4. Operatoren"
+   https://www.bildungsplaene-bw.de/,Lde/BP2016BW_ALLG_GYM_M_OP
+   def = wording of the Bildungsplan; exp = student-friendly paraphrase;
+   ex = example task written for abitakt (not an official exam task).
+   Operators in the same group g are easy to confuse and are never used
+   as distractors for each other, so every question has one clear answer. */
+const OPERATORS = [
+  { op: "angeben", afb: 1, g: "a", def: "Ergebnisse numerisch oder verbal formulieren, ohne Darstellung des Lösungsweges und ohne Begründungen",
+    exp: "Nur das Ergebnis hinschreiben – kein Rechenweg, keine Begründung.",
+    ex: "Geben Sie die Koordinaten des Hochpunkts des Graphen von f an." },
+  { op: "berechnen", afb: 1, g: "b", def: "Ergebnisse von einem Ansatz oder einer Formel ausgehend durch Rechenoperationen gewinnen",
+    exp: "Vom Ansatz aus rechnen – der Rechenweg muss nachvollziehbar dastehen.",
+    ex: "Berechnen Sie den Inhalt der Fläche, die der Graph von f mit der x-Achse einschließt." },
+  { op: "darstellen", afb: 1, g: "c", def: "mathematische Objekte in einer fachlich üblichen oder in einer vorgeschriebenen Form wiedergeben",
+    exp: "In der üblichen oder vorgegebenen Form aufschreiben bzw. zeichnen, z. B. als Tabelle oder Histogramm.",
+    ex: "Stellen Sie die Wahrscheinlichkeitsverteilung von X in einem Histogramm dar." },
+  { op: "erkennen", afb: 1, g: "a", def: "Muster ohne ausführliche Begründung feststellen beziehungsweise feststellen, dass in einer Situation bestimmte fachliche Definitionen zutreffen",
+    exp: "Ein Muster oder eine zutreffende Definition feststellen – ohne ausführliche Begründung.",
+    ex: "Erkennen Sie, welche der abgebildeten Folgen geometrisch ist." },
+  { op: "identifizieren", afb: 1, g: "d", def: "mathematische Objekte und die zugehörigen Fachbegriffe begründet miteinander verbinden",
+    exp: "Objekte und Fachbegriffe begründet miteinander verbinden.",
+    ex: "Identifizieren Sie in der Abbildung den Wendepunkt und die Tangente." },
+  { op: "anwenden", afb: 2, g: "b", alias: "durchführen", def: "nach bekannten Regeln oder Anweisungen von einer Aufgabenstellung zu einem definierten Ziel gelangen",
+    exp: "Ein bekanntes Verfahren nach Regeln oder Anweisung ausführen, bis das Ziel erreicht ist.",
+    ex: "Wenden Sie das Newton-Verfahren mit dem Startwert x₀ = 1 zweimal an." },
+  { op: "auswerten", afb: 2, g: "e", def: "Daten, Einzelergebnisse oder sonstige Sachverhalte zu einer abschließenden, begründeten Gesamtaussage zusammenführen",
+    exp: "Einzelergebnisse zu einer begründeten Gesamtaussage zusammenführen.",
+    ex: "Werten Sie die Ergebnisse der Stichprobe im Hinblick auf die Behauptung des Herstellers aus." },
+  { op: "beschreiben", afb: 2, g: "f", alias: "formulieren", def: "einen Sachverhalt oder ein Verfahren in vollständigen Sätzen unter Verwendung der Fachsprache mit eigenen Worten wiedergeben",
+    exp: "In ganzen Sätzen mit Fachsprache wiedergeben, was passiert oder wie man vorgeht.",
+    ex: "Beschreiben Sie ein Verfahren, mit dem man den Abstand des Punktes P von der Ebene E bestimmen kann." },
+  { op: "bestimmen", afb: 2, g: "b", alias: "erschließen", def: "Lösungen, Lösungswege beziehungsweise Zusammenhänge auf der Basis von Vorkenntnissen oder Verfahren finden und darstellen",
+    exp: "Die Lösung finden und den Lösungsweg darstellen – das Verfahren darfst du selbst wählen.",
+    ex: "Bestimmen Sie eine Gleichung der Tangente an den Graphen von f im Punkt P(1 | f(1))." },
+  { op: "deuten", afb: 2, g: "e", alias: "interpretieren", def: "Sachverhalte, Phänomene, Strukturen oder Ergebnisse in eine andere mathematische Sichtweise umdeuten",
+    exp: "Ein Ergebnis in eine andere Sichtweise übertragen – oft: Was bedeutet die Zahl im Sachzusammenhang?",
+    ex: "Deuten Sie den Wert des Integrals im Sachzusammenhang." },
+  { op: "entnehmen", afb: 2, g: "a", def: "aus vorgegebenen Darstellungen Daten zur Beantwortung von Fragen oder zur Weiterbearbeitung aufbereiten",
+    exp: "Die benötigten Daten aus einer Grafik, Tabelle oder einem Text herausziehen und aufbereiten.",
+    ex: "Entnehmen Sie der Abbildung die momentane Änderungsrate zum Zeitpunkt t = 2." },
+  { op: "erläutern", afb: 2, g: "f", alias: "erklären", def: "Sachverhalte auf der Grundlage von Vorkenntnissen so darlegen und veranschaulichen, dass sie verständlich werden",
+    exp: "So darlegen und veranschaulichen, dass jemand anderes es versteht.",
+    ex: "Erläutern Sie die Bedeutung des Ansatzes P(X ≥ 1) = 1 − P(X = 0) im Sachzusammenhang." },
+  { op: "nutzen", afb: 2, g: "b", alias: "verwenden", def: "Fachbegriffe, Regeln, mathematische Sätze, Zusammenhänge oder Verfahren auf einen anderen Sachverhalt beziehen",
+    exp: "Bekannte Regeln, Sätze oder Verfahren auf einen neuen Sachverhalt übertragen.",
+    ex: "Nutzen Sie die Symmetrie des Graphen, um den Flächeninhalt zu bestimmen." },
+  { op: "skizzieren", afb: 2, g: "c", def: "die wesentlichen Eigenschaften eines Objekts graphisch vereinfacht darstellen",
+    exp: "Die wesentlichen Eigenschaften grob zeichnen – keine exakte Zeichnung nötig.",
+    ex: "Skizzieren Sie den Graphen von f im Intervall [0; 4]." },
+  { op: "untersuchen", afb: 2, g: "g", def: "Sachverhalte, Probleme, Fragestellungen nach bestimmten, fachlich üblichen beziehungsweise sinnvollen Kriterien zielorientiert erkunden",
+    exp: "Zielgerichtet nach sinnvollen fachlichen Kriterien erkunden und das Ergebnis festhalten.",
+    ex: "Untersuchen Sie die gegenseitige Lage der Geraden g und h." },
+  { op: "vergleichen", afb: 2, g: "h", def: "Gemeinsamkeiten und Unterschiede herausarbeiten",
+    exp: "Gemeinsamkeiten und Unterschiede herausarbeiten.",
+    ex: "Vergleichen Sie die beiden Modelle hinsichtlich ihres langfristigen Verhaltens." },
+  { op: "zuordnen", afb: 2, g: "d", def: "einen begründeten Zusammenhang zwischen Objekten oder Darstellungen herstellen",
+    exp: "Einen begründeten Zusammenhang zwischen Objekten oder Darstellungen herstellen.",
+    ex: "Ordnen Sie jedem der drei Graphen den Graphen seiner Ableitungsfunktion zu." },
+  { op: "begründen", afb: 3, g: "i", def: "eine Aussage, einen Sachverhalt durch Berechnungen, nach gültigen Schlussregeln, durch Herleitungen oder inhaltliche Argumentation verifizieren oder falsifizieren",
+    exp: "Zeigen, warum eine Aussage stimmt oder nicht – durch Rechnung, Herleitung oder schlüssige Argumentation.",
+    ex: "Begründen Sie, dass der Graph von f genau einen Wendepunkt hat." },
+  { op: "beurteilen", afb: 3, g: "j", alias: "bewerten", def: "einen Sachverhalt nach fachwissenschaftlichen oder fachmethodischen Kriterien begründet einschätzen und ein selbstständiges Urteil formulieren",
+    exp: "Nach fachlichen Kriterien begründet einschätzen und ein eigenes Urteil formulieren.",
+    ex: "Beurteilen Sie, ob das Modell für große Zeiten t sinnvoll ist." },
+  { op: "beweisen", afb: 3, g: "i", def: "Aussagen unter Verwendung von bekannten mathematischen Sätzen, logischen Schlüssen und Äquivalenzumformungen verifizieren",
+    exp: "Mit bekannten Sätzen und logischen Schlüssen lückenlos zeigen, dass eine Aussage allgemein gilt.",
+    ex: "Beweisen Sie, dass sich die Diagonalen jedes Parallelogramms gegenseitig halbieren." },
+  { op: "überprüfen", afb: 3, g: "i", def: "durch Anwendung mathematischer Regeln oder Kenntnisse in einer ergebnisoffenen Situation einen vorgegebenen Sachverhalt verifizieren oder falsifizieren",
+    exp: "Ergebnisoffen feststellen, ob eine vorgegebene Aussage stimmt – mit Rechnung oder Regeln.",
+    ex: "Überprüfen Sie, ob der Punkt Q(2 | 1 | 3) in der Ebene E liegt." }
+];
+const OP_SOURCE = "https://www.bildungsplaene-bw.de/,Lde/BP2016BW_ALLG_GYM_M_OP";
+const opLabel = o => o.op + (o.alias ? " / " + o.alias : "");
+
+function buildOpQuiz(n) {
+  const qs = [];
+  // prefer operators the learner got wrong before
+  const weight = o => { const st = S.opStats[o.op]; return st ? 1 + (st[1] - st[0]) : 1.5; };
+  const pool = shuffle(OPERATORS).sort((a, b) => weight(b) - weight(a)).slice(0, n);
+  pool.forEach((o, i) => {
+    const others = shuffle(OPERATORS.filter(x => x.g !== o.g)).slice(0, 3);
+    if (i % 2 === 0) {
+      qs.push({ o: o, kind: "expect", q: o.ex, a: o.exp, opts: shuffle([o.exp].concat(others.map(x => x.exp))) });
+    } else {
+      qs.push({ o: o, kind: "name", q: o.def, a: opLabel(o), opts: shuffle([opLabel(o)].concat(others.map(opLabel))) });
+    }
+  });
+  return qs;
+}
+
+function scrOperators() {
+  const weak = OPERATORS.filter(o => { const st = S.opStats[o.op]; return st && st[0] < st[1]; });
+  const group = afb => OPERATORS.filter(o => o.afb === afb).map(o => `
+    <div class="kv" style="align-items:flex-start;gap:6px 16px;padding:12px 0;flex-wrap:wrap">
+      <span class="kv-k" style="flex:0 0 150px;color:var(--tx);font-weight:600">${esc(opLabel(o))}</span>
+      <span style="flex:1 1 240px;font-size:14px;line-height:1.55;color:var(--tx-dim)">${esc(o.exp)}
+        <span class="mute" style="display:block;font-size:12.5px;margin-top:4px">${t("op_example")}: „${esc(o.ex)}“</span></span>
+    </div>`).join("");
+  mount(chrome(`<div class="dash stage-wide">
+    <h1>${t("op_title")}</h1>
+    <p class="lede" style="margin-top:8px">${t("op_lede")}</p>
+    <div class="btn-row" style="margin-top:20px">
+      <button class="btn btn-primary" data-act="opStart">${t("op_practice")}</button>
+      ${weak.length ? `<span class="mute" style="font-size:13px">${t("op_weak", { n: weak.length })}</span>` : ""}
+    </div>
+    ${[1, 2, 3].map(a => `<div class="card" style="margin-top:16px">
+      <div class="sec-title" style="margin-bottom:6px">${t("op_afb" + a)}</div>
+      <p class="hint" style="margin:0 0 6px">${t("op_afb" + a + "_d")}</p>
+      ${group(a)}
+    </div>`).join("")}
+    <p class="hint" style="margin-top:16px">${t("op_source")} <a href="${OP_SOURCE}" target="_blank" rel="noopener" style="color:var(--teal)">bildungsplaene-bw.de</a></p>
+  </div>`));
+}
+ACT.opStart = () => { FLOW.op = { qs: buildOpQuiz(8), i: 0, right: 0 }; renderOpQ(); };
+function renderOpQ() {
+  stopTick();
+  const z = FLOW.op, q = z.qs[z.i];
+  mount(`<div class="focus-top">
+      <button class="btn btn-quiet" data-act="opExit">${t("s_exit")}</button>
+      <div class="step-pips">${z.qs.map((_, i) => `<span class="pip ${i < z.i ? "done" : i === z.i ? "on" : ""}"></span>`).join("")}</div>
+      <span class="mute" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:640">${t("nav_ops")}</span>
+    </div>
+    <div class="focus-body"><div class="focus-card">
+      <div class="micro-tag">${t(q.kind === "expect" ? "op_q_expect" : "op_q_name")} · ${t("q_of", { n: z.i + 1, t: z.qs.length })}</div>
+      <div class="q-text">${q.kind === "expect" ? "„" + esc(q.q) + "“" : esc(q.q)}</div>
+      <div class="opts">${q.opts.map((o, i) => `<button class="opt" data-act="opAns" data-v="${esc(o)}">
+        <span class="opt-key">${"ABCD"[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    </div></div>`, "focus-screen");
+}
+ACT.opAns = (el, d) => {
+  const z = FLOW.op, q = z.qs[z.i];
+  const correct = d.v === q.a;
+  const st = S.opStats[q.o.op] || [0, 0];
+  st[0] += correct ? 1 : 0; st[1] += 1;
+  S.opStats[q.o.op] = st;
+  Store.save();
+  if (correct) z.right++;
+  document.querySelectorAll(".opt").forEach(o => {
+    if (o.dataset.v === q.a) o.classList.add("correct");
+    else if (o.dataset.v === d.v) o.classList.add("wrong");
+    o.removeAttribute("data-act");
+  });
+  const card = document.querySelector(".focus-card");
+  if (card) {
+    const n = document.createElement("div");
+    n.className = "card-2";
+    n.style.cssText = "margin-top:18px;animation:fadeIn .35s";
+    n.innerHTML = `<div style="font-size:14.5px;line-height:1.6"><strong style="color:${correct ? "var(--green)" : "var(--amber)"}">${correct ? t("s_correct") : t("s_wrong")}</strong>
+      — <strong>${esc(opLabel(q.o))}</strong> (AFB ${"I".repeat(q.o.afb)}): ${esc(q.o.exp)}</div>`;
+    card.appendChild(n);
+  }
+  setTimeout(() => {
+    z.i++;
+    if (z.i < z.qs.length) renderOpQ(); else scrOpDone();
+  }, correct ? 1400 : 3000);
+};
+function scrOpDone() {
+  const z = FLOW.op;
+  mount(`<div class="center-wrap"><div class="stage" style="text-align:center">
+    <div style="font-size:34px;margin-bottom:8px">${z.right / z.qs.length >= 0.75 ? "✦" : "✓"}</div>
+    <h1>${t("op_result", { a: z.right, b: z.qs.length })}</h1>
+    <p class="lede" style="margin:12px auto 0">${t("op_result_t")}</p>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-primary" data-act="opStart">${t("op_again")}</button>
+      <button class="btn btn-ghost" data-act="opExit">${t("op_back")}</button>
+    </div>
+  </div></div>`);
+}
+ACT.opExit = () => { FLOW.op = null; VIEW = "ops"; render(); };
+
+
+/* ---------- 6.6 COACH – personal planning layer ---------------
+   Knows the learner's week (timetable, study windows), goals, exams,
+   homework and behaviour, and turns that into ONE concrete next step
+   with a reason ("heute 30 Min X, weil …").
+   Reads Engine results; never changes Engine or its constants.
+   Everything is stored locally in S.life.
+   Observations are usage statistics, never a diagnosis. */
+const LIFE_DEFAULT = () => ({
+  setupDone: false,
+  goals: { avg: "", study: "", why: "", subjectTargets: {} },   // subjectTargets: subjectId -> points 0..15
+  habits: { procrastination: 3, prefLen: 25, phone: 3, place: "", starter: "" },
+  timetable: [],        // {id, day 0..6 (Mo..So), from "08:00", to "09:30", label, kind: "school"|"other"}
+  windows: [],          // {day, enabled, from, to}
+  budget: 60, breakMins: 10,
+  events: [],           // {id, type, subjectId, title, date, topics:[ids], done}
+  tasks: [],            // {id, title, subjectId, due, minutes, done, spent}
+  curriculum: {},       // topicId -> "now" | "later" | "done"
+  checkins: {},         // "YYYY-MM-DD" -> {energy 1..5, barrier}
+  sessions: [],         // {id, at, day, hour, kind, ref, topicId, planned, minutes, done, correct, answered, rating, delay}
+  planLog: {},          // "YYYY-MM-DD" -> [{key, subjectId}] snapshot of what was planned
+  notes: []             // {id, at, ref, text}
+});
+const EVENT_TYPES = ["klausur", "test", "abi", "gfs", "abgabe"];
+const EVENT_WEIGHT = { klausur: 1, test: .7, abi: 1.2, gfs: .8, abgabe: .6 };
+
+function isoDay(d) { d = d || new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function weekday(d) { return ((d || new Date()).getDay() + 6) % 7; }        // 0 = Monday
+function toMin(v) { if (!/^\d{1,2}:\d{2}$/.test(v || "")) return NaN; const p = v.split(":").map(Number); return p[0] < 24 && p[1] < 60 ? p[0] * 60 + p[1] : NaN; }
+function toClock(m) { m = Math.round(m); return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); }
+function fmtDate(iso, opts) {
+  if (!iso) return "";
+  const loc = LANG === "de" ? "de-DE" : LANG === "tr" ? "tr-TR" : "en-GB";
+  return new Date(iso + "T12:00:00").toLocaleDateString(loc, opts || { weekday: "short", day: "numeric", month: "short" });
+}
+function relDays(n) { return n === 0 ? t("co_today") : n === 1 ? t("co_tomorrow") : n < 0 ? t("co_overdue") : t("co_in_days", { n: n }); }
+const uidL = () => (crypto.randomUUID ? crypto.randomUUID() : uid() + uid());
+function dayNames() { return t("co_days").split("|"); }
+function subjectName(id) { const s = S.subjects.find(x => x.id === id); return s ? s.name : ""; }
+
+const Coach = {
+  active: null,            // running planned item {key, kind, ...}
+  lastSession: null,
+
+  life() {
+    if (!S.life || typeof S.life !== "object") S.life = LIFE_DEFAULT();
+    const base = LIFE_DEFAULT();
+    Object.keys(base).forEach(k => { if (S.life[k] == null) S.life[k] = base[k]; });
+    ["goals", "habits"].forEach(k => Object.keys(base[k]).forEach(j => { if (S.life[k][j] == null) S.life[k][j] = base[k][j]; }));
+    return S.life;
+  },
+  configured() { const l = this.life(); return l.windows.some(w => w.enabled); },
+  checkin(date) { return this.life().checkins[isoDay(date)] || null; },
+
+  /* -- observations (only from real usage) -- */
+  recent(days) { const since = Date.now() - (days || 30) * 864e5; return this.life().sessions.filter(s => s.at >= since); },
+  stats() {
+    const rows = this.recent(30), done = rows.filter(s => s.done);
+    const mins = done.map(s => s.minutes).sort((a, b) => a - b);
+    const median = mins.length ? mins[Math.floor(mins.length / 2)] : null;
+    const last6 = rows.slice(-6);
+    const abandon = last6.length >= 3 && last6.filter(s => !s.done).length >= 3;
+    const hard = last6.filter(s => s.rating === "hard").length >= 2;
+    const easy = last6.filter(s => s.rating === "easy").length >= 3;
+    const delays = rows.map(s => s.delay).filter(x => typeof x === "number").sort((a, b) => a - b);
+    const delay = delays.length >= 3 ? delays[Math.floor(delays.length / 2)] : null;
+    // accuracy by time of day from the answer log (>= 10 answers per block)
+    const byBlock = {};
+    S.log.forEach(l => { const b = Engine.blockFor(new Date(l.t).getHours()); (byBlock[b] = byBlock[b] || [0, 0]); byBlock[b][0] += l.correct ? 1 : 0; byBlock[b][1]++; });
+    const blocks = Object.keys(byBlock).filter(b => byBlock[b][1] >= 10).map(b => ({ b: +b, acc: byBlock[b][0] / byBlock[b][1], n: byBlock[b][1] }));
+    blocks.sort((a, b) => b.acc - a.acc);
+    const best = blocks.length >= 2 && blocks[0].acc - blocks[blocks.length - 1].acc >= 0.12 ? blocks[0] : null;
+    // subjects that were planned but not done (last 14 days)
+    const skipped = {};
+    const pl = this.life().planLog;
+    Object.keys(pl).filter(d => d < isoDay() && d >= isoDay(new Date(Date.now() - 14 * 864e5))).forEach(d => {
+      pl[d].forEach(it => {
+        if (!it.subjectId) return;
+        const didIt = this.life().sessions.some(s => s.key === it.key && s.day === d && s.done);
+        const e = skipped[it.subjectId] = skipped[it.subjectId] || [0, 0];
+        e[1]++; if (!didIt) e[0]++;
+      });
+    });
+    const avoided = Object.keys(skipped).filter(k => skipped[k][1] >= 3 && skipped[k][0] / skipped[k][1] >= 0.6);
+    const studyDays = new Set(done.map(s => s.day)).size;
+    return { n: rows.length, done: done.length, quit: rows.length - done.length, median, abandon, hard, easy, delay, best, avoided, studyDays };
+  },
+
+  /* energy for a time: own energy grid > learned best block > neutral */
+  energyAt(minute) {
+    const h = Math.floor(minute / 60);
+    if (Object.keys(S.energy).length) return Engine.energyAt(h);
+    const st = this.stats();
+    if (st.best && Engine.blockFor(h) === st.best.b) return 4;
+    return 3;
+  },
+
+  /* max minutes per unit today, from check-in, habits and observed behaviour */
+  unitCap(date) {
+    const l = this.life(), c = this.checkin(date), st = this.stats();
+    let cap = clamp(+l.habits.prefLen || 25, 10, 60);
+    const notes = [];
+    if (st.abandon) { cap = Math.min(cap, 15); notes.push("co_adapt_abandon"); }
+    if (st.hard) { cap = Math.min(cap, 20); notes.push("co_adapt_hard"); }
+    if (c) {
+      if (c.energy <= 2) { cap = Math.min(cap, 15); notes.push("co_adapt_energy"); }
+      if (c.barrier === "overload") { cap = Math.min(cap, 15); notes.push("co_adapt_overload"); }
+      if (c.barrier === "distraction") { cap = Math.min(cap, 20); notes.push("co_adapt_distraction"); }
+    }
+    return { cap: cap, notes: notes };
+  },
+  firstUnitCap(date) {
+    const l = this.life(), c = this.checkin(date);
+    if ((c && c.barrier === "start") || +l.habits.procrastination >= 4) return 10;
+    return null;
+  },
+
+  /* minutes a topic still needs before a date (estimate, adjusted by readiness) */
+  neededMinutes(topicId) {
+    const r = S.progress[topicId];
+    const ready = Readiness.topic(topicId);
+    const base = r && r.attempts ? 90 : 120;
+    return Math.round(base * (1 - ready));
+  },
+
+  /* -- candidates: everything that could be worked on today -- */
+  candidates(date) {
+    date = date || new Date();
+    const l = this.life(), today = isoDay(date), out = [];
+    const doneToday = key => l.sessions.some(s => s.key === key && s.day === today && s.done);
+    const spentOn = prefix => sum(l.sessions.filter(s => s.day === today && s.key && s.key.indexOf(prefix) === 0).map(s => s.minutes));
+    const goalBoost = sid => { const tg = +l.goals.subjectTargets[sid]; return tg >= 13 ? 1.15 : tg >= 10 ? 1.07 : 1; };
+    const subjectOf = tid => { const s = S.subjects.find(x => x.topics.some(tp => tp.id === tid)); return s ? s.id : null; };
+    const avoided = this.stats().avoided;
+
+    // 1. exams and deadlines
+    l.events.filter(e => !e.done && e.date >= today).forEach(e => {
+      const days = daysUntil(e.date);
+      if (days > 21) return;
+      const topics = (e.topics && e.topics.length ? e.topics : []).filter(id => S.subjects.some(s => s.topics.some(tp => tp.id === id)));
+      const w = EVENT_WEIGHT[e.type] || 1;
+      if (days === 0) {
+        out.push({ key: "ev-final:" + e.id, kind: "review", event: e, subjectId: e.subjectId, minutes: 10, score: 9,
+          title: t("co_final_title", { title: e.title }), why: [t("co_why_today", { title: e.title })], tip: t("co_tip_final") });
+        return;
+      }
+      if (e.type === "abgabe" || e.type === "gfs") {
+        out.push({ key: "ev:" + e.id, kind: "external", event: e, subjectId: e.subjectId, minutes: 30, score: 4 + 3 * w / (days + 1),
+          title: e.title, why: [t("co_why_due", { title: e.title, when: relDays(days) })] });
+        return;
+      }
+      const list = topics.length ? topics : (S.subjects.find(s => s.id === e.subjectId) || { topics: [] }).topics.map(tp => tp.id);
+      const need = list.map(id => ({ id: id, need: this.neededMinutes(id), ready: Readiness.topic(id) }))
+        .filter(x => x.need > 5).sort((a, b) => a.ready - b.ready);
+      const total = sum(need.map(x => x.need));
+      if (!need.length) return;
+      const studyDays = Math.max(1, days - (days > 1 ? 1 : 0));     // keep the last day for review
+      const todayShare = days === 1 ? Math.min(total, 30) : Math.ceil(total / studyDays / 5) * 5;
+      const share = clamp(todayShare, 15, 60);
+      const left = Math.round(share - spentOn("ev:" + e.id + ":"));
+      if (left < 5) return;                                   // today's share is done
+      const practisedToday = id => l.sessions.some(s => s.day === today && s.done && s.key === "ev:" + e.id + ":" + id);
+      const focus = need.find(x => !practisedToday(x.id)) || need[0];
+      out.push({ key: "ev:" + e.id + ":" + focus.id, repeat: true, kind: hasContent(focus.id) ? "lesson" : "external", topicId: focus.id,
+        event: e, subjectId: e.subjectId, minutes: Math.max(5, left),
+        score: 5 + 4 * w / (days + 1),
+        title: days === 1 ? t("co_eve_title", { topic: topicName(focus.id) }) : topicName(focus.id),
+        why: [t("co_why_exam", { title: e.title, when: relDays(days) }), t("co_why_gap", { topic: topicName(focus.id), n: pct(focus.ready) }),
+          t("co_why_need", { n: total, d: studyDays })],
+        tip: days === 1 ? t("co_tip_eve") : null });
+    });
+
+    // 2. homework / own tasks
+    l.tasks.filter(x => !x.done).forEach(x => {
+      const days = x.due ? daysUntil(x.due) : 7;
+      if (days > 10) return;
+      out.push({ key: "task:" + x.id, kind: "task", task: x, subjectId: x.subjectId, minutes: clamp(+x.minutes || 20, 5, 120),
+        score: days < 0 ? 7 : 3 + 3 / (Math.max(days, 0) + 1), title: x.title,
+        why: [x.due ? t("co_why_task", { when: relDays(days) }) : t("co_why_task_nodue")] });
+    });
+
+    // 3. topics currently taught at school, 4. spaced review, 5. long-term Abitur plan
+    const seen = new Set(out.map(c => c.topicId).filter(Boolean));
+    S.subjects.forEach(s => s.topics.forEach(tp => {
+      if (seen.has(tp.id) || l.curriculum[tp.id] === "done") return;
+      const r = S.progress[tp.id];
+      const fresh = Readiness.freshness(tp.id);
+      const now = l.curriculum[tp.id] === "now";
+      const pri = Engine.priority({ exam: tp.exam, mastery: Engine.rec(tp.id).mastery });
+      let score = pri * goalBoost(s.id), why = [], kind = hasContent(tp.id) ? "lesson" : "external", minutes = null, title = tp.name;
+      if (now) { score += 1.2; why.push(t("co_why_now")); }
+      if (r && r.attempts && r.mastery > 0.3 && fresh < 0.7) {
+        score += 0.9; why.push(t("co_why_review", { n: Readiness.daysSince(tp.id) })); minutes = 15;
+        title = t("co_review_title", { topic: tp.name });
+      }
+      if (!why.length) why.push(t("co_why_abi", { n: pct(Engine.rec(tp.id).mastery) }));
+      if (goalBoost(s.id) > 1) why.push(t("co_why_goal", { subject: s.name, p: l.goals.subjectTargets[s.id] }));
+      if (avoided.indexOf(s.id) !== -1) why.push(t("co_why_avoided"));
+      out.push({ key: "topic:" + tp.id, kind: kind, topicId: tp.id, subjectId: s.id, minutes: minutes, score: score, title: title, why: why });
+    }));
+
+    return out.filter(c => c.repeat || !doneToday(c.key)).sort((a, b) => b.score - a.score);
+  },
+
+  /* free minutes today: study windows minus timetable minus now */
+  freeSlots(date) {
+    const l = this.life(), day = weekday(date);
+    const wins = l.windows.filter(w => w.enabled && w.day === day);
+    let free = wins.map(w => [toMin(w.from), toMin(w.to)]).filter(x => x[1] > x[0]);
+    l.timetable.filter(b => b.day === day).forEach(b => {
+      const a = toMin(b.from), z = toMin(b.to);
+      free = free.flatMap(([x, y]) => z <= x || a >= y ? [[x, y]] : [[x, Math.min(a, y)], [Math.max(z, x), y]].filter(q => q[1] - q[0] >= 5));
+    });
+    if (isoDay(date) === isoDay()) {
+      const now = new Date(), m = Math.ceil((now.getHours() * 60 + now.getMinutes()) / 5) * 5;
+      free = free.map(([x, y]) => [Math.max(x, m), y]).filter(q => q[1] - q[0] >= 5);
+    }
+    return free;
+  },
+
+  plan(date) {
+    date = date || new Date();
+    const l = this.life(), today = isoDay(date);
+    const { cap, notes } = this.unitCap(date);
+    const first = this.firstUnitCap(date);
+    const st = this.stats();
+    const spentToday = sum(l.sessions.filter(s => s.day === today).map(s => s.minutes));
+    let budget = clamp(+l.budget || 60, 10, 480) - spentToday;
+    const c = this.checkin(date);
+    if (c && c.energy <= 2) budget = Math.min(budget, Math.round((+l.budget || 60) * 0.6));
+    const cands = this.candidates(date);
+    const items = [];
+    const free = this.freeSlots(date);
+    const timed = this.configured();
+
+    for (const cand of cands) {
+      if (items.length >= 6 || budget < 5) break;
+      let mins = cand.minutes || (st.median && cand.kind === "lesson" ? Math.round(st.median / 5) * 5 : 25);
+      const isFinal = cand.kind === "review" && cand.event;
+      if (!isFinal) mins = Math.min(mins, cand.kind === "task" ? Math.max(cap, cand.minutes || 0) : cap);
+      if (!items.length && first && !isFinal) mins = Math.min(mins, first);
+      mins = clamp(Math.round(mins / 5) * 5, 5, 120);
+      if (mins > budget) { if (budget >= 10 && items.length) mins = Math.floor(budget / 5) * 5; else continue; }
+      const it = Object.assign({}, cand, { minutes: mins });
+      if (timed) {
+        const heavy = cand.kind === "lesson" || (cand.event && cand.kind !== "review");
+        const slots = free.map((s, i) => ({ a: s[0], b: s[1], i: i, e: this.energyAt(s[0]) })).filter(s => s.b - s.a >= mins);
+        if (!slots.length) continue;
+        slots.sort((x, y) => heavy ? (y.e - x.e) || (x.a - y.a) : (x.a - y.a));
+        const sl = slots[0];
+        it.start = sl.a; it.end = sl.a + mins; it.energy = sl.e;
+        free[sl.i][0] = sl.a + mins + (+l.breakMins || 10);
+      }
+      budget -= mins;
+      items.push(it);
+    }
+    if (timed) items.sort((a, b) => a.start - b.start);
+    // remember what was planned (for "planned but skipped" observations)
+    if (today === isoDay() && items.length) {
+      const snap = items.map(i => ({ key: i.key, subjectId: i.subjectId || null }));
+      const prev = l.planLog[today] || [];
+      snap.forEach(s => { if (!prev.some(p => p.key === s.key)) prev.push(s); });
+      l.planLog[today] = prev.slice(0, 12);
+      const keep = Object.keys(l.planLog).sort().slice(-30);
+      Object.keys(l.planLog).forEach(k => { if (keep.indexOf(k) === -1) delete l.planLog[k]; });
+    }
+    return { items: items, notes: notes, timed: timed, budgetLeft: Math.max(0, budget), spent: Math.round(spentToday),
+      pending: Math.max(0, cands.length - items.length) };
+  },
+
+  /* -- sessions -- */
+  begin(item) {
+    this.active = item ? { key: item.key, kind: item.kind, planned: item.minutes, start: item.start, topicId: item.topicId || null,
+      subjectId: item.subjectId || null, ref: item.task ? item.task.id : item.event ? item.event.id : null, t0: Date.now() } : null;
+  },
+  record(extra) {
+    const l = this.life(), a = this.active || {};
+    const now = new Date();
+    const row = Object.assign({
+      id: uidL(), at: Date.now(), day: isoDay(now), hour: now.getHours(), key: a.key || null, kind: a.kind || "lesson",
+      planned: a.planned || null, ref: a.ref || null, subjectId: a.subjectId || null, rating: null,
+      delay: a.start != null && a.key ? Math.round((new Date(a.t0).getHours() * 60 + new Date(a.t0).getMinutes()) - a.start) : null
+    }, extra);
+    row.minutes = Math.max(0.5, Math.round((row.minutes || 0) * 10) / 10);
+    l.sessions.push(row);
+    if (l.sessions.length > 600) l.sessions = l.sessions.slice(-600);
+    this.lastSession = row.id;
+    this.active = null;
+    Store.save();
+    return row;
+  }
+};
+
+/* ---------- Coach UI: today --------------------------------- */
+function coachItemMeta(it) {
+  const kindLabel = { lesson: t("co_kind_lesson"), external: t("co_kind_external"), task: t("co_kind_task"), review: t("co_kind_review") }[it.kind];
+  return `<span>${esc(kindLabel)}</span>${it.subjectId ? `<span>·</span><span>${esc(subjectName(it.subjectId))}</span>` : ""}<span>·</span><span>${it.minutes} min</span>`;
+}
+function coachNextCard(plan) {
+  const it = plan.items[0];
+  const l = Coach.life();
+  if (!it) {
+    return `<section class="coach-hero">
+      <div class="eyebrow">${t("co_next")}</div>
+      <h1 style="margin-top:8px">${esc(Engine.line("greet"))}</h1>
+      <p class="lede" style="margin-top:10px">${plan.timed ? t("co_nothing_timed") : t("co_nothing")}</p>
+      <div class="btn-row">${!Coach.configured() ? `<button class="btn btn-primary btn-lg" data-act="coachSetup">${t("co_setup_btn")}</button>` : ""}
+        <button class="btn btn-ghost" data-act="go" data-v="plan">${t("co_open_planner")}</button></div>
+    </section>`;
+  }
+  const when = it.start != null ? `${toClock(it.start)}–${toClock(it.end)}` : t("co_anytime");
+  const intention = +l.habits.procrastination >= 4 && it.start != null
+    ? `<p class="coach-intent">${t("co_intention", { time: toClock(it.start), place: esc(l.habits.place || t("co_place_default")), what: esc(it.title) })}</p>` : "";
+  return `<section class="coach-hero">
+    <div class="eyebrow">${t("co_next")} · ${when}</div>
+    <h1 style="margin-top:8px">${t("co_do", { n: it.minutes, what: esc(it.title) })}</h1>
+    <ul class="coach-why">${it.why.map(w => `<li>${esc(w)}</li>`).join("")}</ul>
+    ${it.tip ? `<p class="hint">${esc(it.tip)}</p>` : ""}
+    ${intention}
+    ${plan.notes.length ? `<p class="hint">${plan.notes.map(n => esc(t(n))).join(" ")}</p>` : ""}
+    <div class="btn-row">
+      <button class="btn btn-primary btn-lg" data-act="coachStart" data-i="0">${t("co_start")}</button>
+      ${l.habits.starter ? `<span class="hint" style="margin:0">${t("co_starter", { s: esc(l.habits.starter) })}</span>` : ""}
+    </div>
+  </section>`;
+}
+function coachCheckinCard() {
+  if (Coach.checkin()) return "";
+  const barriers = t("co_barriers").split("|");
+  const ids = ["none", "start", "overload", "distraction"];
+  return `<section class="card coach-checkin" style="margin-bottom:20px">
+    <div class="sec-title">${t("co_checkin")}</div>
+    <p class="hint" style="margin:6px 0 12px">${t("co_checkin_note")}</p>
+    <div class="label" style="margin-top:0">${t("co_energy_q")}</div>
+    <div class="chips" role="group" aria-label="${esc(t("co_energy_q"))}">${[1, 2, 3, 4, 5].map(v =>
+      `<button type="button" class="chip" data-act="ciEnergy" data-v="${v}" aria-pressed="false">${v} · ${esc([t("e_lvl1"), t("e_lvl2"), t("e_lvl3"), t("e_lvl4"), t("e_lvl5")][v - 1])}</button>`).join("")}</div>
+    <div class="label">${t("co_barrier_q")}</div>
+    <div class="chips" role="group" aria-label="${esc(t("co_barrier_q"))}">${ids.map((id, i) =>
+      `<button type="button" class="chip" data-act="ciBarrier" data-v="${id}" aria-pressed="false">${esc(barriers[i])}</button>`).join("")}</div>
+    <div class="btn-row"><button class="btn btn-primary" id="ci-save" data-act="ciSave" disabled>${t("co_checkin_save")}</button>
+      <button class="btn btn-quiet" data-act="ciSkip">${t("co_checkin_skip")}</button></div>
+  </section>`;
+}
+let CI = {};
+ACT.ciEnergy = (el, d) => { CI.energy = +d.v; el.parentNode.querySelectorAll(".chip").forEach(c => { c.classList.toggle("sel", c === el); c.setAttribute("aria-pressed", String(c === el)); }); ciSync(); };
+ACT.ciBarrier = (el, d) => { CI.barrier = d.v; el.parentNode.querySelectorAll(".chip").forEach(c => { c.classList.toggle("sel", c === el); c.setAttribute("aria-pressed", String(c === el)); }); ciSync(); };
+function ciSync() { const b = document.getElementById("ci-save"); if (b) b.disabled = !(CI.energy && CI.barrier); }
+ACT.ciSave = () => { if (!(CI.energy && CI.barrier)) return; Coach.life().checkins[isoDay()] = { energy: CI.energy, barrier: CI.barrier }; pruneCheckins(); CI = {}; Store.save(); render(); };
+ACT.ciSkip = () => { Coach.life().checkins[isoDay()] = { energy: 3, barrier: "none", skipped: true }; pruneCheckins(); Store.save(); render(); };
+function pruneCheckins() { const c = Coach.life().checkins; Object.keys(c).sort().slice(0, -60).forEach(k => delete c[k]); }
+
+function coachTimeline(plan) {
+  const l = Coach.life(), day = weekday();
+  const blocks = l.timetable.filter(b => b.day === day).map(b => ({ start: toMin(b.from), end: toMin(b.to), fixed: b }));
+  const rows = plan.items.map((it, i) => ({ start: it.start, end: it.end, it: it, i: i })).concat(plan.timed ? blocks : []);
+  rows.sort((a, b) => (a.start == null ? 9999 : a.start) - (b.start == null ? 9999 : b.start));
+  return `<section class="card">
+    <div class="sec-head"><span class="sec-title">${t("co_today_plan")}</span>
+      <span class="mute" style="font-size:12.5px">${t("co_plan_sum", { a: sum(plan.items.map(i => i.minutes)), b: plan.spent })}</span></div>
+    ${rows.length ? rows.map(r => r.fixed
+      ? `<div class="tl-row tl-fixed"><span class="task-time">${r.fixed.from}</span><span class="task-body"><span class="task-title">${esc(r.fixed.label)}</span>
+          <span class="task-meta"><span>${r.fixed.from}–${r.fixed.to}</span><span>·</span><span>${t(r.fixed.kind === "school" ? "co_kind_school" : "co_kind_fixed")}</span></span></span></div>`
+      : `<div style="margin-bottom:8px"><button class="task" data-act="coachStart" data-i="${r.i}">
+          <span class="task-time">${r.start != null ? toClock(r.start) : "–"}</span>
+          <span class="task-body"><span class="task-title">${esc(r.it.title)}</span>
+            <span class="task-meta">${coachItemMeta(r.it)}</span></span>
+          <span aria-hidden="true">›</span></button></div>`).join("")
+      : `<div class="empty">${plan.timed ? t("co_nothing_timed") : t("co_nothing")}</div>`}
+    ${plan.pending ? `<p class="hint">${t("co_pending", { n: plan.pending })}</p>` : ""}
+    ${!plan.timed ? `<p class="hint">${t("co_untimed_note")}</p>` : ""}
+  </section>`;
+}
+function coachUpcomingCard() {
+  const l = Coach.life(), today = isoDay();
+  const ev = l.events.filter(e => !e.done && e.date >= today).map(e => ({ date: e.date, title: e.title, sub: t("co_type_" + e.type) + (e.subjectId ? " · " + subjectName(e.subjectId) : "") }));
+  const tk = l.tasks.filter(x => !x.done && x.due).map(x => ({ date: x.due, title: x.title, sub: t("co_kind_task") + (x.subjectId ? " · " + subjectName(x.subjectId) : "") }));
+  const rows = ev.concat(tk).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
+  return `<section class="card">
+    <div class="sec-title" style="margin-bottom:10px">${t("co_upcoming")}</div>
+    ${rows.length ? rows.map(r => { const d = daysUntil(r.date); return `<div class="kv"><span class="kv-k"><strong style="color:var(--tx)">${esc(r.title)}</strong><br><span style="font-size:12.5px">${esc(r.sub)}</span></span>
+      <span class="kv-v"><span class="pill ${d <= 2 ? "pill-exam" : "pill-low"}">${esc(relDays(d))}</span></span></div>`; }).join("")
+      : `<p class="hint">${t("co_upcoming_empty")}</p>`}
+    <div class="btn-row" style="margin-top:12px"><button class="btn btn-ghost" data-act="go" data-v="plan">${t("co_manage")}</button></div>
+  </section>`;
+}
+
+let TODAY_PLAN = null;
+ACT.coachStart = (el, d) => {
+  const plan = TODAY_PLAN || Coach.plan();
+  const it = plan.items[+d.i];
+  if (!it) return;
+  Coach.begin(it);
+  if (it.kind === "lesson" && it.topicId) return openLesson(it.topicId);
+  if (it.kind === "task") return startFocus({ title: it.title, minutes: it.minutes, kind: "task", ref: it.task.id });
+  return startFocus({ title: it.title, minutes: it.minutes, kind: it.kind, topicId: it.topicId || null, event: it.event || null, tip: it.tip || null });
+};
+ACT.coachSetup = () => startWizard();
+ACT.ownMaterial = (el, d) => {
+  if (!Coach.active || Coach.active.topicId !== d.v) Coach.begin({ key: "topic:" + d.v, kind: "external", topicId: d.v, minutes: 25,
+    subjectId: (S.subjects.find(x => x.topics.some(tp => tp.id === d.v)) || {}).id });
+  startFocus({ title: topicName(d.v), minutes: Math.min(25, Coach.unitCap().cap), kind: "external", topicId: d.v });
+};
+
+/* ---------- Focus timer (own material, homework, final review) --- */
+let FOCUS = null;
+function startFocus(cfg) {
+  stopTick();
+  if (!Coach.active) Coach.begin({ key: null, kind: cfg.kind, minutes: cfg.minutes });
+  FOCUS = Object.assign({ left: cfg.minutes * 60, running: true, t0: Date.now(), spent: 0 }, cfg);
+  renderFocus();
+}
+function focusElapsed() { return FOCUS.spent + (FOCUS.running ? (Date.now() - FOCUS.t0) / 1000 : 0); }
+function renderFocus() {
+  stopTick();
+  FLOW.redraw = renderFocus;
+  const f = FOCUS;
+  const hint = f.kind === "review" ? t("co_focus_review") : f.kind === "task" ? t("co_focus_task") : t("co_focus_external");
+  mount(`<div class="focus-top">
+      <button class="btn btn-quiet" data-act="focusQuit">${t("s_exit")}</button>
+      <span></span>
+      <span class="mute" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:640">${esc(t("co_focus"))}</span>
+    </div>
+    <div class="focus-body"><div class="focus-card" style="text-align:center">
+      <div class="micro-tag">${esc(f.title)}</div>
+      <div class="focus-clock mono" id="fclock" role="timer" aria-live="off">--:--</div>
+      <p class="lede" style="margin:10px auto 0">${hint}</p>
+      ${f.tip ? `<p class="hint">${esc(f.tip)}</p>` : ""}
+      ${+Coach.life().habits.phone >= 4 ? `<p class="hint">${t("co_phone_tip")}</p>` : ""}
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn btn-ghost" data-act="focusToggle">${f.running ? t("co_pause") : t("co_resume")}</button>
+        <button class="btn btn-primary" data-act="focusDone">${t("co_finish")}</button>
+      </div>
+    </div></div>`, "focus-screen");
+  const tick = () => {
+    const el = document.getElementById("fclock");
+    if (!el || !FOCUS) { stopTick(); return; }
+    const left = Math.max(0, Math.round(f.minutes * 60 - focusElapsed()));
+    el.textContent = String(Math.floor(left / 60)).padStart(2, "0") + ":" + String(left % 60).padStart(2, "0");
+    if (left <= 0 && !f.rang) { f.rang = true; toast(`<span>◆</span><span>${esc(t("co_timeup"))}</span>`, 4000); }
+  };
+  tick();
+  TICK = setInterval(tick, 1000);
+}
+ACT.focusToggle = () => {
+  if (!FOCUS) return;
+  if (FOCUS.running) { FOCUS.spent += (Date.now() - FOCUS.t0) / 1000; FOCUS.running = false; }
+  else { FOCUS.t0 = Date.now(); FOCUS.running = true; }
+  renderFocus();
+};
+ACT.focusQuit = () => {
+  if (!FOCUS) return;
+  const mins = focusElapsed() / 60;
+  if (mins >= 0.5) Coach.record({ kind: FOCUS.kind, minutes: mins, done: false, topicId: FOCUS.topicId || null });
+  else Coach.active = null;
+  FOCUS = null; stopTick(); VIEW = "dash"; render();
+};
+ACT.focusDone = () => {
+  if (!FOCUS) return;
+  const f = FOCUS;
+  const mins = focusElapsed() / 60;
+  if (f.running) { f.spent += (Date.now() - f.t0) / 1000; f.running = false; }
+  stopTick();
+  const row = Coach.record({ kind: f.kind, minutes: mins, done: true, topicId: f.topicId || null });
+  const l = Coach.life();
+  if (f.kind === "task") {
+    const tk = l.tasks.find(x => x.id === f.ref);
+    if (tk) tk.spent = (tk.spent || 0) + Math.round(mins);
+  }
+  if (f.kind === "review" && f.event) { /* nothing else: exam is today */ }
+  Store.save();
+  FLOW.redraw = null;
+  mount(`<div class="center-wrap"><div class="stage" style="text-align:center">
+    <div style="font-size:34px;margin-bottom:8px">✓</div>
+    <h1>${t("co_focus_done", { n: Math.max(1, Math.round(mins)) })}</h1>
+    <p class="lede" style="margin:12px auto 0">${f.kind === "task" ? t("co_task_q") : t("co_recall")}</p>
+    ${f.kind !== "task" ? `<textarea class="field" id="recall" rows="4" maxlength="2000" placeholder="${esc(t("co_recall_ph"))}" style="margin-top:18px;text-align:left"></textarea>` : ""}
+    <div class="btn-row" style="justify-content:center">
+      ${f.kind === "task" ? `<button class="btn btn-primary" data-act="focusTaskDone" data-v="${esc(f.ref)}">${t("co_task_done")}</button>
+        <button class="btn btn-ghost" data-act="focusBack">${t("co_task_notyet")}</button>`
+      : `<button class="btn btn-primary" data-act="focusSaveNote" data-v="${esc(row.id)}">${t("co_save_back")}</button>`}
+    </div>
+    ${ratingCard()}
+    <p class="hint">${t("co_external_note")}</p>
+  </div></div>`);
+  FOCUS = null;
+};
+ACT.focusSaveNote = (el, d) => {
+  const txt = (document.getElementById("recall") || {}).value || "";
+  if (txt.trim()) { Coach.life().notes.push({ id: uidL(), at: Date.now(), ref: d.v, text: txt.trim().slice(0, 2000) }); Coach.life().notes = Coach.life().notes.slice(-200); Store.save(); }
+  VIEW = "dash"; render();
+};
+ACT.focusTaskDone = (el, d) => { const tk = Coach.life().tasks.find(x => x.id === d.v); if (tk) tk.done = true; Store.save(); VIEW = "dash"; render(); };
+ACT.focusBack = () => { VIEW = "dash"; render(); };
+
+function ratingCard() {
+  if (!Coach.lastSession) return "";
+  return `<section class="card-2 coach-rating" style="margin-top:20px;text-align:left">
+    <div class="sec-title" style="margin-bottom:8px">${t("co_rate_q")}</div>
+    <div class="btn-row" style="margin-top:6px">${["hard", "fit", "easy"].map(v =>
+      `<button type="button" class="btn btn-ghost" data-act="coachRate" data-id="${Coach.lastSession}" data-v="${v}" aria-pressed="false">${t("co_rate_" + v)}</button>`).join("")}</div>
+    <p class="hint">${t("co_rate_note")}</p>
+  </section>`;
+}
+ACT.coachRate = (el, d) => {
+  const row = Coach.life().sessions.find(x => x.id === d.id);
+  if (!row || ["hard", "fit", "easy"].indexOf(d.v) === -1) return;
+  row.rating = d.v; Store.save();
+  el.parentNode.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b === el)));
+  toast(`<span>✓</span><span>${esc(t("co_rated"))}</span>`);
+};
+
+/* ---------- Planner view (organisation) --------------------- */
+let PLAN_TAB = "events";
+function subjectOptions(sel, allowEmpty) {
+  return (allowEmpty ? `<option value="">${t("co_no_subject")}</option>` : "") +
+    S.subjects.map(s => `<option value="${esc(s.id)}" ${s.id === sel ? "selected" : ""}>${esc(s.name)}</option>`).join("");
+}
+function field(id, label, input) { return `<div class="form-cell"><label class="label" for="${id}">${label}</label>${input}</div>`; }
+function scrPlanner() {
+  const l = Coach.life(), tabs = [["events", "co_tab_events"], ["tasks", "co_tab_tasks"], ["week", "co_tab_week"], ["topics", "co_tab_topics"]];
+  const today = isoDay();
+  let body = "";
+  if (PLAN_TAB === "events") {
+    const sid = S.subjects[0] ? S.subjects[0].id : "";
+    body = `<section class="card">
+      <div class="sec-title">${t("co_add_event")}</div>
+      <div class="form-grid">
+        ${field("ev-type", t("co_type"), `<select class="field" id="ev-type">${EVENT_TYPES.map(x => `<option value="${x}">${t("co_type_" + x)}</option>`).join("")}</select>`)}
+        ${field("ev-subject", t("co_subject"), `<select class="field" id="ev-subject">${subjectOptions(sid)}</select>`)}
+        ${field("ev-date", t("co_date"), `<input class="field" type="date" id="ev-date" min="${today}">`)}
+        ${field("ev-title", t("co_title"), `<input class="field" id="ev-title" maxlength="120" placeholder="${esc(t("co_title_ph"))}">`)}
+      </div>
+      <div class="label">${t("co_event_topics")}</div>
+      <div class="chips" id="ev-topics">${eventTopicChips(sid, [])}</div>
+      <p class="hint">${t("co_event_topics_note")}</p>
+      <div class="btn-row"><button class="btn btn-primary" data-act="evAdd">${t("co_add")}</button></div>
+    </section>
+    <section class="card" style="margin-top:16px">
+      <div class="sec-title" style="margin-bottom:8px">${t("co_events")}</div>
+      ${l.events.filter(e => !e.done).sort((a, b) => a.date.localeCompare(b.date)).map(e => `<div class="kv">
+        <span class="kv-k"><strong style="color:var(--tx)">${esc(e.title)}</strong><br><span style="font-size:12.5px">${esc(t("co_type_" + e.type))} · ${esc(subjectName(e.subjectId))} · ${esc(fmtDate(e.date))} · ${esc(relDays(daysUntil(e.date)))}</span>
+          ${e.topics && e.topics.length ? `<br><span style="font-size:12.5px">${e.topics.map(id => esc(topicName(id))).join(", ")}</span>` : ""}</span>
+        <span class="kv-v"><button class="btn btn-quiet" data-act="evDone" data-v="${esc(e.id)}">${t(e.date < today ? "co_remove" : "co_done")}</button></span></div>`).join("")
+        || `<p class="hint">${t("co_events_empty")}</p>`}
+    </section>`;
+  } else if (PLAN_TAB === "tasks") {
+    body = `<section class="card">
+      <div class="sec-title">${t("co_add_task")}</div>
+      <div class="form-grid">
+        ${field("tk-title", t("co_task_title"), `<input class="field" id="tk-title" maxlength="160" placeholder="${esc(t("co_task_ph"))}">`)}
+        ${field("tk-subject", t("co_subject"), `<select class="field" id="tk-subject">${subjectOptions("", true)}</select>`)}
+        ${field("tk-due", t("co_due"), `<input class="field" type="date" id="tk-due">`)}
+        ${field("tk-min", t("co_minutes"), `<input class="field" type="number" id="tk-min" min="5" max="240" value="30">`)}
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" data-act="tkAdd">${t("co_add")}</button></div>
+    </section>
+    <section class="card" style="margin-top:16px">
+      <div class="sec-title" style="margin-bottom:8px">${t("co_tasks")}</div>
+      ${l.tasks.slice().sort((a, b) => (a.done - b.done) || (a.due || "9").localeCompare(b.due || "9")).map(x => `<div class="kv">
+        <span class="kv-k"><strong style="color:var(--tx);${x.done ? "text-decoration:line-through" : ""}">${esc(x.title)}</strong><br><span style="font-size:12.5px">${x.subjectId ? esc(subjectName(x.subjectId)) + " · " : ""}${x.due ? esc(fmtDate(x.due)) + " · " : ""}${x.minutes} min${x.spent ? " · " + t("co_spent", { n: x.spent }) : ""}</span></span>
+        <span class="kv-v"><button class="btn btn-quiet" data-act="tkToggle" data-v="${esc(x.id)}" aria-pressed="${!!x.done}">${t(x.done ? "co_reopen" : "co_done")}</button>
+          <button class="btn btn-quiet" data-act="tkDel" data-v="${esc(x.id)}">${t("co_remove")}</button></span></div>`).join("")
+        || `<p class="hint">${t("co_tasks_empty")}</p>`}
+    </section>`;
+  } else if (PLAN_TAB === "week") {
+    body = weekForms();
+  } else {
+    body = `<section class="card"><div class="sec-title">${t("co_topics_title")}</div><p class="hint">${t("co_topics_note")}</p>
+      ${S.subjects.map(s => `<div style="margin-top:18px"><strong>${esc(s.name)}</strong>
+        ${s.topics.map(tp => { const st = l.curriculum[tp.id] || "later"; return `<div class="kv" style="flex-wrap:wrap">
+          <span class="kv-k" style="flex:1 1 200px;color:var(--tx)">${esc(tp.name)}</span>
+          <span class="chips" style="margin:0" role="group" aria-label="${esc(tp.name)}">${["now", "later", "done"].map(v =>
+            `<button type="button" class="chip chip-sm ${st === v ? "sel" : ""}" aria-pressed="${st === v}" data-act="curSet" data-t="${esc(tp.id)}" data-v="${v}">${t("co_cur_" + v)}</button>`).join("")}</span></div>`; }).join("")}</div>`).join("")
+      || `<p class="hint">${t("co_no_subjects")}</p>`}</section>`;
+  }
+  mount(chrome(`<div class="dash stage-wide">
+    <h1>${t("co_planner_title")}</h1>
+    <p class="lede" style="margin-top:8px">${t("co_planner_lede")}</p>
+    <div class="tabs" role="tablist">${tabs.map(([k, lk]) => `<button type="button" role="tab" class="tab ${PLAN_TAB === k ? "on" : ""}" aria-selected="${PLAN_TAB === k}" data-act="planTab" data-v="${k}">${t(lk)}</button>`).join("")}</div>
+    ${weekStrip()}
+    ${body}
+  </div>`));
+}
+function weekStrip() {
+  const l = Coach.life(), names = dayNames(), out = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(Date.now() + i * 864e5), iso = isoDay(d), wd = weekday(d);
+    const lessons = l.timetable.filter(b => b.day === wd).length;
+    const win = l.windows.filter(w => w.day === wd && w.enabled).reduce((n, w) => n + Math.max(0, toMin(w.to) - toMin(w.from)), 0);
+    const ev = l.events.filter(e => !e.done && e.date === iso);
+    const tk = l.tasks.filter(x => !x.done && x.due === iso);
+    out.push(`<div class="wk-day ${i === 0 ? "on" : ""}"><div class="wk-name">${esc(names[wd].slice(0, 2))} <span class="mute">${d.getDate()}.</span></div>
+      ${ev.map(e => `<div class="wk-ev">${esc(t("co_type_" + e.type))}: ${esc(e.title)}</div>`).join("")}
+      ${tk.map(x => `<div class="wk-tk">${esc(x.title)}</div>`).join("")}
+      <div class="wk-meta">${lessons ? t("co_wk_lessons", { n: lessons }) : ""}${win ? `<br>${t("co_wk_free", { n: win })}` : ""}</div></div>`);
+  }
+  return `<div class="wk-strip" aria-label="${esc(t("co_week_ahead"))}">${out.join("")}</div>`;
+}
+function eventTopicChips(sid, sel) {
+  const s = S.subjects.find(x => x.id === sid);
+  return s ? s.topics.map(tp => `<button type="button" class="chip chip-sm ${sel.indexOf(tp.id) !== -1 ? "sel" : ""}" aria-pressed="${sel.indexOf(tp.id) !== -1}" data-act="evTopic" data-v="${esc(tp.id)}">${esc(tp.name)}</button>`).join("") : "";
+}
+let EV_TOPICS = [];
+ACT.planTab = (el, d) => { PLAN_TAB = d.v; EV_TOPICS = []; WIN_DRAFT = null; BUDGET_DRAFT = null; render(); };
+ACT.evTopic = (el, d) => {
+  const i = EV_TOPICS.indexOf(d.v);
+  if (i === -1) EV_TOPICS.push(d.v); else EV_TOPICS.splice(i, 1);
+  el.classList.toggle("sel"); el.setAttribute("aria-pressed", String(i === -1));
+};
+document.addEventListener("change", e => {
+  if (e.target && e.target.id === "ev-subject") { EV_TOPICS = []; const box = document.getElementById("ev-topics"); if (box) box.innerHTML = eventTopicChips(e.target.value, []); }
+});
+ACT.evAdd = () => {
+  const type = $("#ev-type").value, subjectId = $("#ev-subject").value, date = $("#ev-date").value;
+  const title = $("#ev-title").value.trim() || (t("co_type_" + type) + " " + subjectName(subjectId));
+  if (!date || !subjectId || EVENT_TYPES.indexOf(type) === -1) { toast(`<span>!</span><span>${esc(t("co_invalid_event"))}</span>`); return; }
+  Coach.life().events.push({ id: uidL(), type: type, subjectId: subjectId, title: title.slice(0, 120), date: date, topics: EV_TOPICS.slice(), done: false });
+  EV_TOPICS = []; Store.save(); toast(`<span>✓</span><span>${esc(t("co_saved"))}</span>`); render();
+};
+ACT.evDone = (el, d) => { const l = Coach.life(); const e = l.events.find(x => x.id === d.v); if (e) e.done = true; Store.save(); render(); };
+ACT.tkAdd = () => {
+  const title = $("#tk-title").value.trim(), mins = +$("#tk-min").value;
+  if (!title || !(mins >= 5 && mins <= 240)) { toast(`<span>!</span><span>${esc(t("co_invalid_task"))}</span>`); return; }
+  Coach.life().tasks.push({ id: uidL(), title: title.slice(0, 160), subjectId: $("#tk-subject").value || null, due: $("#tk-due").value || "", minutes: Math.round(mins), done: false, spent: 0 });
+  Store.save(); toast(`<span>✓</span><span>${esc(t("co_saved"))}</span>`); render();
+};
+ACT.tkToggle = (el, d) => { const x = Coach.life().tasks.find(q => q.id === d.v); if (x) x.done = !x.done; Store.save(); render(); };
+ACT.tkDel = (el, d) => { const l = Coach.life(); l.tasks = l.tasks.filter(q => q.id !== d.v); Store.save(); render(); };
+ACT.curSet = (el, d) => { Coach.life().curriculum[d.t] = d.v; Store.save(); render(); };
+
+/* timetable + study windows (used in planner and wizard) */
+let WIN_DRAFT = null, BUDGET_DRAFT = null;
+function readWeekInputs() {
+  if (!document.getElementById("w-on-0")) return;
+  WIN_DRAFT = [];
+  for (let i = 0; i < 7; i++) WIN_DRAFT.push({ day: i, enabled: $("#w-on-" + i).checked, from: $("#w-from-" + i).value, to: $("#w-to-" + i).value });
+  BUDGET_DRAFT = { budget: $("#w-budget").value, breakMins: $("#w-break").value };
+}
+function weekForms() {
+  const l = Coach.life(), names = dayNames();
+  const wins = WIN_DRAFT || l.windows, bd = BUDGET_DRAFT || { budget: l.budget, breakMins: l.breakMins };
+  return `<section class="card">
+      <div class="sec-title">${t("co_windows")}</div>
+      <p class="hint" style="margin-bottom:10px">${t("co_windows_note")}</p>
+      ${names.map((n, i) => { const w = wins.find(x => x.day === i) || { enabled: false, from: i >= 5 ? "10:00" : "16:00", to: i >= 5 ? "12:00" : "18:00" };
+        return `<div class="win-row"><label class="win-day"><input type="checkbox" id="w-on-${i}" ${w.enabled ? "checked" : ""}> ${esc(n)}</label>
+          <label><span class="sr">${esc(n)} ${t("co_from")}</span><input class="field" type="time" id="w-from-${i}" value="${esc(w.from)}"></label>
+          <span class="mute">–</span>
+          <label><span class="sr">${esc(n)} ${t("co_to")}</span><input class="field" type="time" id="w-to-${i}" value="${esc(w.to)}"></label></div>`; }).join("")}
+      <div class="form-grid" style="margin-top:8px">
+        ${field("w-budget", t("co_budget"), `<input class="field" type="number" id="w-budget" min="10" max="480" value="${esc(bd.budget)}">`)}
+        ${field("w-break", t("co_break"), `<input class="field" type="number" id="w-break" min="0" max="60" value="${esc(bd.breakMins)}">`)}
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" data-act="winSave">${t("co_save")}</button></div>
+    </section>
+    <section class="card" style="margin-top:16px">
+      <div class="sec-title">${t("co_timetable")}</div>
+      <p class="hint" style="margin-bottom:10px">${t("co_timetable_note")}</p>
+      <div class="form-grid">
+        ${field("tt-day", t("co_day"), `<select class="field" id="tt-day">${names.map((n, i) => `<option value="${i}">${esc(n)}</option>`).join("")}</select>`)}
+        ${field("tt-label", t("co_tt_label"), `<input class="field" id="tt-label" maxlength="80" placeholder="${esc(t("co_tt_ph"))}">`)}
+        ${field("tt-from", t("co_from"), `<input class="field" type="time" id="tt-from" value="08:00">`)}
+        ${field("tt-to", t("co_to"), `<input class="field" type="time" id="tt-to" value="09:30">`)}
+        ${field("tt-kind", t("co_tt_kind"), `<select class="field" id="tt-kind"><option value="school">${t("co_kind_school")}</option><option value="other">${t("co_kind_fixed")}</option></select>`)}
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" data-act="ttAdd">${t("co_add")}</button>
+        ${l.timetable.length ? `<button class="btn btn-quiet" data-act="ttCopy">${t("co_tt_copy")}</button>` : ""}</div>
+      <div style="margin-top:14px">${names.map((n, i) => { const rows = l.timetable.filter(b => b.day === i).sort((a, b) => a.from.localeCompare(b.from));
+        return rows.length ? `<div style="margin-top:10px"><strong>${esc(n)}</strong>${rows.map(b => `<div class="kv"><span class="kv-k">${esc(b.from)}–${esc(b.to)} · ${esc(b.label)}</span>
+          <span class="kv-v"><button class="btn btn-quiet" data-act="ttDel" data-v="${esc(b.id)}">${t("co_remove")}</button></span></div>`).join("")}</div>` : ""; }).join("")
+        || `<p class="hint">${t("co_tt_empty")}</p>`}</div>
+    </section>`;
+}
+ACT.winSave = () => {
+  const l = Coach.life(), wins = [];
+  for (let i = 0; i < 7; i++) {
+    const on = $("#w-on-" + i).checked, from = $("#w-from-" + i).value, to = $("#w-to-" + i).value;
+    if (on && !(toMin(to) > toMin(from))) { toast(`<span>!</span><span>${esc(t("co_invalid_time"))}</span>`); return; }
+    wins.push({ day: i, enabled: on, from: from, to: to });
+  }
+  const b = +$("#w-budget").value, br = +$("#w-break").value;
+  if (!(b >= 10 && b <= 480) || !(br >= 0 && br <= 60)) { toast(`<span>!</span><span>${esc(t("co_invalid_budget"))}</span>`); return; }
+  l.windows = wins; l.budget = Math.round(b); l.breakMins = Math.round(br);
+  WIN_DRAFT = null; BUDGET_DRAFT = null;
+  Store.save(); toast(`<span>✓</span><span>${esc(t("co_saved"))}</span>`);
+  if (WIZ) wizNext(); else render();
+};
+ACT.ttAdd = () => {
+  const label = $("#tt-label").value.trim(), from = $("#tt-from").value, to = $("#tt-to").value;
+  if (!label || !(toMin(to) > toMin(from))) { toast(`<span>!</span><span>${esc(t("co_invalid_time"))}</span>`); return; }
+  readWeekInputs();
+  Coach.life().timetable.push({ id: uidL(), day: +$("#tt-day").value, label: label.slice(0, 80), from: from, to: to, kind: $("#tt-kind").value === "other" ? "other" : "school" });
+  Store.save();
+  const keepDay = $("#tt-day").value;
+  if (WIZ) renderWizard(); else render();
+  const sel = document.getElementById("tt-day"); if (sel) sel.value = keepDay;
+  const f = document.getElementById("tt-from"); if (f) f.value = to;
+};
+ACT.ttDel = (el, d) => { readWeekInputs(); const l = Coach.life(); l.timetable = l.timetable.filter(b => b.id !== d.v); Store.save(); if (WIZ) renderWizard(); else render(); };
+ACT.ttCopy = () => {
+  // copy the selected day's blocks to all other weekdays Mo–Fr that are still empty
+  readWeekInputs();
+  const l = Coach.life(), src = +$("#tt-day").value;
+  const rows = l.timetable.filter(b => b.day === src);
+  if (!rows.length) { toast(`<span>!</span><span>${esc(t("co_tt_copy_none"))}</span>`); return; }
+  for (let d = 0; d < 5; d++) if (d !== src && !l.timetable.some(b => b.day === d)) rows.forEach(b => l.timetable.push(Object.assign({}, b, { id: uidL(), day: d })));
+  Store.save(); if (WIZ) renderWizard(); else render();
+};
+
+/* ---------- "About me" (goals, habits) + observations --------- */
+function aboutForms() {
+  const l = Coach.life(), g = l.goals, h = l.habits;
+  const scale = (id, val, lo, hi) => `<div class="chips" role="group" aria-labelledby="${id}-l">${[1, 2, 3, 4, 5].map(v =>
+    `<button type="button" class="chip chip-sm ${+val === v ? "sel" : ""}" aria-pressed="${+val === v}" data-act="habScale" data-k="${id}" data-v="${v}">${v}</button>`).join("")}</div>
+    <div class="scale-ends"><span>${lo}</span><span>${hi}</span></div>`;
+  return `<section class="card">
+      <div class="sec-title">${t("co_goals")}</div>
+      <div class="form-grid">
+        ${field("g-avg", t("co_goal_avg"), `<input class="field" id="g-avg" maxlength="10" inputmode="decimal" placeholder="1,8" value="${esc(g.avg)}">`)}
+        ${field("g-study", t("co_goal_study"), `<input class="field" id="g-study" maxlength="120" placeholder="${esc(t("co_goal_study_ph"))}" value="${esc(g.study)}">`)}
+      </div>
+      ${field("g-why", t("co_goal_why"), `<textarea class="field" id="g-why" rows="2" maxlength="400" placeholder="${esc(t("co_goal_why_ph"))}">${esc(g.why)}</textarea>`)}
+      ${S.subjects.length ? `<div class="label">${t("co_goal_subjects")}</div>
+      <div class="form-grid">${S.subjects.map(s => field("gt-" + s.id, esc(s.name) + " " + (s.tag ? `<span class="mute">${esc(s.tag)}</span>` : ""),
+        `<input class="field" type="number" min="0" max="15" id="gt-${esc(s.id)}" data-sid="${esc(s.id)}" placeholder="${t("co_points")}" value="${esc(g.subjectTargets[s.id] == null ? "" : g.subjectTargets[s.id])}">`)).join("")}</div>
+      <p class="hint">${t("co_goal_subjects_note")}</p>` : ""}
+    </section>
+    <section class="card" style="margin-top:16px">
+      <div class="sec-title">${t("co_habits")}</div>
+      <p class="hint">${t("co_habits_note")}</p>
+      <div class="label" id="procrastination-l">${t("co_hab_proc")}</div>${scale("procrastination", h.procrastination, t("co_hab_proc_lo"), t("co_hab_proc_hi"))}
+      <div class="label" id="phone-l">${t("co_hab_phone")}</div>${scale("phone", h.phone, t("co_hab_phone_lo"), t("co_hab_phone_hi"))}
+      <div class="form-grid">
+        ${field("h-len", t("co_hab_len"), `<select class="field" id="h-len">${[10, 15, 20, 25, 30, 45, 60].map(v => `<option value="${v}" ${+h.prefLen === v ? "selected" : ""}>${v} min</option>`).join("")}</select>`)}
+        ${field("h-place", t("co_hab_place"), `<input class="field" id="h-place" maxlength="60" placeholder="${esc(t("co_place_default"))}" value="${esc(h.place)}">`)}
+      </div>
+      ${field("h-starter", t("co_hab_starter"), `<input class="field" id="h-starter" maxlength="120" placeholder="${esc(t("co_hab_starter_ph"))}" value="${esc(h.starter)}">`)}
+      <div class="btn-row"><button class="btn btn-primary" data-act="aboutSave">${t("co_save")}</button></div>
+    </section>`;
+}
+ACT.habScale = (el, d) => {
+  Coach.life().habits[d.k] = +d.v;
+  el.parentNode.querySelectorAll(".chip").forEach(c => { c.classList.toggle("sel", c === el); c.setAttribute("aria-pressed", String(c === el)); });
+};
+ACT.aboutSave = () => {
+  const l = Coach.life();
+  l.goals.avg = $("#g-avg").value.trim().slice(0, 10);
+  l.goals.study = $("#g-study").value.trim().slice(0, 120);
+  l.goals.why = $("#g-why").value.trim().slice(0, 400);
+  document.querySelectorAll("input[data-sid]").forEach(inp => {
+    const v = inp.value.trim();
+    if (v === "") delete l.goals.subjectTargets[inp.dataset.sid];
+    else if (+v >= 0 && +v <= 15) l.goals.subjectTargets[inp.dataset.sid] = Math.round(+v);
+  });
+  l.habits.prefLen = +$("#h-len").value;
+  l.habits.place = $("#h-place").value.trim().slice(0, 60);
+  l.habits.starter = $("#h-starter").value.trim().slice(0, 120);
+  Store.save(); toast(`<span>✓</span><span>${esc(t("co_saved"))}</span>`);
+  if (WIZ) wizNext(); else render();
+};
+function insightsCard() {
+  const st = Coach.stats(), l = Coach.life(), lines = [];
+  if (st.n) lines.push(t("co_ins_sessions", { a: st.done, b: st.quit, d: st.studyDays }));
+  if (st.median != null) lines.push(t("co_ins_median", { n: Math.round(st.median) }));
+  if (st.best) lines.push(t("co_ins_best", { h: hourLabel(st.best.b), n: pct(st.best.acc) }));
+  if (st.delay != null && Math.abs(st.delay) >= 10) lines.push(t(st.delay > 0 ? "co_ins_late" : "co_ins_early", { n: Math.abs(Math.round(st.delay)) }));
+  if (st.abandon) lines.push(t("co_ins_abandon"));
+  if (st.hard) lines.push(t("co_ins_hard"));
+  if (st.easy) lines.push(t("co_ins_easy"));
+  st.avoided.forEach(sid => lines.push(t("co_ins_avoided", { s: subjectName(sid) })));
+  return `<section class="card">
+    <div class="sec-title">${t("co_insights")}</div>
+    <p class="hint">${t("co_insights_note")}</p>
+    ${lines.length ? `<ul class="coach-why">${lines.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<p class="hint">${t("co_ins_empty")}</p>`}
+    ${l.goals.why ? `<div class="card-2" style="margin-top:12px"><div class="sec-title" style="margin-bottom:6px">${t("co_your_why")}</div><p style="margin:0">${esc(l.goals.why)}</p></div>` : ""}
+  </section>`;
+}
+
+/* ---------- Setup wizard ("Alltag einrichten") ----------------- */
+let WIZ = null;
+const WIZ_STEPS = ["about", "week", "events"];
+function startWizard() { WIZ = { i: 0 }; renderWizard(); }
+function renderWizard() {
+  stopTick();
+  FLOW.redraw = renderWizard;
+  const step = WIZ_STEPS[WIZ.i];
+  let body = "";
+  if (step === "about") body = aboutForms();
+  else if (step === "week") body = weekForms();
+  else { PLAN_TAB = "events"; body = wizardEvents(); }
+  mount(`<div class="center-wrap"><div class="stage" style="max-width:820px">
+    <div class="eyebrow">${t("co_wiz_head")} · ${WIZ.i + 1} / ${WIZ_STEPS.length}</div>
+    <h1 style="margin-top:10px">${t("co_wiz_" + step)}</h1>
+    <p class="lede" style="margin:10px 0 20px">${t("co_wiz_" + step + "_t")}</p>
+    ${body}
+    <div class="btn-row">
+      ${step === "events" ? `<button class="btn btn-primary" data-act="wizFinish">${t("co_wiz_finish")}</button>` : ""}
+      <button class="btn btn-ghost" data-act="wizSkip">${step === "events" ? t("co_wiz_later") : t("co_wiz_skip")}</button>
+    </div>
+  </div></div>`);
+}
+function wizardEvents() {
+  const l = Coach.life(), sid = S.subjects[0] ? S.subjects[0].id : "", today = isoDay();
+  return `<section class="card">
+    <div class="form-grid">
+      ${field("ev-type", t("co_type"), `<select class="field" id="ev-type">${EVENT_TYPES.map(x => `<option value="${x}">${t("co_type_" + x)}</option>`).join("")}</select>`)}
+      ${field("ev-subject", t("co_subject"), `<select class="field" id="ev-subject">${subjectOptions(sid)}</select>`)}
+      ${field("ev-date", t("co_date"), `<input class="field" type="date" id="ev-date" min="${today}">`)}
+      ${field("ev-title", t("co_title"), `<input class="field" id="ev-title" maxlength="120" placeholder="${esc(t("co_title_ph"))}">`)}
+    </div>
+    <div class="label">${t("co_event_topics")}</div>
+    <div class="chips" id="ev-topics">${eventTopicChips(sid, [])}</div>
+    <div class="btn-row"><button class="btn btn-ghost" data-act="evAddWiz">${t("co_add")}</button></div>
+    ${l.events.filter(e => !e.done).map(e => `<div class="kv"><span class="kv-k">${esc(e.title)}</span><span class="kv-v">${esc(fmtDate(e.date))}</span></div>`).join("")}
+  </section>`;
+}
+ACT.evAddWiz = () => { const n = Coach.life().events.length; ACT.evAdd(); if (Coach.life().events.length > n) renderWizard(); };
+function wizNext() { WIZ.i++; if (WIZ.i >= WIZ_STEPS.length) return ACT.wizFinish(); renderWizard(); }
+ACT.wizSkip = () => { if (WIZ.i >= WIZ_STEPS.length - 1) return ACT.wizFinish(); wizNext(); };
+ACT.wizFinish = () => { WIZ = null; Coach.life().setupDone = true; Store.save(); FLOW = {}; VIEW = "dash"; render(); };
+function setupPromptCard() {
+  const l = Coach.life();
+  if (l.setupDone || Coach.configured()) return "";
+  return `<section class="card-2" style="margin-bottom:16px;border-color:var(--accent-line)">
+    <div class="sec-title" style="margin-bottom:8px">${t("co_setup_title")}</div>
+    <p class="dim" style="font-size:14px;line-height:1.6;margin:0">${t("co_setup_t")}</p>
+    <div class="btn-row" style="margin-top:14px"><button class="btn btn-primary" data-act="coachSetup">${t("co_setup_btn")}</button></div>
+  </section>`;
+}
 
 /* ---------- 7. BOOT --------------------------------------- */
 function boot() {
   const had = Store.load();
+  backfillLastPractice();
+  loadAiCache();
+  syncTopicCatalogue();
   if (S.lang && I18N[S.lang]) LANG = S.lang;
   else {
     const nav = (navigator.language || "de").slice(0, 2).toLowerCase();
@@ -2824,7 +4728,18 @@ document.addEventListener("keydown", e => {
           : "abcdABCD".indexOf(e.key) !== -1 ? "abcdABCD".indexOf(e.key) % 4 : -1;
   if (i >= 0 && opts[i]) opts[i].click();
 });
+/* ---------- 8. OFFLINE / INSTALLABLE APP ---------------- */
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator) || !/^https?:$/.test(location.protocol)) return;
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => { /* app works without it */ });
+  });
+}
+window.addEventListener("offline", () => toast(`<span>○</span><span>${esc(t("off_now"))}</span>`, 4200));
+window.addEventListener("online", () => toast(`<span>●</span><span>${esc(t("off_back"))}</span>`, 2200));
+
 boot();
+registerServiceWorker();
 
 </script>
 </body>
