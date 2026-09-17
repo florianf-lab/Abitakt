@@ -170,7 +170,7 @@ Fehlschlag → **ein** neuer Versuch → sonst HTTP 502. Kaputte Lektionen werde
 - Netlify Blobs, Store `lessons`
 - Schlüssel: `v1/{topicId}/{level}` (Level gehört in den Schlüssel – LF und BF sind verschiedene Lektionen)
 - Erst Cache lesen, nur bei Miss generieren
-- Zusätzlich im Client: `localStorage["abitakt.lessons.v1"]` (getrennt vom Zustand `"abitakt.v1"`)
+- Zusätzlich im Client: `localStorage["abitakt.lessons.v2"]` (getrennt vom Zustand `"abitakt.v1"`)
 
 ### 5.7 Budget-Bremse
 
@@ -279,7 +279,7 @@ Nach dem ersten Install die Versionen fest eintragen (keine `latest` im Dauerbet
 
 - `getTopic(id)` bleibt; neu: `async getTopicAsync(id)`
   1. handgeschriebenes Thema in `TOPICS`? → direkt zurück
-  2. `localStorage["abitakt.lessons.v1"][id + level]`? → validieren → zurück
+  2. `localStorage["abitakt.lessons.v2"][id + level]`? → validieren → zurück
   3. Fach ist `s_mathe`? → `POST /api/lesson` → validieren → cachen → zurück
   4. sonst oder bei jedem Fehler → `genericTopic()` wie bisher
 - `level` aus dem Tag in `S.subjects`: `P3` → Basisfach, `P1`/`P2`/`LF` → Leistungsfach

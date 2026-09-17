@@ -107,7 +107,7 @@ Erlaubte CSS-Klassen im Lektions-HTML: `.visual-box`, `.kinetic-box`, `.audio-bo
 **Design (V2):** helles „Papier & Waldgrün“-Design, mobile Navigation unten (5 Punkte). CSS-Block „Version 2“ am Ende von `<style>`, danach „Coach“-CSS.
 Codex-Fixes: Sprachwechsel bleibt in der laufenden Lektion (`refreshSessionLanguage`), Beenden während des Feedbacks springt nicht zurück, Themen ohne Inhalt erzeugen keinen Schein-Fortschritt (`startSession` zeigt „Noch kein Lerninhalt“ + Knopf „Mit eigenen Unterlagen lernen“).
 
-**KI-Lektionen:** `AI_TOPICS`, `AI_CACHE` (`localStorage["abitakt.lessons.v1"]`), `mathLevel(id)`, `aiKey(id)`, `needsAi(id)`, `hasContent(id)`, `openLesson(id)` (lädt vor der Session, Ladebildschirm, Polling alle 5 s), `acceptLesson()` + `cleanHtml()` (Allowlist-Sanitizer), `syncTopicCatalogue()` (neue Themen für alte Profile). `getTopic()` bleibt synchron.
+**KI-Lektionen:** Erzeugung in zwei Durchgängen: (1) Lektion schreiben (`emit_lesson`), (2) Fachprüfer rechnet alle 9 Aufgaben neu und korrigiert (`report_review`, `applyReview`); nur geprüfte Lektionen werden gespeichert (Schlüssel `v2/…`). Erster echter Test (17.09.2026): Stochastik LF, ca. 3 Min, Qualität gut, aber ohne Prüfdurchgang 1 falsche Antwort → deshalb der Fachprüfer. `AI_TOPICS`, `AI_CACHE` (`localStorage["abitakt.lessons.v2"]`), `mathLevel(id)`, `aiKey(id)`, `needsAi(id)`, `hasContent(id)`, `openLesson(id)` (lädt vor der Session, Ladebildschirm, Polling alle 5 s), `acceptLesson()` + `cleanHtml()` (Allowlist-Sanitizer), `syncTopicCatalogue()` (neue Themen für alte Profile). `getTopic()` bleibt synchron.
 
 **Operatoren:** `OPERATORS` (21, Bildungsplan BW 2016 Mathe, mit Quelle), `buildOpQuiz(n)`, `scrOperators()`, `S.opStats`.
 

@@ -2104,7 +2104,7 @@ function genericTopic(name, subject) {
    in localStorage under its own key, so a profile reset keeps them.
    getTopic() must stay synchronous – the engine calls it – so lessons are
    fetched *before* a session starts (openLesson) and read from AI_CACHE. */
-const AI_KEY = "abitakt.lessons.v1";
+const AI_KEY = "abitakt.lessons.v2";   // v2: lessons with review pass
 const AI_TOPICS = ["analysis_integral", "analysis_exp", "stochastik_binom", "geometrie_ebenen", "geometrie_lage", "geometrie_abstand"];
 let AI_CACHE = {};
 function loadAiCache() {
