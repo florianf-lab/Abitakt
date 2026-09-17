@@ -2,7 +2,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { getStore } from "@netlify/blobs";
 import { MATHE_TOPICS, LEVELS, type Level, lessonKey, monthKey, SYSTEM_PROMPT, userPrompt,
-  EMIT_LESSON_TOOL, validateLesson, cleanLesson } from "../lib/lesson-core.mts";
+  EMIT_LESSON_TOOL, validateLesson, cleanLesson, normalizeLesson, REVIEW_PROMPT, REVIEW_TOOL, applyReview } from "../lib/lesson-core.mts";
 
 export default async (req: Request) => {
   const meta = getStore("lesson-meta");
@@ -35,17 +35,36 @@ export default async (req: Request) => {
         messages: [{
           role: "user",
           content: userPrompt(topicName, level) + (lastErrors.length
-            ? `\n\nEin vorheriger Versuch war ungültig. Behebe unbedingt: ${lastErrors.slice(0, 12).join("; ")}.` : ""),
+            ? `\n\nEin vorheriger Versuch war ungültig. Behebe unbedingt: ${lastErrors.slice(0, 12).join("; ")}. (practice count = es müssen genau 9 Übungsaufgaben sein.)` : ""),
         }],
       }, { signal: AbortSignal.timeout(8 * 60 * 1000) });
       usage.input += msg.usage?.input_tokens || 0;
       usage.output += msg.usage?.output_tokens || 0;
       usage.calls++;
       const block: any = msg.content.find((b: any) => b.type === "tool_use");
+      if (block) block.input = normalizeLesson(block.input);
       const errs = block ? validateLesson(block.input) : ["no tool output"];
       if (msg.stop_reason === "max_tokens") errs.push("output truncated");
       if (!errs.length) {
-        await lessons.setJSON(key, { ...cleanLesson(block.input, topicName), level, model, created: new Date().toISOString() });
+        // second pass: independent review that recomputes every task
+        const rv = await client.messages.create({
+          model,
+          max_tokens: 12000,
+          system: REVIEW_PROMPT,
+          tools: [REVIEW_TOOL as any],
+          tool_choice: { type: "tool", name: "report_review" },
+          messages: [{ role: "user", content: `Thema: ${topicName} (${level})\n\n` + JSON.stringify(block.input) }],
+        }, { signal: AbortSignal.timeout(6 * 60 * 1000) });
+        usage.input += rv.usage?.input_tokens || 0;
+        usage.output += rv.usage?.output_tokens || 0;
+        usage.calls++;
+        const rb: any = rv.content.find((b: any) => b.type === "tool_use");
+        const reviewed = applyReview(block.input, rb && rb.input);
+        const errs2 = reviewed.ok ? validateLesson(reviewed.lesson) : ["review rejected: " + reviewed.problems.join(" | ")];
+        if (reviewed.problems.length) console.log(`lesson ${key} review fixed:`, reviewed.problems.join(" | "));
+        if (errs2.length) { lastErrors = errs2; console.warn(`lesson ${key} attempt ${attempt + 1} failed review:`, errs2.join(", ")); continue; }
+        await lessons.setJSON(key, { ...cleanLesson(reviewed.lesson, topicName), level, model, reviewed: true,
+          reviewNotes: reviewed.problems, created: new Date().toISOString() });
         await jobs.delete(key);
         await record(budget, usage, true);
         return;
