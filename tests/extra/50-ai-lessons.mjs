@@ -69,7 +69,7 @@ export default async function ({ ok }) {
   await start;
   await p.waitForSelector('[data-act="nextTeach"]', { timeout: 20000 });
   const st = await p.evaluate(() => ({ ai: SES.topic.ai, gen: !!SES.topic.generic, n: SES.topic.practice.length,
-    cached: !!JSON.parse(localStorage.getItem("abitakt.lessons.v1"))["stochastik_binom/Leistungsfach"] }));
+    cached: !!JSON.parse(localStorage.getItem("abitakt.lessons.v2"))["stochastik_binom/Leistungsfach"] }));
   ok(st.ai && !st.gen && st.n === 9, "KI-Lektion geladen (9 Aufgaben)");
   ok(st.cached, "Lektion im eigenen localStorage-Schlüssel gespeichert");
   const html = await p.evaluate(() => JSON.stringify(AI_CACHE["stochastik_binom/Leistungsfach"].steps));
@@ -117,7 +117,7 @@ export default async function ({ ok }) {
 
   // profile reset keeps lessons
   await p.evaluate(() => { Store.reset(); });
-  ok(await p.evaluate(() => !!localStorage.getItem("abitakt.lessons.v1")), "Profil-Reset löscht Lektionen nicht");
+  ok(await p.evaluate(() => !!localStorage.getItem("abitakt.lessons.v2")), "Profil-Reset löscht Lektionen nicht");
   ok(errors.length === 0, "keine JS-Fehler" + (errors.length ? ": " + errors.join(" | ") : ""));
   await browser.close();
   server.close();
