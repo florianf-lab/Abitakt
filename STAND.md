@@ -1,10 +1,15 @@
-# Arbeitsstand – 18.09.2026
+# Arbeitsstand – 17.09.2026, abends
 
-Hauptversion = Codex-Design (V2) + Lernbegleiter + alle Claude-Funktionen.
-Kompletter Testlauf bestanden (Engine-Prüfsumme, Onboarding + Lektion in DE/EN/TR, i18n,
-Design, Schnellstart, Prüfungsbereitschaft, Offline-App, Operatoren, KI-Lektionen, Lernbegleiter).
+Live: https://abifix.netlify.app (Netlify deployt automatisch aus GitHub `main`).
+
+Fertig und getestet:
+- Design V2, Lernbegleiter (Alltag, Check-in, Tagesplan mit Begründung, Planer, Fokus-Timer,
+  Bewertung, Beobachtungen), Schnellstart, Prüfungsbereitschaft, Operatoren, Offline-App
+- KI-Lektionen mit Fachprüfer-Durchgang; erste Lektion (Stochastik LF) erzeugt und nachgerechnet
+- Agent-Setup im Repo: CLAUDE.md, .claude/agents (builder, fachpruefer, test-agent, waechter),
+  .claude/skills/lektion-pruefen, Hook: Engine-Prüfsumme nach jeder Datei-Änderung
 
 Offen:
-1. Diesen Ordner auf GitHub hochladen (Florian: Upload files → alles hineinziehen → Commit)
-2. Netlify mit GitHub verknüpfen (Florian meldet sich an)
-3. Ideen aus Florians TikTok-Videos einbauen (Inhalt muss Florian beschreiben – TikTok ist für Claude nicht abrufbar)
+1. Lektionen für die übrigen Mathe-Themen erzeugen und prüfen (Budget: 8 pro Monat)
+2. Ideen aus Florians TikTok-Videos (Inhalt muss Florian beschreiben)
+3. Später: Freitext-Aufgaben mit KI-Feedback, Trainer für die mündliche Prüfung, weitere Fächer
