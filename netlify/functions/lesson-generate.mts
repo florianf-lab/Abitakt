@@ -3,10 +3,17 @@ import Anthropic from "@anthropic-ai/sdk";
 import { getStore } from "@netlify/blobs";
 import { MATHE_TOPICS, LEVELS, type Level, lessonKey, monthKey, SYSTEM_PROMPT, userPrompt,
   EMIT_LESSON_TOOL, validateLesson, cleanLesson, normalizeLesson, REVIEW_PROMPT, REVIEW_TOOL, applyReview } from "../lib/lesson-core.mts";
+import { recordOutcome, releaseSlot, releaseLock, failLock } from "../lib/atomic.mts";
+
+// A background function gets 15 min. Leave room so the second attempt cannot be
+// cut off mid-write, and skip it when there is no time left.
+const HARD_DEADLINE_MS = 13 * 60 * 1000;
+const GEN_TIMEOUT_MS = 6 * 60 * 1000;
+const REVIEW_TIMEOUT_MS = 4 * 60 * 1000;
 
 export default async (req: Request) => {
   const meta = getStore("lesson-meta");
-  const secret = await meta.get("secret");
+  const secret = await meta.get("secret", { type: "text" });
   if (!secret || req.headers.get("x-abitakt-secret") !== secret) return;
 
   const { topicId, level } = (await req.json().catch(() => ({}))) as { topicId?: string; level?: Level };
@@ -17,7 +24,9 @@ export default async (req: Request) => {
   const lessons = getStore("lessons");
   const jobs = getStore("lesson-jobs");
   const budget = getStore("budget");
-  if (await lessons.get(key)) { await jobs.delete(key); return; }
+  if (await lessons.get(key)) { await releaseLock(jobs as any, key); await releaseSlot(budget as any, monthKey()); return; }
+
+  const deadline = Date.now() + HARD_DEADLINE_MS;
 
   const client = new Anthropic();
   const model = process.env.LESSON_MODEL || "claude-sonnet-5";
@@ -25,6 +34,10 @@ export default async (req: Request) => {
   let usage = { input: 0, output: 0, calls: 0 };
 
   for (let attempt = 0; attempt < 2; attempt++) {
+    if (attempt > 0 && Date.now() + GEN_TIMEOUT_MS + REVIEW_TIMEOUT_MS > deadline) {
+      lastErrors = ["no time left for a second attempt"];
+      break;
+    }
     try {
       const msg = await client.messages.create({
         model,
@@ -37,7 +50,7 @@ export default async (req: Request) => {
           content: userPrompt(topicName, level) + (lastErrors.length
             ? `\n\nEin vorheriger Versuch war ungültig. Behebe unbedingt: ${lastErrors.slice(0, 12).join("; ")}. (practice count = es müssen genau 9 Übungsaufgaben sein.)` : ""),
         }],
-      }, { signal: AbortSignal.timeout(8 * 60 * 1000) });
+      }, { signal: AbortSignal.timeout(Math.min(GEN_TIMEOUT_MS, Math.max(30_000, deadline - Date.now()))) });
       usage.input += msg.usage?.input_tokens || 0;
       usage.output += msg.usage?.output_tokens || 0;
       usage.calls++;
@@ -54,7 +67,7 @@ export default async (req: Request) => {
           tools: [REVIEW_TOOL as any],
           tool_choice: { type: "tool", name: "report_review" },
           messages: [{ role: "user", content: `Thema: ${topicName} (${level})\n\n` + JSON.stringify(block.input) }],
-        }, { signal: AbortSignal.timeout(6 * 60 * 1000) });
+        }, { signal: AbortSignal.timeout(Math.min(REVIEW_TIMEOUT_MS, Math.max(30_000, deadline - Date.now()))) });
         usage.input += rv.usage?.input_tokens || 0;
         usage.output += rv.usage?.output_tokens || 0;
         usage.calls++;
@@ -65,8 +78,8 @@ export default async (req: Request) => {
         if (errs2.length) { lastErrors = errs2; console.warn(`lesson ${key} attempt ${attempt + 1} failed review:`, errs2.join(", ")); continue; }
         await lessons.setJSON(key, { ...cleanLesson(reviewed.lesson, topicName), level, model, reviewed: true,
           reviewNotes: reviewed.problems, created: new Date().toISOString() });
-        await jobs.delete(key);
-        await record(budget, usage, true);
+        await releaseLock(jobs as any, key);
+        await recordOutcome(budget as any, monthKey(), usage, true);
         return;
       }
       lastErrors = errs;
@@ -76,18 +89,10 @@ export default async (req: Request) => {
       console.error(`lesson ${key} attempt ${attempt + 1} failed:`, lastErrors[0]);
     }
   }
-  await jobs.setJSON(key, { state: "failed", at: Date.now(), reason: lastErrors.slice(0, 5) });
-  await record(budget, usage, false);
+  await failLock(jobs as any, key, lastErrors.slice(0, 5));
+  // A failure that never reached the model costs nothing – give the slot back.
+  if (!usage.calls) await releaseSlot(budget as any, monthKey());
+  await recordOutcome(budget as any, monthKey(), usage, false);
 };
-
-async function record(budget: ReturnType<typeof getStore>, usage: { input: number; output: number; calls: number }, ok: boolean) {
-  const k = monthKey();
-  const m: any = (await budget.get(k, { type: "json" })) || { generations: 0, failed: 0, inputTokens: 0, outputTokens: 0, calls: 0 };
-  if (ok) m.generations++; else m.failed = (m.failed || 0) + 1;
-  // failed attempts also cost money – count them against the limit too
-  if (!ok && usage.calls) m.generations++;
-  m.inputTokens += usage.input; m.outputTokens += usage.output; m.calls += usage.calls;
-  await budget.setJSON(k, m);
-}
 
 export const config = { path: "/api/lesson-generate", background: true };
