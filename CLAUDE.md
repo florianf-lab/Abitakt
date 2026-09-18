@@ -28,6 +28,7 @@ Aktueller Stand: `STAND.md`.
 ```bash
 npm install                    # einmalig, danach: npx playwright install chromium
 node tests/engine-guard.mjs    # Engine-Prüfsumme (Sekunden)
+npm run test:content           # Lektionen: Darstellungsformen, Optionen, Schwierigkeit (Sekunden)
 npm run test:server            # Server-Logik: Budget, Sperren, Sync (Sekunden)
 node tests/e2e.mjs --extra     # Tests der Zusatzfunktionen (ca. 5 Min)
 node tests/e2e.mjs --extra --only=70   # nur eine Testdatei

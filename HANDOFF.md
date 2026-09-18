@@ -140,6 +140,8 @@ Codex-Fixes: Sprachwechsel bleibt in der laufenden Lektion (`refreshSessionLangu
 
 **Behobene Befunde aus der Codex-Prüfung (17.09.2026).** Budget-Wettlauf und Job-Sperre laufen über `netlify/lib/atomic.mts` (Reservierung **vor** dem Modellaufruf, Rückgabe nur wenn nichts abgerechnet wurde); Sperrfrist 16 Min, harte 13-Min-Frist im Generator; `daysUntil(iso, from)` nimmt einen Bezugstag und `Coach.candidates(date)` übergibt ihn; `Coach.pace()` schätzt aus eigener Median-Dauer und gemessenem Zuwachs und kennzeichnet sich sonst als grob.
 
+**Handgeschriebene Lektionen:** `TOPICS` enthält jetzt fünf: `analysis_extrem` (Mathematik), `neuro_ap` und `genetik_pbs` (Biologie), `eroerterung` (Deutsch), `gesch_teilung` (Geschichte). Format je Lektion: `steps[]` mit `{t, visual, auditory, kinesthetic, textual}` und `practice[]` mit `{d, op, q, opts, a, why, wrong}`. `node tests/content.mjs` prüft Vollständigkeit, eindeutige Optionen, steigende Schwierigkeit und dass kein ausführbarer Code im Inhalt steht. Neue Lektionen zusätzlich in `OPEN_TOPICS` (index.html) und `AUTHORED_TOPICS` (netlify/lib/ai-core.mts) eintragen, sonst gibt es dafür keine Freitext-Aufgaben.
+
 **i18n-Blöcke:** „3a-2“ (Schnellstart, Bereitschaft, Operatoren, KI), „3a-3“ (Lernbegleiter), „3a-4“ (Freitext + mündlich), „3a-5“ (Sicherung), „3a-6“ (Rechtliches). Alle drei Sprachen, sonst schlägt der i18n-Test fehl.
 
 ---

@@ -1,11 +1,12 @@
 # Arbeitsstand – 18.09.2026
 
 Live: https://abifix.netlify.app (Netlify deployt automatisch aus GitHub `main`).
-**Achtung: der Stand unten liegt noch nicht auf GitHub.** Die Live-Seite zeigt weiterhin `7bb2709`.
+Der Stand unten ist auf GitHub und live.
 
 Fertig und getestet (Browser-Tests mit simulierten Serverantworten):
 - Design V2, Lernbegleiter (Alltag, Check-in, Tagesplan mit Begründung, Planer, Fokus-Timer,
   Bewertung, Beobachtungen), Schnellstart, Prüfungsbereitschaft, Operatoren, Offline-App
+- Fünf handgeschriebene Lektionen: Analysis, Aktionspotential, Proteinbiosynthese, Erörterung, Deutschland 1945–1990
 - KI-Lektionen mit Fachprüfer-Durchgang; eine echte Lektion (Stochastik LF) erzeugt und nachgerechnet
 - Freitext-Aufgaben im Abiturformat mit Korrektur am Erwartungshorizont (`/api/open`, `/api/feedback`)
 - Mündlicher Prüfungstrainer P4/P5 (`/api/oral`)
@@ -16,8 +17,7 @@ Fertig und getestet (Browser-Tests mit simulierten Serverantworten):
 - Agent-Setup im Repo: CLAUDE.md, .claude/agents, .claude/skills/lektion-pruefen, Hook
 
 Offen:
-1. `OPERATOR` in `index.html` (Abschnitt 6.10) ausfüllen – Impressumspflicht
-2. Diesen Stand nach GitHub `main` bringen und live prüfen
+1. `OPERATOR` in `index.html` (Abschnitt 6.10) ausfüllen – ohne Angaben ist das Impressum unvollständig
 3. Erste echte Läufe der neuen Endpunkte mit der Abrechnung abgleichen
 4. Lektionen für die übrigen Mathe-Themen erzeugen und prüfen (Budget 8/Monat)
 5. Ideen aus Florians TikTok-Videos (Inhalt muss Florian beschreiben)

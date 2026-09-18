@@ -2,7 +2,11 @@
 
 > **Neu erstellt am 17.09.2026.** Diese Datei ersetzt die ältere `BUILD-GUIDE.md` (Next.js/Prisma-Variante) **nicht 1:1** – sie beschreibt den *aktuellen* Stand (Einzeldatei + Netlify Functions) und den Plan fürs Agent-Team. Wenn die alte Version wieder auftaucht, Abschnitte daraus bewusst übernehmen statt blind zu mischen.
 >
-> Aktueller Arbeitsstand und Code-Landkarte: siehe `HANDOFF.md`.
+> **Stand 18.09.2026:** Abschnitt 2, 9 und 10 sind auf dem aktuellen Stand. Abschnitt 5
+> (Lektions-Generator) beschreibt die ursprüngliche Spezifikation und ist in Teilen von der
+> Umsetzung überholt – maßgeblich sind der Code und `HANDOFF.md` Abschnitt 3.8/3.9.
+>
+> Aktueller Arbeitsstand und Code-Landkarte: siehe `HANDOFF.md`. Kurzregeln: `CLAUDE.md`.
 >
 > Diese Datei ist das **gemeinsame Gedächtnis** aller Agents. Jeder Agent liest sie vor jeder Aufgabe.
 
@@ -22,37 +26,47 @@ abitakt ist eine adaptive Abitur-Lern-App für Baden-Württemberg, die **den ein
 
 ```
 abitakt/
-├── index.html                 ← die komplette App (kanonische Datei, KEIN abitakt.html)
+├── index.html                      ← die komplette App (kanonische Datei, kein Build-Schritt)
 ├── netlify/
-│   └── functions/
-│       └── lesson.mts         ← Lektions-Generator (MUSS .mts sein, siehe 5.1)
-├── tests/                     ← wird NICHT ausgeliefert (siehe netlify.toml)
-│   ├── engine.test.mjs        ← Engine-Mathe
-│   ├── i18n.test.mjs          ← Übersetzungs-Vollständigkeit
-│   ├── ui.e2e.mjs             ← UI-Durchlauf in DE/EN/TR (Playwright)
-│   ├── engine-guard.mjs       ← Prüfsumme des Engine-Blocks
-│   └── engine.sha256          ← erwartete Prüfsumme
-├── agents/
-│   ├── TODO.md                ← Aufgabenliste (Planer schreibt, alle lesen)
-│   ├── DECISIONS.md           ← Entscheidungen + Begründung
-│   └── REPORTS/               ← nächtliche Berichte
-├── package.json
-├── netlify.toml
-└── BUILD-GUIDE.md             ← diese Datei
+│   ├── functions/
+│   │   ├── lesson.mts              ← /api/lesson: Status, Start, Whitelist, Budgetbremse
+│   │   ├── lesson-generate.mts     ← Hintergrund: Lektion erzeugen → Fachprüfer → Blobs
+│   │   ├── open.mts                ← /api/open: drei Freitext-Prüfungsaufgaben je Thema
+│   │   ├── open-generate.mts       ← Hintergrund: Aufgaben erzeugen → Blobs
+│   │   ├── feedback.mts            ← /api/feedback: Korrektur am Erwartungshorizont
+│   │   ├── oral.mts                ← /api/oral: mündliche Übungsprüfung (P4/P5)
+│   │   └── sync.mts                ← /api/sync: verschlüsselte Profil-Sicherung
+│   └── lib/
+│       ├── lesson-core.mts         ← Prompts, Schemata, Validierung, Review
+│       ├── ai-core.mts             ← dasselbe für Freitext, Korrektur, mündlich
+│       └── atomic.mts              ← Compare-and-Swap: Budget-Reservierung, Job-Sperren
+├── tests/                          ← wird NICHT ausgeliefert (siehe netlify.toml)
+│   ├── engine-guard.mjs            ← Prüfsumme des Engine-Blocks
+│   ├── engine.sha256               ← erwartete Prüfsumme
+│   ├── content.mjs                 ← prüft die handgeschriebenen Lektionen (ohne Browser)
+│   ├── e2e.mjs                     ← Onboarding + Session in DE/EN/TR, i18n-Vollständigkeit
+│   ├── extra/NN-*.mjs              ← ein Test je Funktion, wird automatisch geladen
+│   └── server/                     ← Server-Logik ohne Browser (Budget, Sperren, Sync)
+├── icons/, manifest.webmanifest, sw.js   ← installierbare App, Offline
+├── .claude/                        ← Agent-Team, Skill, Hook
+├── package.json, netlify.toml
+├── CLAUDE.md, HANDOFF.md, STAND.md, BUILD-GUIDE.md
 ```
 
 - Kein Build-Schritt für die App selbst. `index.html` bleibt eine selbstständige Datei.
-- Netlify deployt automatisch aus `main`.
-- Veröffentlicht wird nur das, was die App braucht:
+- Netlify deployt automatisch aus `main`; publiziert wird das Repo-Wurzelverzeichnis.
+- `tests/` und `netlify/` sind über Weiterleitungen in `netlify.toml` von außen nicht erreichbar.
+- Sicherheits-Header (CSP, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy) stehen
+  ebenfalls in `netlify.toml`.
 
 ```toml
-# netlify.toml
+# netlify.toml (Auszug)
 [build]
-  publish = "public"
-  command = "mkdir -p public && cp index.html public/"
+  publish = "."
 
 [functions]
   directory = "netlify/functions"
+  node_bundler = "esbuild"
 ```
 
 ---
@@ -377,19 +391,25 @@ TODO → Planer → Builder / Content-Agent
 | 7 | Prüfungsbereitschaft pro Fach (P1–P5) mit den 3 nächsten Lücken | ✅ erledigt |
 | 8 | PWA: installierbar, gecachte Lektionen offline | ✅ erledigt |
 | 9 | Schneller Start (erst Fächer + erste Session, Profil später vervollständigen) | ✅ erledigt (freigegeben) |
-| 10 | Freitext-Aufgaben mit KI-Feedback nach Erwartungshorizont (Tageslimit, kostet pro Antwort) | **wartet auf Florians Freigabe** |
-| 11 | Trainer für mündliche Prüfung / Präsentationsprüfung (P4/P5) | später |
-| 12 | Weitere Fächer nach Mathe | später |
-| 13 | Konten + Sync (Backend, DSGVO-Projekt) | später |
+| 10 | Freitext-Aufgaben mit KI-Feedback nach Erwartungshorizont (Tageslimit, kostet pro Antwort) | ✅ gebaut, getestet mit simulierten Antworten |
+| 11 | Trainer für mündliche Prüfung (P4/P5) | ✅ gebaut, getestet mit simulierten Antworten |
+| 12 | Weitere Fächer neben Mathe | teilweise: 5 handgeschriebene Lektionen (Mathe, Biologie ×2, Deutsch, Geschichte) |
+| 13 | Konten + Sync | ✅ gelöst **ohne** Konto: verschlüsselte Sicherung, Server kann nichts lesen |
 | 14 | Lernbegleiter: Stundenplan, Prüfungen, Aufgaben, Check-in, Tagesplan mit Begründung, Beobachtungen | ✅ erledigt (siehe HANDOFF 3.8) |
+| 15 | Datenschutz, Impressum, „Über abitakt“ in DE/EN/TR | ✅ gebaut; Anbieterangaben noch einzutragen |
+| 16 | Sicherheits-Header, Teilen-Vorschau, Icons im App-Design | ✅ erledigt |
 
 ---
 
 ## 10. Offene Punkte
 
-- [ ] Repo-Zugang: GitHub-Repo + lokaler Klon verbunden?
-- [ ] Liegen die alten Testdateien noch vor, oder neu schreiben?
-- [ ] Monatsbudget festlegen (`MAX_GENERATIONS_PER_MONTH`)
-- [ ] Aktuelle Sonnet-Modell-ID für `LESSON_MODEL` im Netlify AI Gateway prüfen
-- [ ] Erste echte Generierung mit Abrechnung abgleichen und hier eintragen
-- [ ] Freigabe für Roadmap 9 und 10
+- [x] Repo-Zugang: GitHub `florianf-lab/Abitakt`, Netlify deployt `main` automatisch
+- [x] Monatsbudget festgelegt (`MAX_GENERATIONS_PER_MONTH`, Standard 8)
+- [x] Erste echte Lektion erzeugt (Stochastik LF) und nachgerechnet
+- [ ] `OPERATOR` in `index.html` (Abschnitt 6.10) ausfüllen – ohne Name, ladungsfähige Anschrift
+      und E-Mail ist das Impressum unvollständig; die Seite warnt selbst darauf hin
+- [ ] Erste echte Läufe von `/api/open`, `/api/feedback` und `/api/oral` mit der Abrechnung
+      abgleichen – bisher nur gegen simulierte Antworten getestet
+- [ ] Lektionen für die übrigen Mathe-Themen erzeugen und fachlich prüfen (Budget 8/Monat)
+- [ ] Weitere handgeschriebene Lektionen für Fächer ohne Inhalt
+- [ ] Abschnitt 5 dieser Datei gegen den tatsächlichen Code nachziehen

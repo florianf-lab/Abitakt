@@ -1078,7 +1078,7 @@ Object.assign(I18N.de, {
   "v2_scope": "Für volljährige Lernende · unabhängiges Lernprojekt",
   "v2_dates": "Prüfungstermine bitte mit der Schule abgleichen.",
   "v2_available": "Bereit zum Lernen",
-  "v2_library": "Drei ausgearbeitete Lektionen. Weitere Themen sind im Lernplan vorgemerkt.",
+  "v2_library": "{n} ausgearbeitete Lektionen. Weitere Themen sind im Lernplan vorgemerkt – Mathe-Lektionen entstehen auf Abruf.",
   "v2_missing": "Noch kein Lerninhalt",
   "v2_missing_body": "Für dieses Thema gibt es noch keine ausgearbeitete Lektion. Es wird deshalb nicht als Übung gewertet. Wähle eine der verfügbaren Lektionen auf deiner Startseite.",
   "v2_back": "Zur Startseite",
@@ -1100,7 +1100,7 @@ Object.assign(I18N.en, {
   "v2_scope": "For adult learners · independent learning project",
   "v2_dates": "Please confirm exam dates with your school.",
   "v2_available": "Ready to study",
-  "v2_library": "Three complete lessons. Further topics are listed in your study plan.",
+  "v2_library": "{n} complete lessons. Further topics are listed in your study plan – maths lessons are created on demand.",
   "v2_missing": "Content not yet available",
   "v2_missing_body": "This topic does not yet have a complete lesson, so it will not count as practice. Choose an available lesson on your home page.",
   "v2_back": "Back to home",
@@ -1122,7 +1122,7 @@ Object.assign(I18N.tr, {
   "v2_scope": "Yetişkin öğrenciler için · bağımsız öğrenme projesi",
   "v2_dates": "Sınav tarihlerini lütfen okulunla doğrula.",
   "v2_available": "Öğrenmeye hazır",
-  "v2_library": "Üç tamamlanmış ders. Diğer konular çalışma planında listelenmiştir.",
+  "v2_library": "{n} tamamlanmış ders. Diğer konular çalışma planında listelenmiştir – matematik dersleri istendiğinde oluşturulur.",
   "v2_missing": "İçerik henüz hazır değil",
   "v2_missing_body": "Bu konu için henüz tamamlanmış bir ders yok. Bu nedenle alıştırma olarak sayılmaz. Ana sayfadan hazır bir ders seç.",
   "v2_back": "Ana sayfaya dön",
@@ -2582,6 +2582,256 @@ const TOPICS = {
     ]
   },
 
+  genetik_pbs: {
+    subject: "Biologie", name: "Genetik: Proteinbiosynthese", load: 4, lf: true,
+    steps: [
+      { t: "Vom Gen zum Protein – der Weg",
+        visual: `<p>Ein Gen ist ein Bauplan. Zwischen Plan und fertigem Bauteil liegen zwei Schritte – und bei uns eine Zwischenstation.</p>
+          <div class="visual-box"><div class="mono" style="text-align:center;line-height:2.1;font-size:14px">
+          <span style="color:var(--accent)">DNA</span> <span class="mute">im Zellkern</span><br>
+          <span class="mute">↓ Transkription</span><br>
+          <span style="color:var(--teal)">prä-mRNA → mRNA</span> <span class="mute">Prozessierung, noch im Kern</span><br>
+          <span class="mute">↓ Kernpore</span><br>
+          <span style="color:var(--teal)">mRNA</span> <span class="mute">am Ribosom im Cytoplasma</span><br>
+          <span class="mute">↓ Translation</span><br>
+          <span style="color:var(--accent)">Polypeptid → Protein</span>
+          </div></div>
+          <p>Zwei Namen, zwei Orte: <strong>Transkription</strong> im Kern, <strong>Translation</strong> am Ribosom. Dazwischen verlässt nur die fertige mRNA den Kern.</p>`,
+        auditory: `<p>Zwei Wörter, die alles tragen – und die man leicht verwechselt:</p>
+          <div class="audio-box"><p style="margin:0"><em>„Transkription ist Abschreiben. Translation ist Übersetzen.“</em></p></div>
+          <p>Abgeschrieben wird von einer Nukleinsäure in eine Nukleinsäure – dieselbe Sprache, nur anderes Papier. Übersetzt wird von der Basensprache in die Aminosäuresprache – eine <em>andere</em> Sprache, deshalb braucht es ein Wörterbuch: den genetischen Code.</p>
+          <p>Sprich auch die Orte mit: <em>Transkription im Zellkern, Translation im Cytoplasma.</em> Bei Bakterien fällt das zusammen, weil sie keinen Kern haben – dort läuft beides gleichzeitig.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Erst du.</strong> Eine Zelle soll ein Protein herstellen, das aus 300 Aminosäuren besteht. Wie viele Basen der mRNA werden dafür mindestens abgelesen?</p></div>
+          <p>300 Aminosäuren × 3 Basen pro Codon = <strong>900 Basen</strong>, plus das Stoppcodon: 903. Der Dreierschritt ist die wichtigste Zahl dieses Themas.</p>
+          <p>Zweite Überlegung, die im Abitur häufig gefragt wird: Warum reichen Zweiergruppen nicht? 4 Basen in Zweiergruppen ergeben 4² = 16 Möglichkeiten – zu wenig für 20 Aminosäuren. Erst 4³ = <strong>64</strong> reicht aus, mit Reserve.</p>`,
+        textual: `<p><strong>Proteinbiosynthese</strong> bezeichnet die Umsetzung der in der DNA gespeicherten Information in ein Polypeptid.</p>
+          <p><strong>Schritt 1 – Transkription:</strong> Umschreiben eines DNA-Abschnitts in prä-mRNA; Ort: Zellkern.<br>
+          <strong>Schritt 2 – Prozessierung:</strong> Reifung der prä-mRNA zur mRNA; Ort: Zellkern (nur bei Eukaryoten).<br>
+          <strong>Schritt 3 – Translation:</strong> Übersetzung der Basensequenz in eine Aminosäuresequenz; Ort: Ribosom im Cytoplasma bzw. am rauen ER.</p>
+          <p><strong>Ein Gen – ein Polypeptid.</strong> Die ältere Formulierung „ein Gen – ein Enzym“ gilt als überholt: viele Proteine bestehen aus mehreren Polypeptidketten, und durch alternatives Spleißen kann ein Gen für mehrere Polypeptide codieren.</p>
+          <p><strong>Prokaryoten:</strong> kein Zellkern, keine Prozessierung, Transkription und Translation erfolgen räumlich und zeitlich gekoppelt.</p>` },
+
+      { t: "Transkription: die mRNA entsteht",
+        visual: `<p>Nur einer der beiden DNA-Stränge wird abgelesen. Der andere sieht aus wie das Ergebnis.</p>
+          <div class="visual-box"><div class="mono" style="font-size:13.5px;line-height:2">
+          <span class="mute">codogener Strang (Matrize) 3′</span> <span style="color:var(--accent)">T A C G G A T T C</span> <span class="mute">5′</span><br>
+          <span class="mute">codierender Strang&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5′</span> <span class="mute">A T G C C T A A G</span> <span class="mute">3′</span><br>
+          <span class="mute">↓ RNA-Polymerase liest die Matrize</span><br>
+          <span class="mute">mRNA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5′</span> <span style="color:var(--teal)">A U G C C U A A G</span> <span class="mute">3′</span>
+          </div></div>
+          <p>Die mRNA gleicht dem <strong>codierenden</strong> Strang – nur steht überall <strong>U</strong> statt T. Abgelesen wurde aber der <strong>codogene</strong> Strang.</p>`,
+        auditory: `<p>Der Satz, der die häufigste Verwechslung verhindert:</p>
+          <div class="audio-box"><p style="margin:0"><em>„Abgelesen wird der codogene Strang – abgeschrieben aussehen tut der codierende.“</em></p></div>
+          <p>Die <strong>RNA-Polymerase</strong> bindet am <strong>Promotor</strong>, öffnet die Doppelhelix und setzt komplementäre RNA-Nukleotide an: zu A kommt U, zu T kommt A, zu G kommt C, zu C kommt G.</p>
+          <p>Zwei Richtungen, die man auseinanderhalten muss: die Polymerase liest die Matrize von <em>3′ nach 5′</em> und baut die mRNA von <em>5′ nach 3′</em>. Am <strong>Terminator</strong> löst sie sich ab.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Du bist dran.</strong> Der codogene Strang lautet 3′-TACGGCTTA-5′. Schreib die mRNA auf, bevor du weiterliest.</p></div>
+          <p><strong>5′-AUGCCGAAU-3′.</strong> Prüf dich selbst: T→A, A→U, C→G, G→C. Und nirgends ein T.</p>
+          <p>Kontrolle, die im Abitur Punkte rettet: Beginnt deine mRNA mit <strong>AUG</strong>? Dann hast du wahrscheinlich richtig gearbeitet, denn das ist das Startcodon. Steht dort UAC, hast du den falschen Strang abgelesen.</p>
+          <p>Und noch etwas: Schreib die Richtungsangaben 5′ und 3′ immer dazu. Eine Sequenz ohne Richtung ist zweideutig.</p>`,
+        textual: `<p><strong>Transkription.</strong></p>
+          <p><strong>Initiation:</strong> Die RNA-Polymerase bindet – bei Eukaryoten mithilfe von Transkriptionsfaktoren – an den <em>Promotor</em> und entwindet die DNA lokal.</p>
+          <p><strong>Elongation:</strong> Als Matrize dient ausschließlich der <em>codogene Strang</em> (Matrizenstrang), der in 3′→5′-Richtung abgelesen wird. Die prä-mRNA wächst antiparallel in 5′→3′-Richtung. Basenpaarung: A–U, T–A, G–C, C–G. Uracil ersetzt Thymin.</p>
+          <p><strong>Termination:</strong> Am Terminator lösen sich Polymerase und Transkript von der DNA; die Doppelhelix schließt sich wieder.</p>
+          <p><strong>Begriffsklärung:</strong> Der <em>codierende Strang</em> (Sinnstrang) ist basengleich mit der mRNA (T statt U) und wird gerade <em>nicht</em> abgelesen. Ein Gen wird nur einmal transkribiert, kann aber vielfach translatiert werden – so entstehen aus einer mRNA viele Proteinkopien.</p>` },
+
+      { t: "Prozessierung: warum aus prä-mRNA erst mRNA wird",
+        visual: `<p>Das Transkript ist noch kein fertiger Bauplan. Erst werden Stücke herausgeschnitten.</p>
+          <div class="visual-box"><svg width="100%" height="140" viewBox="0 0 320 140" style="max-width:320px;display:block;margin:0 auto">
+          <rect x="10" y="26" width="40" height="16" rx="4" fill="var(--accent)"/>
+          <rect x="50" y="26" width="52" height="16" rx="4" fill="rgba(140,150,160,.35)"/>
+          <rect x="102" y="26" width="44" height="16" rx="4" fill="var(--accent)"/>
+          <rect x="146" y="26" width="58" height="16" rx="4" fill="rgba(140,150,160,.35)"/>
+          <rect x="204" y="26" width="46" height="16" rx="4" fill="var(--accent)"/>
+          <text x="12" y="20" font-size="10" font-family="monospace" fill="var(--accent)">Exon</text>
+          <text x="56" y="20" font-size="10" font-family="monospace" fill="#8d95a3">Intron</text>
+          <text x="150" y="20" font-size="10" font-family="monospace" fill="#8d95a3">Intron</text>
+          <text x="10" y="62" font-size="10" font-family="monospace" fill="#8d95a3">prä-mRNA</text>
+          <path d="M120 74 L120 88" stroke="#8d95a3" stroke-width="1.5"/>
+          <path d="M115 83 L120 90 L125 83" fill="#8d95a3"/>
+          <text x="132" y="86" font-size="10" font-family="monospace" fill="#8d95a3">Spleißen</text>
+          <rect x="10" y="100" width="40" height="16" rx="4" fill="var(--accent)"/>
+          <rect x="50" y="100" width="44" height="16" rx="4" fill="var(--accent)"/>
+          <rect x="94" y="100" width="46" height="16" rx="4" fill="var(--accent)"/>
+          <text x="10" y="132" font-size="10" font-family="monospace" fill="#8d95a3">reife mRNA</text>
+          </svg></div>
+          <p>Dazu kommen zwei Schutzkappen: die <strong>5′-Cap</strong> vorn und der <strong>Poly-A-Schwanz</strong> hinten.</p>`,
+        auditory: `<p>Drei Dinge passieren mit dem frischen Transkript – sprich sie als Liste:</p>
+          <div class="audio-box"><p style="margin:0"><em>„Cap vorne, Schwanz hinten, Introns raus.“</em></p></div>
+          <p>Die <strong>5′-Cap</strong> ist ein verändertes Guanosin. Sie schützt vor Abbau und dient dem Ribosom später als Andockstelle. Der <strong>Poly-A-Schwanz</strong> aus vielen Adenin-Nukleotiden bestimmt mit, wie lange die mRNA im Cytoplasma überlebt.</p>
+          <p>Und die Eselsbrücke fürs Spleißen: <em>Introns bleiben <strong>in</strong> im Kern, Exons gehen <strong>ex</strong> hinaus.</em> Zuständig ist das <strong>Spleißosom</strong>.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Denk kurz nach.</strong> Das menschliche Genom hat etwa 20 000 Gene, aber der Körper stellt weit mehr verschiedene Proteine her. Wie geht das?</p></div>
+          <p><strong>Alternatives Spleißen.</strong> Aus derselben prä-mRNA können unterschiedliche Kombinationen von Exons zusammengesetzt werden – ein Gen liefert so mehrere Proteine.</p>
+          <p>Genau deshalb ist „ein Gen – ein Enzym“ überholt. Wenn du in der Prüfung eine Erklärung für die Vielfalt der Proteine brauchst, ist alternatives Spleißen fast immer ein Teil der Antwort.</p>
+          <p>Und die Gegenprobe zu Bakterien: Prokaryoten haben in der Regel keine Introns und kein Spleißosom. Ihre mRNA ist sofort einsatzbereit – ein Grund, warum menschliche Gene nicht ohne Weiteres in Bakterien exprimiert werden können.</p>`,
+        textual: `<p><strong>Prozessierung (nur Eukaryoten).</strong></p>
+          <p><strong>5′-Capping:</strong> Anfügen eines 7-Methylguanosins am 5′-Ende. Funktionen: Schutz vor Exonukleasen, Erkennung durch das Ribosom, Kernexport.</p>
+          <p><strong>Polyadenylierung:</strong> Anfügen eines Poly-A-Schwanzes aus 100–250 Adenin-Nukleotiden am 3′-Ende. Funktionen: Stabilität und Lebensdauer der mRNA.</p>
+          <p><strong>Spleißen:</strong> Das <em>Spleißosom</em> entfernt die nichtcodierenden <em>Introns</em> und verknüpft die codierenden <em>Exons</em>.</p>
+          <p><strong>Alternatives Spleißen:</strong> Unterschiedliche Exon-Kombinationen desselben Primärtranskripts ergeben verschiedene mRNAs und damit verschiedene Polypeptide. Dies erklärt, warum die Zahl der Proteine die Zahl der Gene deutlich übersteigt.</p>
+          <p>Erst nach der Prozessierung verlässt die reife mRNA den Kern durch eine Kernpore.</p>` },
+
+      { t: "Translation und der genetische Code",
+        visual: `<p>Das Ribosom liest Dreiergruppen. Die tRNA bringt zu jedem Codon die passende Aminosäure.</p>
+          <div class="visual-box"><div class="mono" style="font-size:13.5px;line-height:2.1;text-align:center">
+          <span class="mute">mRNA 5′</span> <span style="color:var(--teal)">A U G</span> <span style="color:var(--accent)">C C U</span> <span style="color:var(--teal)">A A G</span> <span class="mute">U A A 3′</span><br>
+          <span class="mute">Anticodon</span> &nbsp; <span style="color:var(--teal)">U A C</span> &nbsp; <span style="color:var(--accent)">G G A</span> &nbsp; <span style="color:var(--teal)">U U C</span><br>
+          <span class="mute">Aminosäure</span> &nbsp;&nbsp; Met &nbsp;&nbsp;&nbsp;&nbsp; Pro &nbsp;&nbsp;&nbsp;&nbsp; Lys &nbsp; <span class="mute">STOPP</span>
+          </div></div>
+          <p><strong>AUG</strong> startet und codiert zugleich Methionin. <strong>UAA, UAG, UGA</strong> beenden – für sie gibt es keine tRNA.</p>`,
+        auditory: `<p>Die drei Stoppcodons lassen sich als Reihe sprechen:</p>
+          <div class="audio-box"><p style="margin:0"><em>„U-A-A, U-A-G, U-G-A – und AUG fängt an.“</em></p></div>
+          <p>Der Ablauf in drei Worten: <strong>Initiation</strong> – die kleine Ribosomen-Untereinheit findet die Cap und wandert bis zum AUG. <strong>Elongation</strong> – die tRNA mit passendem <em>Anticodon</em> bindet, das Ribosom knüpft die <strong>Peptidbindung</strong> und rückt ein Triplett weiter. <strong>Termination</strong> – am Stoppcodon bindet statt einer tRNA ein Freisetzungsfaktor, die Kette wird entlassen.</p>
+          <p>Und der Unterschied, der oft gefragt wird: <em>Codon</em> sitzt auf der mRNA, <em>Anticodon</em> auf der tRNA. Sie sind zueinander komplementär.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Rechne mit.</strong> Es gibt 64 Codons, aber nur 20 proteinogene Aminosäuren. Was folgt daraus – und was folgt daraus <em>nicht</em>?</p></div>
+          <p>Es folgt: Der Code ist <strong>degeneriert</strong> (redundant). Mehrere Codons codieren dieselbe Aminosäure – Leucin zum Beispiel sechs.</p>
+          <p>Es folgt <em>nicht</em>, dass ein Codon mehrdeutig wäre. Der Code ist <strong>eindeutig</strong>: jedes Codon steht für genau eine Aminosäure. Diese beiden Eigenschaften werden in Klausuren regelmäßig verwechselt.</p>
+          <p>Direkte Folge der Degeneration: Tauscht eine Mutation die dritte Base eines Codons, bleibt die Aminosäure oft dieselbe – eine <strong>stille Mutation</strong>. Deshalb ist die dritte Position die „unsicherste“ und zugleich die verzeihlichste.</p>`,
+        textual: `<p><strong>Translation.</strong></p>
+          <p><strong>Initiation:</strong> Die kleine Untereinheit des Ribosoms bindet an die 5′-Cap, wandert bis zum Startcodon AUG; die Initiator-tRNA mit Methionin bindet, die große Untereinheit lagert sich an.</p>
+          <p><strong>Elongation:</strong> In der A-Stelle bindet die tRNA, deren Anticodon komplementär zum Codon ist. Zwischen den Aminosäuren in P- und A-Stelle entsteht eine <em>Peptidbindung</em>. Das Ribosom rückt um ein Triplett weiter; die entladene tRNA verlässt die E-Stelle.</p>
+          <p><strong>Termination:</strong> Für UAA, UAG und UGA existiert keine passende tRNA. Ein Freisetzungsfaktor bewirkt die Ablösung des Polypeptids; das Ribosom zerfällt in seine Untereinheiten.</p>
+          <p><strong>Eigenschaften des genetischen Codes:</strong> <em>Triplettcode</em> (3 Basen pro Aminosäure) · <em>eindeutig</em> (ein Codon → genau eine Aminosäure) · <em>degeneriert</em> (eine Aminosäure ← mehrere Codons) · <em>kommafrei und nicht überlappend</em> (lückenlose Dreierschritte ab dem Startcodon) · <em>nahezu universell</em> (bei fast allen Lebewesen gleich – Grundlage der Gentechnik).</p>
+          <p><strong>Leserasterverschiebung:</strong> Eine Insertion oder Deletion, deren Basenzahl nicht durch drei teilbar ist, verschiebt das Leseraster ab der Mutationsstelle und verändert die gesamte folgende Aminosäuresequenz.</p>` }
+    ],
+    practice: [
+      { d: .2, op: "benennen", q: "Wo findet bei einer eukaryotischen Zelle die Transkription statt?", opts: ["Im Zellkern", "Am Ribosom", "In den Mitochondrien", "In der Zellmembran"], a: "Im Zellkern", why: "Die DNA verlässt den Kern nicht – nur die fertige mRNA tut das.", wrong: { "Am Ribosom": "Dort läuft die Translation, nicht die Transkription." } },
+      { d: .3, op: "angeben", q: "Welche Base der RNA steht anstelle von Thymin?", opts: ["Uracil", "Adenin", "Cytosin", "Guanin"], a: "Uracil", why: "RNA enthält Uracil; Thymin kommt nur in der DNA vor." },
+      { d: .35, op: "bestimmen", q: "Der codogene Strang lautet 3′-TAC-5′. Wie lautet das zugehörige mRNA-Codon?", opts: ["5′-AUG-3′", "5′-UAC-3′", "5′-ATG-3′", "5′-GUA-3′"], a: "5′-AUG-3′", why: "Komplementär und mit U statt T: T→A, A→U, C→G. Das ist zugleich das Startcodon.", wrong: { "5′-ATG-3′": "In RNA gibt es kein Thymin." } },
+      { d: .45, op: "erklären", q: "Welche Aufgabe hat der Promotor?", opts: ["Er ist die Bindestelle der RNA-Polymerase und legt den Startpunkt fest", "Er codiert die ersten Aminosäuren", "Er beendet die Transkription", "Er verbindet die Exons"], a: "Er ist die Bindestelle der RNA-Polymerase und legt den Startpunkt fest", why: "Der Promotor wird selbst nicht in Aminosäuren übersetzt.", wrong: { "Er beendet die Transkription": "Das ist die Aufgabe des Terminators." } },
+      { d: .55, op: "erläutern", q: "Warum wird die prä-mRNA vor dem Kernexport gespleißt?", opts: ["Weil die nichtcodierenden Introns entfernt werden müssen", "Weil die mRNA sonst zu kurz wäre", "Weil sonst kein Startcodon entsteht", "Weil das Ribosom nur DNA lesen kann"], a: "Weil die nichtcodierenden Introns entfernt werden müssen", why: "Nur die Exons tragen die Information für das Polypeptid.", wrong: { "Weil die mRNA sonst zu kurz wäre": "Spleißen verkürzt das Transkript, es verlängert es nicht." } },
+      { d: .6, op: "unterscheiden", q: "Worin unterscheiden sich Codon und Anticodon?", opts: ["Das Codon liegt auf der mRNA, das Anticodon auf der tRNA", "Das Codon liegt auf der tRNA, das Anticodon auf der mRNA", "Beide liegen auf der mRNA", "Das Anticodon liegt auf der DNA"], a: "Das Codon liegt auf der mRNA, das Anticodon auf der tRNA", why: "Beide sind zueinander komplementär – so findet die richtige Aminosäure ihren Platz." },
+      { d: .7, op: "begründen", q: "Der genetische Code gilt als degeneriert. Was bedeutet das?", opts: ["Mehrere Codons codieren dieselbe Aminosäure", "Ein Codon kann mehrere Aminosäuren codieren", "Manche Codons codieren gar nichts", "Der Code ist bei jeder Art anders"], a: "Mehrere Codons codieren dieselbe Aminosäure", why: "64 Codons stehen 20 Aminosäuren gegenüber. Eindeutig bleibt der Code trotzdem: ein Codon → genau eine Aminosäure.", wrong: { "Ein Codon kann mehrere Aminosäuren codieren": "Das wäre Mehrdeutigkeit – genau das ist der Code nicht." } },
+      { d: .8, op: "beurteilen", q: "In einem Gen wird die dritte Base eines Codons ausgetauscht, das Protein bleibt unverändert. Wie ist das zu erklären?", opts: ["Durch die Degeneration des Codes – eine stille Mutation", "Das Ribosom hat den Fehler korrigiert", "Die Mutation lag in einem Intron", "Das Leseraster hat sich verschoben"], a: "Durch die Degeneration des Codes – eine stille Mutation", why: "Codons derselben Aminosäure unterscheiden sich häufig nur in der dritten Base.", wrong: { "Das Leseraster hat sich verschoben": "Ein Austausch verschiebt das Raster nicht – nur Insertionen oder Deletionen tun das." } },
+      { d: .85, op: "beurteilen", q: "Ein menschliches Gen wird unverändert in ein Bakterium übertragen, das Protein entsteht jedoch fehlerhaft. Was ist die wahrscheinlichste Ursache?", opts: ["Bakterien können die Introns nicht herausspleißen", "Bakterien benutzen einen anderen genetischen Code", "Bakterien besitzen keine Ribosomen", "Bakterien können keine Peptidbindungen knüpfen"], a: "Bakterien können die Introns nicht herausspleißen", why: "Prokaryoten haben kein Spleißosom. Deshalb überträgt man in der Gentechnik cDNA, die aus reifer mRNA gewonnen wurde.", wrong: { "Bakterien benutzen einen anderen genetischen Code": "Der Code ist nahezu universell – genau das macht Gentechnik überhaupt möglich." } }
+    ]
+  },
+  eroerterung: {
+    subject: "Deutsch", name: "Erörterung literarischer Texte", load: 4, lf: false,
+    steps: [
+      { t: "Was „erörtern“ wirklich verlangt",
+        visual: `<p>Drei Aufgabenarten, die ständig verwechselt werden – und drei verschiedene Ergebnisse.</p>
+          <div class="visual-box"><div style="display:grid;gap:8px;font-size:13px">
+          <div style="padding:11px 13px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)">
+            <strong>Analysieren</strong> <span class="mute">– wie ist der Text gemacht?</span><br>
+            <span class="mute" style="font-size:12.5px">Aufbau, Sprache, Mittel. Kein Urteil.</span></div>
+          <div style="padding:11px 13px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)">
+            <strong>Interpretieren</strong> <span class="mute">– was bedeutet er?</span><br>
+            <span class="mute" style="font-size:12.5px">Deutung, am Text belegt. Noch kein Urteil.</span></div>
+          <div style="padding:11px 13px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent-line)">
+            <strong>Erörtern</strong> <span class="mute">– wie ist es zu beurteilen?</span><br>
+            <span class="mute" style="font-size:12.5px">Frage, Gegenargumente, begründetes eigenes Urteil.</span></div>
+          </div></div>
+          <p>Wer bei „erörtern“ nur nacherzählt oder analysiert, bekommt Punkte für die falsche Aufgabe.</p>`,
+        auditory: `<p>Der Satz, an dem du den Operator erkennst:</p>
+          <div class="audio-box"><p style="margin:0"><em>„Erörtern heißt: eine strittige Frage von zwei Seiten prüfen und dann Position beziehen.“</em></p></div>
+          <p>Das Wort <strong>strittig</strong> ist der Kern. Wenn die Antwort offensichtlich ist, gibt es nichts zu erörtern. Deine Aufgabe ist es, die Frage so zu stellen, dass eine echte Gegenposition möglich bleibt.</p>
+          <p>Und beachte den Zusatz <em>„literarischer Texte“</em>: Deine Argumente müssen aus dem Text kommen, nicht aus deiner Meinung über die Welt. Jedes Argument braucht einen Beleg mit Zeilenangabe.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Erst du.</strong> Welche der beiden Fragen taugt für eine Erörterung?<br>
+          (a) „Wie ist das Drama aufgebaut?“ &nbsp;(b) „Trägt die Hauptfigur Schuld an ihrem Scheitern?“</p></div>
+          <p><strong>(b).</strong> Darauf kann man mit Ja und mit Nein antworten, und beides lässt sich am Text belegen. Frage (a) hat eine feststellbare Antwort – das ist Analyse.</p>
+          <p>Prüfe deine Fragestellung immer mit diesem Test: <em>Könnte eine kluge Person das Gegenteil vertreten?</em> Wenn nein, formuliere um. Das kostet zwei Minuten und entscheidet über die ganze Klausur.</p>`,
+        textual: `<p>Der Operator <strong>erörtern</strong> gehört zum Anforderungsbereich III und verlangt die begründete Auseinandersetzung mit einer strittigen Fragestellung.</p>
+          <p><strong>Abgrenzung:</strong><br>
+          <em>Analysieren</em> (AFB II): Untersuchung von Struktur, Sprache und Gestaltungsmitteln.<br>
+          <em>Interpretieren</em> (AFB II–III): Deutung des Textes auf Grundlage der Analyse.<br>
+          <em>Erörtern</em> (AFB III): Prüfung einer These unter Einbezug von Gegenpositionen und abschließendes eigenes Urteil.</p>
+          <p><strong>Textgebundene Erörterung:</strong> Sämtliche Argumente sind aus dem literarischen Text zu entwickeln und durch Zitate mit Stellenangabe zu belegen. Weltwissen darf ergänzen, nicht ersetzen.</p>
+          <p><strong>Zwei Grundformen:</strong> die <em>dialektische</em> (Pro und Kontra, dann Urteil) und die <em>lineare</em> Erörterung (eine These, gestützt durch aufeinander aufbauende Argumente).</p>` },
+
+      { t: "Von der Frage zur Gliederung",
+        visual: `<p>Bevor du schreibst, steht die Frage – und daneben zwei Spalten.</p>
+          <div class="visual-box"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12.5px">
+          <div style="padding:11px;border-radius:10px;background:var(--teal-soft);border:1px solid rgba(53,214,192,.3)">
+            <div class="mono" style="font-size:11.5px;color:var(--teal)">PRO</div>
+            <div style="margin-top:6px">Argument + Zitat (Z. …)<br>Argument + Zitat (Z. …)</div></div>
+          <div style="padding:11px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)">
+            <div class="mono" style="font-size:11.5px;color:var(--tx-mute)">KONTRA</div>
+            <div style="margin-top:6px">Argument + Zitat (Z. …)<br>Argument + Zitat (Z. …)</div></div>
+          </div>
+          <p style="margin:12px 0 0;font-size:13px" class="mute">Das stärkste Argument steht zuletzt – direkt vor deinem Urteil.</p></div>
+          <p>Diese Tabelle ist keine Fleißarbeit. Sie ist die Gliederung, nur noch nicht in Sätzen.</p>`,
+        auditory: `<p>Die Reihenfolge, die im Hauptteil trägt:</p>
+          <div class="audio-box"><p style="margin:0"><em>„Erst die Seite, die ich am Ende nicht vertrete. Dann meine. Vom schwächsten zum stärksten Argument.“</em></p></div>
+          <p>Das nennt man das <strong>Sanduhrprinzip</strong>: Die Gegenposition zuerst, absteigend nach Gewicht. Dann die eigene Position, aufsteigend. So endet der Hauptteil mit dem stärksten Argument – und geht direkt in dein Fazit über.</p>
+          <p>Die Alternative ist das <strong>Reißverschlussprinzip</strong>: Argument, Gegenargument, Argument, Gegenargument. Das wirkt lebendiger, verlangt aber mehr Übersicht und gerät unter Zeitdruck leicht ins Schlingern.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Sortier mit.</strong> Du hast drei Pro-Argumente: ein sehr starkes, ein mittleres, ein schwaches. In welcher Reihenfolge kommen sie in den Hauptteil?</p></div>
+          <p><strong>Schwach – mittel – stark.</strong> Wer stark anfängt, baut ab. Wer stark aufhört, überzeugt.</p>
+          <p>Und noch eine Entscheidung, die viele zu spät treffen: Leg <em>vor</em> dem Schreiben fest, welche Position du am Ende vertrittst. Nur dann weißt du, welche Seite zuerst drankommt. Ein Fazit, das sich erst beim Schreiben findet, liest man ihm an.</p>
+          <p>Plane auch die Zeit: etwa ein Fünftel für Lesen und Gliedern, drei Fünftel fürs Schreiben, ein Fünftel fürs Überarbeiten. Die letzten Minuten sind keine Reserve, sondern Teil der Aufgabe.</p>`,
+        textual: `<p><strong>Arbeitsschritte.</strong></p>
+          <p><strong>1. Erschließung:</strong> Text mehrfach lesen, Textstellen markieren, die zur Fragestellung passen.<br>
+          <strong>2. Fragestellung:</strong> als Entscheidungsfrage formulieren, die eine Gegenposition zulässt.<br>
+          <strong>3. Stoffsammlung:</strong> zweispaltige Tabelle Pro/Kontra, jedes Argument mit Zeilenangabe.<br>
+          <strong>4. Gewichtung:</strong> Argumente ordnen; schwache streichen statt strecken.<br>
+          <strong>5. Gliederung:</strong> Anordnung nach Sanduhr- oder Reißverschlussprinzip festlegen.</p>
+          <p><strong>Sanduhrprinzip:</strong> Gegenposition absteigend, eigene Position aufsteigend. Vorteil: Das stärkste Argument steht unmittelbar vor dem Fazit.<br>
+          <strong>Reißverschlussprinzip:</strong> unmittelbare Gegenüberstellung von Argument und Gegenargument. Vorteil: dichte Auseinandersetzung; Nachteil: höherer Anspruch an die Gliederung.</p>` },
+
+      { t: "Der Aufbau: Einleitung, Hauptteil, Schluss",
+        visual: `<p>Drei Teile mit drei klar verschiedenen Aufgaben.</p>
+          <div class="visual-box"><div style="display:grid;gap:8px;font-size:13px">
+          <div style="padding:11px 13px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)">
+            <strong>Einleitung</strong> <span class="mute">· ca. 10 %</span><br>
+            <span class="mute" style="font-size:12.5px">Autor, Titel, Textart, Erscheinungsjahr, Thema in einem Satz – dann die Fragestellung.</span></div>
+          <div style="padding:11px 13px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent-line)">
+            <strong>Hauptteil</strong> <span class="mute">· ca. 75 %</span><br>
+            <span class="mute" style="font-size:12.5px">Argumente in geplanter Reihenfolge, jedes mit Beleg und Deutung.</span></div>
+          <div style="padding:11px 13px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)">
+            <strong>Schluss</strong> <span class="mute">· ca. 15 %</span><br>
+            <span class="mute" style="font-size:12.5px">Antwort auf die Frage, begründet. Kein neues Argument.</span></div>
+          </div></div>
+          <p>Der häufigste Fehler steht im Schluss: dort taucht plötzlich ein Argument auf, das im Hauptteil gefehlt hat.</p>`,
+        auditory: `<p>Die Einleitung als feste Formel – einmal laut, dann sitzt sie:</p>
+          <div class="audio-box"><p style="margin:0"><em>„Autor, Titel, Textart, Jahr, Thema – und dann die Frage.“</em></p></div>
+          <p>Ein Beispielsatz: <em>„In Friedrich Schillers Drama ‚Kabale und Liebe‘ aus dem Jahr 1784 wird die Liebe zweier Menschen an den Standesgrenzen ihrer Zeit zerrieben. Im Folgenden ist zu erörtern, ob Ferdinand an diesem Scheitern Schuld trägt.“</em></p>
+          <p>Zwei Sätze, alles drin. Verzichte auf Einstiege wie <em>„Schon immer beschäftigt die Menschheit …“</em> – sie kosten Zeit und bringen keinen Punkt.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Prüf den Schluss.</strong> Was fehlt diesem Fazit?<br>
+          <em>„Insgesamt ist die Frage schwer zu beantworten, es gibt gute Gründe für beide Seiten.“</em></p></div>
+          <p>Es fehlt die <strong>Antwort</strong>. Erörtern heißt abwägen <em>und</em> entscheiden. Ein Schluss, der beide Seiten stehen lässt, erfüllt den Operator nicht.</p>
+          <p>Besser: <em>„Ferdinand trägt Mitschuld, weil er Luise nicht glaubt, ohne sie zu fragen (Z. 812 ff.). Die entscheidende Ursache bleibt jedoch die Standesordnung, die ein offenes Gespräch von vornherein unmöglich macht.“</em></p>
+          <p>Das ist ein Urteil mit Abstufung – und genau das ist im Anforderungsbereich III gefragt. Ein differenziertes Urteil ist kein unentschiedenes.</p>`,
+        textual: `<p><strong>Einleitung</strong> (ca. 10 %): Autor, Titel, Textart, Entstehungszeit, Thema in einem Satz, anschließend die zu erörternde Fragestellung. Kein allgemeiner Einstieg ohne Textbezug.</p>
+          <p><strong>Hauptteil</strong> (ca. 75 %): Darlegung der Argumente in der geplanten Reihenfolge. Jeder Absatz behandelt genau ein Argument. Überleitungen machen die Gliederung hörbar (<em>„Dagegen spricht …“, „Gewichtiger erscheint jedoch …“</em>).</p>
+          <p><strong>Schluss</strong> (ca. 15 %): begründete Beantwortung der Fragestellung. Zulässig sind die Abwägung der Argumentgewichte sowie ein knapper Ausblick. Unzulässig sind neue Argumente und bloße Wiederholung.</p>
+          <p><strong>Häufige Fehler:</strong> Nacherzählung statt Argumentation · Behauptungen ohne Beleg · fehlende Gegenposition · Fazit ohne Entscheidung · Zitate ohne Stellenangabe.</p>` },
+
+      { t: "Ein Argument bauen – und es sprachlich tragen",
+        visual: `<p>Ein vollständiges Argument hat vier Teile. Fehlt einer, wirkt es dünn.</p>
+          <div class="visual-box"><div class="mono" style="font-size:13px;line-height:2.1">
+          <span style="color:var(--accent)">1 These</span> <span class="mute">– was ich behaupte</span><br>
+          <span style="color:var(--accent)">2 Begründung</span> <span class="mute">– warum das so ist</span><br>
+          <span style="color:var(--teal)">3 Beleg</span> <span class="mute">– Zitat mit Zeilenangabe</span><br>
+          <span style="color:var(--teal)">4 Deutung</span> <span class="mute">– was der Beleg zeigt</span>
+          </div></div>
+          <p>Der vierte Schritt wird am häufigsten vergessen: Ein Zitat spricht nicht für sich. Du musst sagen, <em>was</em> es belegt.</p>`,
+        auditory: `<p>Vier Wörter, die du beim Schreiben mitsprechen kannst:</p>
+          <div class="audio-box"><p style="margin:0"><em>„These – Begründung – Beleg – Deutung.“</em></p></div>
+          <p>Und die Sprache: Über literarische Texte schreibt man im <strong>Präsens</strong>. Die Figur <em>handelt</em>, sie handelte nicht. Für Behauptungen anderer nutzt du den <strong>Konjunktiv I</strong>: <em>„Ferdinand meint, Luise habe ihn betrogen.“</em></p>
+          <p>Zitierregeln, kurz gesagt: kurze Zitate in Anführungszeichen mit Zeilenangabe (Z. 812), Auslassungen mit […], eigene Ergänzungen in eckigen Klammern. Und: nie ein Zitat, das du nicht deutest.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Ergänze.</strong> Was fehlt diesem Argument?<br>
+          <em>„Ferdinand ist misstrauisch. Er sagt: ‚Ich glaube dir nicht‘ (Z. 812).“</em></p></div>
+          <p>Es fehlt die <strong>Deutung</strong> – und damit der Anschluss an die Fragestellung. Vollständig: <em>„Ferdinand ist misstrauisch, weil er Luises Verhalten nicht aus ihrer Lage erklärt, sondern sofort als Verrat liest. Das zeigt sich, als er ohne Nachfrage erklärt: ‚Ich glaube dir nicht‘ (Z. 812). Damit macht er das Gespräch unmöglich, das die Katastrophe hätte verhindern können – seine Mitschuld liegt nicht im Irrtum, sondern im Verzicht auf die Nachfrage.“</em></p>
+          <p>Merk dir den Test: Nach jedem Zitat fragst du dich <em>„Und was heißt das für meine Frage?“</em> Der Satz, der darauf antwortet, bringt den Punkt.</p>`,
+        textual: `<p><strong>Aufbau eines Arguments:</strong> These – Begründung – Beleg – Deutung. Der Beleg ist textbezogen zu zitieren, die Deutung stellt den Bezug zur Fragestellung her.</p>
+          <p><strong>Sprachliche Anforderungen:</strong><br>
+          <em>Tempus:</em> Präsens für Handlung und Aussagen des Textes.<br>
+          <em>Modus:</em> Konjunktiv I bei indirekter Wiedergabe von Figurenrede.<br>
+          <em>Register:</em> sachlich, ohne Umgangssprache; Ich-Aussagen sind im Fazit möglich, im Hauptteil sparsam einzusetzen.<br>
+          <em>Fachbegriffe:</em> gattungsspezifisch verwenden (Drama: Exposition, Peripetie, Katastrophe; Lyrik: Metrum, Enjambement; Epik: Erzählperspektive).</p>
+          <p><strong>Zitiernachweis:</strong> wörtliche Zitate in doppelten Anführungszeichen mit Stellenangabe (Z. 812 f.); Auslassungen durch […]; grammatische Anpassungen in eckigen Klammern. Zitate sind syntaktisch in den eigenen Satz einzubinden.</p>` }
+    ],
+    practice: [
+      { d: .2, op: "benennen", q: "Welcher Operator verlangt ein begründetes eigenes Urteil?", opts: ["Erörtern", "Analysieren", "Zusammenfassen", "Wiedergeben"], a: "Erörtern", why: "Erörtern gehört zum Anforderungsbereich III: abwägen und entscheiden.", wrong: { "Analysieren": "Analysieren beschreibt, wie der Text gemacht ist – ohne Urteil." } },
+      { d: .3, op: "angeben", q: "Womit beginnt die Einleitung einer textgebundenen Erörterung?", opts: ["Mit Autor, Titel, Textart und Entstehungszeit", "Mit dem stärksten Argument", "Mit dem eigenen Urteil", "Mit einer Nacherzählung des Textes"], a: "Mit Autor, Titel, Textart und Entstehungszeit", why: "Danach folgen das Thema in einem Satz und die Fragestellung." },
+      { d: .35, op: "bestimmen", q: "Welche Fragestellung eignet sich für eine Erörterung?", opts: ["Trägt die Hauptfigur Schuld an ihrem Scheitern?", "In welchem Jahr ist das Drama erschienen?", "Wie ist der Text aufgebaut?", "Welche Metaphern kommen vor?"], a: "Trägt die Hauptfigur Schuld an ihrem Scheitern?", why: "Nur hier ist eine begründete Gegenposition möglich – das macht eine Frage strittig.", wrong: { "Wie ist der Text aufgebaut?": "Das hat eine feststellbare Antwort und gehört zur Analyse." } },
+      { d: .45, op: "erklären", q: "Was besagt das Sanduhrprinzip im Hauptteil?", opts: ["Gegenposition absteigend, eigene Position aufsteigend", "Immer abwechselnd Pro und Kontra", "Das stärkste Argument zuerst", "Nur die eigene Position darstellen"], a: "Gegenposition absteigend, eigene Position aufsteigend", why: "So steht das stärkste Argument direkt vor dem Fazit.", wrong: { "Immer abwechselnd Pro und Kontra": "Das ist das Reißverschlussprinzip." } },
+      { d: .55, op: "erläutern", q: "Aus welchen vier Teilen besteht ein vollständiges Argument?", opts: ["These, Begründung, Beleg, Deutung", "Einleitung, Hauptteil, Schluss, Fazit", "Zitat, Meinung, Gegenmeinung, Wiederholung", "Analyse, Interpretation, Urteil, Ausblick"], a: "These, Begründung, Beleg, Deutung", why: "Die Deutung fehlt am häufigsten – ein Zitat belegt nichts von selbst." },
+      { d: .6, op: "beurteilen", q: "Welcher Schlusssatz erfüllt den Operator „erörtern“?", opts: ["Ferdinand trägt Mitschuld, weil er auf die Nachfrage verzichtet – entscheidend bleibt jedoch die Standesordnung.", "Die Frage lässt sich nicht beantworten, beide Seiten haben gute Gründe.", "Zusammenfassend wurden Pro- und Kontra-Argumente dargestellt.", "Das Thema ist auch heute noch sehr aktuell und wichtig."], a: "Ferdinand trägt Mitschuld, weil er auf die Nachfrage verzichtet – entscheidend bleibt jedoch die Standesordnung.", why: "Ein differenziertes Urteil ist kein unentschiedenes: es entscheidet und gewichtet.", wrong: { "Die Frage lässt sich nicht beantworten, beide Seiten haben gute Gründe.": "Abwägen allein reicht nicht – der Operator verlangt eine Entscheidung." } },
+      { d: .7, op: "überprüfen", q: "Ein Absatz lautet: „Ferdinand ist misstrauisch. Er sagt: ‚Ich glaube dir nicht‘ (Z. 812).“ Was fehlt?", opts: ["Die Deutung, also der Bezug des Belegs zur Fragestellung", "Die Zeilenangabe", "Das Zitat", "Die These"], a: "Die Deutung, also der Bezug des Belegs zur Fragestellung", why: "Nach jedem Zitat gehört der Satz, der sagt, was es für die Frage bedeutet.", wrong: { "Die Zeilenangabe": "Die steht mit (Z. 812) bereits da." } },
+      { d: .8, op: "begründen", q: "Warum schreibt man über literarische Texte im Präsens?", opts: ["Weil das Dargestellte bei jeder Lektüre erneut gegenwärtig ist", "Weil der Text in der Vergangenheit erschienen ist", "Weil der Konjunktiv sonst nicht möglich wäre", "Weil das Präteritum in Klausuren verboten ist"], a: "Weil das Dargestellte bei jeder Lektüre erneut gegenwärtig ist", why: "Das literarische Präsens gilt für Handlung und Aussagen des Textes; Entstehungsangaben stehen dagegen im Präteritum.", wrong: { "Weil das Präteritum in Klausuren verboten ist": "Verboten ist es nicht – für die Entstehungsgeschichte ist es sogar richtig." } },
+      { d: .85, op: "beurteilen", q: "In einer Erörterung stehen fünf Pro-Argumente und kein Gegenargument. Wie ist das zu bewerten?", opts: ["Der Operator ist verfehlt – ohne geprüfte Gegenposition liegt keine Erörterung vor", "Das ist ideal, weil die eigene Position klar wird", "Das ist zulässig, wenn alle Argumente belegt sind", "Das ist nur bei linearen Erörterungen ein Fehler"], a: "Der Operator ist verfehlt – ohne geprüfte Gegenposition liegt keine Erörterung vor", why: "Auch die lineare Erörterung muss naheliegende Einwände aufgreifen und entkräften.", wrong: { "Das ist zulässig, wenn alle Argumente belegt sind": "Belege ersetzen die Auseinandersetzung mit der Gegenposition nicht." } }
+    ]
+  },
   gesch_teilung: {
     subject: "Geschichte", name: "Deutschland 1945–1990", load: 3, lf: false,
     steps: [
@@ -3776,7 +4026,7 @@ function scrDash() {
     <div style="height:20px"></div>
     <section class="card" style="margin-bottom:20px">
       <div class="sec-title">${t("v2_available")}</div>
-      <p class="hint" style="margin:8px 0 18px">${t("v2_library")}</p>
+      <p class="hint" style="margin:8px 0 18px">${t("v2_library", { n: Object.keys(TOPICS).length })}</p>
       <div class="grid g-3">${Object.entries(TOPICS).map(([id,tp])=>'<button class="task" data-act="openTopic" data-v="'+id+'"><span class="task-body"><span class="eyebrow">'+esc(tp.subject)+'</span><span class="task-title" style="margin-top:8px">'+esc(tp.name)+'</span></span><span aria-hidden="true">↗</span></button>').join("")}</div>
     </section>
     ${profileTodoCard()}
@@ -5350,7 +5600,7 @@ const OPEN_CACHE_KEY = "abitakt.open.v1";
 let OPEN_CACHE = {};
 function loadOpenCache() { try { OPEN_CACHE = JSON.parse(localStorage.getItem(OPEN_CACHE_KEY) || "{}") || {}; } catch (e) { OPEN_CACHE = {}; } }
 function saveOpenCache() { try { localStorage.setItem(OPEN_CACHE_KEY, JSON.stringify(OPEN_CACHE)); } catch (e) {} }
-const OPEN_TOPICS = ["analysis_extrem", "neuro_ap", "gesch_teilung"].concat(AI_TOPICS);
+const OPEN_TOPICS = ["analysis_extrem", "neuro_ap", "genetik_pbs", "eroerterung", "gesch_teilung"].concat(AI_TOPICS);
 function openLevel(topicId) {
   const s = S.subjects.find(x => x.topics.some(tp => tp.id === topicId));
   if (!s) return null;
