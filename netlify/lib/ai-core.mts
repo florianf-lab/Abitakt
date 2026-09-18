@@ -6,6 +6,8 @@ import { spendDayMonth } from "./atomic.mts";
 export const AUTHORED_TOPICS: Record<string, { name: string; subject: string }> = {
   analysis_extrem: { name: "Analysis: Extremwertprobleme", subject: "Mathematik" },
   neuro_ap: { name: "Neurobiologie: Das Aktionspotential", subject: "Biologie" },
+  genetik_pbs: { name: "Genetik: Proteinbiosynthese", subject: "Biologie" },
+  eroerterung: { name: "Erörterung literarischer Texte", subject: "Deutsch" },
   gesch_teilung: { name: "Deutschland 1945–1990", subject: "Geschichte" },
 };
 export function topicInfo(topicId: string): { name: string; subject: string } | null {
