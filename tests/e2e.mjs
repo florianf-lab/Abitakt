@@ -118,7 +118,8 @@ for (const lang of ONLY_EXTRA ? [] : ["de", "en", "tr"]) {
 import { readdirSync } from "node:fs";
 const extraDir = join(root, "tests", "extra");
 if (existsSync(extraDir)) {
-  for (const f of readdirSync(extraDir).filter(f => f.endsWith(".mjs")).sort()) {
+  const only = (process.argv.find(x => x.startsWith("--only=")) || "").slice(7);
+  for (const f of readdirSync(extraDir).filter(f => f.endsWith(".mjs") && (!only || f.includes(only))).sort()) {
     console.log(`\n[extra] ${f}`);
     const mod = await import(pathToFileURL(join(extraDir, f)).href);
     await mod.default({ newPage, ok, act, click, runSession, fullOnboarding });
