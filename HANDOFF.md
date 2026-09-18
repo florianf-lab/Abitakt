@@ -44,7 +44,14 @@ Unterschied zu simpleclub, StudySmarter, Knowunity, sofatutor usw.: nicht mehr I
 | `netlify.toml` | Netlify-Konfiguration (kein Build-Schritt, Funktionen, Header) |
 | `netlify/functions/lesson.mts` | `/api/lesson` – Status abfragen / Generierung anstoßen (Whitelist, Budget, Cache) |
 | `netlify/functions/lesson-generate.mts` | Hintergrund-Funktion: erzeugt eine Mathe-Lektion mit Claude, prüft sie, speichert in Netlify Blobs |
+| `netlify/functions/open.mts`, `open-generate.mts` | `/api/open` – drei Freitext-Prüfungsaufgaben je Thema (einmal erzeugt, gecacht) |
+| `netlify/functions/feedback.mts` | `/api/feedback` – korrigiert eine Freitext-Antwort am Erwartungshorizont |
+| `netlify/functions/oral.mts` | `/api/oral` – mündliche Übungsprüfung (fünf Fragen, dann Rückmeldung) |
+| `netlify/functions/sync.mts` | `/api/sync` – verschlüsselte Profil-Sicherung (Server speichert nur einen Blob) |
 | `netlify/lib/lesson-core.mts` | Themen-Whitelist, Prompt, Tool-Schema, Validierung |
+| `netlify/lib/ai-core.mts` | Prompts, Schemata und Validierung für Freitext, Korrektur und mündliche Prüfung |
+| `netlify/lib/atomic.mts` | Compare-and-Swap auf Netlify Blobs: Budget-Reservierung und Job-Sperren |
+| `tests/server/` | Server-Tests ohne Browser (`npm run test:server`): Budget unter Parallelzugriff, Sperren, `/api/sync` |
 
 ---
 
@@ -119,6 +126,22 @@ Codex-Fixes: Sprachwechsel bleibt in der laufenden Lektion (`refreshSessionLangu
 - UI: `coachNextCard`, `coachCheckinCard`, `coachTimeline`, `coachUpcomingCard`, `setupPromptCard`, Fokus-Timer `startFocus/renderFocus`, `ratingCard`, Planer `scrPlanner` (Tabs events/tasks/week/topics), `aboutForms`, `insightsCard`, Assistent `startWizard/renderWizard`.
 - Einheiten mit eigenen Unterlagen zählen als Lernzeit, **nie** als fachlicher Fortschritt.
 
+### 3.9 Ergänzungen (Stand 18.09.2026, zweiter Block)
+
+**Freitext-Aufgaben mit Korrektur (6.7).** `OPEN_TOPICS`, `OPEN_CACHE` (`localStorage["abitakt.open.v1"]`), `openLevel(id)`, `canOpen(id)`, `startOpenTask(id)` (POST `/api/open`, Polling alle 5 s), `renderOpenTask/Grading/Result`, `ACT.openSubmit` (POST `/api/feedback`), `S.openStats[topicId] = {done, points, max, next}`. Die Korrektur bewegt **nie** die Engine-Mastery – sie zählt als Lernzeit (`Coach.record({kind:"open"})`) und als Übung für die Prüfungsbereitschaft (`S.lastPractice`).
+
+**Mündlicher Trainer (6.8).** `startOral(id)`, `oralStep(answer)`, `renderOral()`, `ACT.oralSend/oralQuit/oralAgain`. Fünf Fragen, dann Notenpunkte, Stärken, Lücken, Protokoll. Nur bei Fächern mit Tag P4/P5. Einstieg über `examPracticeCard()` im Dashboard und über den Abschluss einer Lektion.
+
+**Verschlüsselte Sicherung (6.9).** `SYNC` liegt in `localStorage["abitakt.sync.v1"]` = `{id, rev, salt, key, at}` – der abgeleitete Schlüssel, **nie** das Passwort. `deriveKey` = PBKDF2-SHA256, 210 000 Runden; Blob = base64(`salt(16)||iv(12)||ciphertext`), AES-GCM-256. `syncTouch()` hängt an `Store.save()` und lädt entprellt nach 4 s hoch; `syncPush({force})`, `syncPull()`, `applyProfile(data)`. Versionskonflikt → sichtbare Auswahl, kein stilles Überschreiben. Bildschirme `scrSync`, `scrSyncNew`, `scrSyncJoin`, `scrSyncCode`. Zusätzlich `ACT.importProfile` (Profil aus Datei).
+
+**Rechtliche Seiten (6.10).** `OPERATOR` (Name, Anschrift, E-Mail – **muss vor der Veröffentlichung ausgefüllt werden**, sonst warnt die Seite selbst), `scrLegal(tab)` mit `privacy` / `imprint` / `about`, `legalFooterLinks()` im Startbildschirm, `legalCard()` im Profil.
+
+**Dashboard.** `DASH_MORE` klappt Countdown, Stand je Thema, Energiekurve und Prüfungsbereitschaft zusammen (`<details class="dash-more">`).
+
+**Behobene Befunde aus der Codex-Prüfung (17.09.2026).** Budget-Wettlauf und Job-Sperre laufen über `netlify/lib/atomic.mts` (Reservierung **vor** dem Modellaufruf, Rückgabe nur wenn nichts abgerechnet wurde); Sperrfrist 16 Min, harte 13-Min-Frist im Generator; `daysUntil(iso, from)` nimmt einen Bezugstag und `Coach.candidates(date)` übergibt ihn; `Coach.pace()` schätzt aus eigener Median-Dauer und gemessenem Zuwachs und kennzeichnet sich sonst als grob.
+
+**i18n-Blöcke:** „3a-2“ (Schnellstart, Bereitschaft, Operatoren, KI), „3a-3“ (Lernbegleiter), „3a-4“ (Freitext + mündlich), „3a-5“ (Sicherung), „3a-6“ (Rechtliches). Alle drei Sprachen, sonst schlägt der i18n-Test fehl.
+
 ---
 
 ## 4. Rechtliche und inhaltliche Leitplanken
@@ -134,22 +157,27 @@ Codex-Fixes: Sprachwechsel bleibt in der laufenden Lektion (`refreshSessionLangu
 
 ## 5. Stand
 
-**Fertig und getestet:** alles aus Abschnitt 3 und 3.8 (Tests: `tests/e2e.mjs` + `tests/extra/05…60`).
+**Fertig und getestet:** alles aus Abschnitt 3, 3.8 und 3.9 (`tests/e2e.mjs` + `tests/extra/05…95`, `npm run test:server`).
+
+**Nur mit simulierten Serverantworten getestet:** Freitext-Korrektur, mündliche Prüfung und die Sicherung sind noch nie gegen den echten Dienst gelaufen.
 
 **Offen:**
-1. Netlify mit dem GitHub-Repo verknüpfen; `LESSON_MODEL` (Standard `claude-sonnet-5`) und `MAX_GENERATIONS_PER_MONTH` (Standard 8) optional als Umgebungsvariablen setzen; erste echte Generierung mit der Abrechnung abgleichen.
-2. Freitext-Aufgaben mit KI-Feedback (kostet pro Antwort → Tageslimit)
-3. Trainer für die mündliche Prüfung (P4/P5)
-4. Inhalte für weitere Fächer (bis dahin: Einheiten „mit eigenen Unterlagen“)
-5. Optional: Kalender-Export (.ics) für den Tagesplan, Erinnerungen per Push
+1. `OPERATOR` in Abschnitt 6.10 ausfüllen (Name, ladungsfähige Anschrift, E-Mail) – ohne das kein rechtssicheres Impressum.
+2. Diesen Stand nach GitHub `main` bringen; die Live-Seite zeigt sonst weiter den alten Stand.
+3. Erste echte Läufe von `/api/open`, `/api/feedback`, `/api/oral` mit der Abrechnung abgleichen.
+4. Lektionen für die übrigen Mathe-Themen erzeugen und prüfen (Budget 8/Monat).
+5. Inhalte für weitere Fächer (bis dahin: Einheiten „mit eigenen Unterlagen“).
+6. Optional: Kalender-Export (.ics) für den Tagesplan, Erinnerungen per Push.
 
 ## 6. Testen
 
 ```bash
 npm install            # installiert playwright
 npx playwright install chromium
-npm test               # = Engine-Wächter + alle Browser-Tests (ca. 6 Min)
-node tests/e2e.mjs --extra   # nur die Tests neuer Funktionen (schneller)
+npm test                     # Engine-Wächter + Server-Tests + alle Browser-Tests (ca. 10 Min)
+npm run test:server          # nur die Server-Logik (Sekunden, kein Browser)
+node tests/e2e.mjs --extra   # nur die Tests neuer Funktionen (ca. 5 Min)
+node tests/e2e.mjs --extra --only=70   # nur eine einzelne Testdatei
 ```
 
 Neue Funktion → neue Datei `tests/extra/NN-name.mjs`:

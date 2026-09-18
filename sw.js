@@ -2,7 +2,7 @@
    - App shell (index.html, manifest, icons): served from cache, refreshed in the background.
    - Google Fonts: cached on first use.
    - /api/* (AI lessons): never cached here – the app caches lessons itself. */
-const VERSION = "abitakt-v2";
+const VERSION = "abitakt-v3";   // bump whenever the shell or the icons change
 const SHELL = ["./", "./index.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/apple-touch-icon.png"];
 

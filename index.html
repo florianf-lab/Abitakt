@@ -3,14 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>abitakt — Abitur Baden-Württemberg</title>
-<meta name="description" content="Adaptiver Lernplan fürs Abitur in Baden-Württemberg.">
-<meta name="theme-color" content="#08090e">
+<title>abitakt — Lernbegleiter fürs Abitur in Baden-Württemberg</title>
+<meta name="description" content="abitakt sagt dir jeden Tag, was du lernen solltest und warum: Stundenplan, Prüfungen und dein tatsächlicher Fortschritt werden zu einem konkreten Plan. Adaptive Lektionen, Abitur-Aufgaben im Prüfungsformat mit Korrektur und ein mündlicher Prüfungstrainer. Kostenlos, ohne Konto, läuft im Browser.">
+<meta name="theme-color" content="#f4f3ec">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href="https://abifix.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="abitakt">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://abifix.netlify.app/">
+<meta property="og:title" content="abitakt — Lernbegleiter fürs Abitur in Baden-Württemberg">
+<meta property="og:description" content="Jeden Tag ein konkreter Lernvorschlag mit Begründung. Adaptive Lektionen, Abitur-Aufgaben mit Korrektur, mündlicher Prüfungstrainer. Ohne Konto, läuft im Browser.">
+<meta property="og:image" content="https://abifix.netlify.app/icons/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="abitakt – Lernbegleiter fürs Abitur in Baden-Württemberg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="abitakt — Lernbegleiter fürs Abitur">
+<meta name="twitter:description" content="Jeden Tag ein konkreter Lernvorschlag mit Begründung. Ohne Konto, läuft im Browser.">
+<meta name="twitter:image" content="https://abifix.netlify.app/icons/share.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
 /* ============================================================
    ABITAKT DESIGN SYSTEM
@@ -306,6 +322,16 @@ textarea.field{min-height:150px;resize:vertical;line-height:1.6;font-family:var(
 .topbar,.focus-top{padding-left:150px}
 .mastery-row .bar,.mastery-row .bar-fill{display:block}
 @media(max-width:640px){.langbar{top:10px;left:10px}}
+.dash-more{margin:4px 0 20px}
+.dash-more>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:15px 19px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
+  font-size:13.5px;font-weight:600;color:var(--tx-dim);transition:border-color .18s var(--ease)}
+.dash-more>summary:hover{border-color:var(--line-strong)}
+.dash-more>summary::-webkit-details-marker{display:none}
+.dash-more>summary::after{content:"\25be";font-size:11px;color:var(--tx-mute)}
+.dash-more[open]>summary::after{content:"\25b4"}
+.dash-more>summary .dash-more-sub{font-weight:400;color:var(--tx-mute);font-size:12.5px}
+.dash-more-body{margin-top:16px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 :is(button,a,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;box-shadow:0 0 0 5px var(--line-strong)}
 
@@ -417,6 +443,7 @@ const BLANK = () => ({
   completedToday: [],
   quick: false,               // true = started via quick start, profile still incomplete
   opStats: {},                // operator -> [correct, total] from the operator trainer
+  openStats: {},              // topicId -> {done, points, max, next} from the free-text trainer
   life: null,                 // personal coach data (see Coach.life)
   lastPractice: {}            // topicId -> timestamp of the last practice answer (kept outside the engine)
 });
@@ -427,6 +454,7 @@ const KEY = "abitakt.v1";
 const Store = {
   save() {
     try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* file:// or private mode */ }
+    syncTouch();
   },
   load() {
     try {
@@ -469,10 +497,13 @@ function shuffle(a) {
   }
   return r;
 }
-function daysUntil(iso) {
+/* Days from `from` (default: today) until an ISO date. The reference day matters:
+   the planner also builds plans for future days, and without it every deadline
+   there would look as urgent as it is today. */
+function daysUntil(iso, from) {
   if (!iso) return null;
-  const d = (new Date(iso + "T00:00:00") - new Date(new Date().toDateString())) / 864e5;
-  return Math.round(d);
+  const base = new Date(new Date(from || new Date()).toDateString());
+  return Math.round((new Date(iso + "T00:00:00") - base) / 864e5);
 }
 function hourLabel(h) {
   if (LANG === "en") { const ap = h < 12 ? "am" : "pm"; return (h % 12 === 0 ? 12 : h % 12) + ap; }
@@ -1134,7 +1165,10 @@ Object.assign(I18N.de, {
   co_kind_school: "Unterricht", co_kind_fixed: "Fester Termin",
   co_why_exam: "{title} ist {when}.",
   co_why_gap: "Größte Lücke dafür: {topic} (Bereitschaft {n} %).",
+  db_more: "Zahlen und Fortschritt",
+  db_more_t: "Countdown, Stand je Thema, deine Energiekurve und die Prüfungsbereitschaft",
   co_why_need: "Geschätzt noch {n} Min Lernzeit, verteilt auf {d} Tag(e) – heute ist dein Anteil dran.",
+  co_why_need_rough: "Grob geschätzt noch {n} Min, verteilt auf {d} Tag(e). Der Wert wird genauer, sobald abitakt dein Tempo kennt.",
   co_why_today: "{title} ist heute – jetzt nichts Neues mehr, nur aktivieren.",
   co_why_due: "{title} ist fällig: {when}.",
   co_why_task: "Fällig {when}.", co_why_task_nodue: "Offene Aufgabe ohne Termin.",
@@ -1250,7 +1284,10 @@ Object.assign(I18N.en, {
   co_kind_school: "Class", co_kind_fixed: "Fixed appointment",
   co_why_exam: "{title} is {when}.",
   co_why_gap: "Biggest gap for it: {topic} (readiness {n} %).",
+  db_more: "Numbers and progress",
+  db_more_t: "Countdown, mastery per topic, your energy curve and exam readiness",
   co_why_need: "About {n} min of study left, spread over {d} day(s) – today's share is due.",
+  co_why_need_rough: "Roughly {n} min left, spread over {d} day(s). This gets more accurate once abitakt knows your pace.",
   co_why_today: "{title} is today – nothing new now, just activate what you know.",
   co_why_due: "{title} is due {when}.",
   co_why_task: "Due {when}.", co_why_task_nodue: "Open task without a due date.",
@@ -1366,7 +1403,10 @@ Object.assign(I18N.tr, {
   co_kind_school: "Ders", co_kind_fixed: "Sabit randevu",
   co_why_exam: "{title}: {when}.",
   co_why_gap: "Bunun için en büyük eksik: {topic} (hazırlık {n} %).",
+  db_more: "Sayılar ve ilerleme",
+  db_more_t: "Geri sayım, konu bazında seviye, enerji eğrin ve sınav hazırlığı",
   co_why_need: "Tahminen {n} dk çalışma kaldı, {d} güne yayıldı – bugünkü payın sırada.",
+  co_why_need_rough: "Kabaca {n} dk kaldı, {d} güne yayıldı. abitakt temponu öğrendikçe bu değer netleşir.",
   co_why_today: "{title} bugün – artık yeni bir şey yok, sadece bildiklerini canlandır.",
   co_why_due: "{title} teslim: {when}.",
   co_why_task: "Teslim: {when}.", co_why_task_nodue: "Tarihi olmayan açık görev.",
@@ -1447,6 +1487,579 @@ Object.assign(I18N.tr, {
   co_wiz_events: "Neler yaklaşıyor?", co_wiz_events_t: "Sınavlar, testler, sunumlar ve teslimler. Tarih yaklaştıkça ağırlığı artar – bir gün öncesinde sadece tekrar yapılır.",
   co_wiz_skip: "Atla", co_wiz_later: "Sonra ekle", co_wiz_finish: "Bitti – planımı göster",
   v2_none_available: "Şu an planın için uygulamada ders yok. Günlük planı kullan – orada kendi materyallerinle oturumlar planlandı."
+});
+
+/* 3a-4. Strings for free-text exam tasks with AI feedback and the oral exam trainer. */
+Object.assign(I18N.de, {
+  op_section: "Im Prüfungsformat üben",
+  op_section_sub: "Freitext + Korrektur",
+  op_section_t: "Schreib deine Antwort so, wie du sie in der Klausur schreiben würdest. Du bekommst eine Korrektur entlang des Erwartungshorizonts – mit Punkten, Musterlösung und dem, was noch fehlt.",
+  op_section_note: "Deine Antworten werden nur zur Korrektur verschickt und nicht gespeichert.",
+  op_write: "Aufgabe schreiben",
+  op_done_stat: "{n} Aufgaben · {a}/{b} Punkte",
+  op_unavailable: "Dafür gibt es gerade keine Aufgaben. Prüf deine Verbindung.",
+  op_loading: "Aufgaben werden erstellt",
+  op_loading_t: "Das passiert einmal pro Thema und dauert bis zu zwei Minuten. Danach sind die Aufgaben sofort da.",
+  op_failed: "Die Aufgaben konnten nicht erstellt werden. Versuch es später noch einmal.",
+  op_budget: "Das Aufgaben-Kontingent für diesen Monat ist aufgebraucht.",
+  op_tag: "{op} · AFB {afb} · ca. {n} Min",
+  op_your_answer: "Deine Antwort",
+  op_answer_ph: "Schreib in ganzen Sätzen, mit Fachsprache und Rechenweg – so wie in der Prüfung.",
+  op_hint: "Der Erwartungshorizont hat {n} Punkte. Denk an den Operator: Er sagt dir, wie ausführlich du werden musst.",
+  op_submit: "Abgeben und korrigieren lassen",
+  op_other_task: "Andere Aufgabe",
+  op_too_short: "Schreib zuerst eine Antwort.",
+  op_grading: "Deine Antwort wird korrigiert",
+  op_grading_t: "Die Antwort wird Punkt für Punkt mit dem Erwartungshorizont verglichen. Einen Moment.",
+  op_fb_failed: "Die Korrektur hat nicht geklappt. Dein Text steht noch da – versuch es gleich noch einmal.",
+  op_fb_budget: "Für heute ist das Korrektur-Kontingent aufgebraucht. Morgen geht es weiter.",
+  op_result: "Korrektur",
+  op_points: "Punkte",
+  op_criteria: "Erwartungshorizont",
+  op_operator: "Operator",
+  op_good: "Das war gut",
+  op_improve: "Das fehlt noch",
+  op_next: "Als Nächstes",
+  op_solution: "Musterlösung ansehen",
+  op_note: "Übungskorrektur – keine offizielle Bewertung.",
+  op_left: "Noch {n} Korrekturen heute.",
+  op_next_task: "Nächste Aufgabe",
+  op_back: "Zurück zur Übersicht",
+  or_train: "Mündlich üben",
+  or_title: "Mündliche Prüfung",
+  or_starting: "Die Prüfung beginnt",
+  or_starting_t: "Fünf Fragen zu {topic}, wie in einer P4/P5-Prüfung. Antworte in ganzen Sätzen.",
+  or_question: "Frage {n} von {t}",
+  or_your_answer: "Deine Antwort",
+  or_answer_ph: "Antworte so, wie du es sagen würdest – in ganzen Sätzen, mit Fachbegriffen.",
+  or_hint: "In der echten Prüfung darfst du kurz nachdenken. Nimm dir die Zeit auch hier.",
+  or_send: "Antworten",
+  or_thinking: "Prüfer:in überlegt …",
+  or_too_short: "Antworte zuerst auf die Frage.",
+  or_failed: "Die Verbindung zur Prüfung ist abgerissen. Versuch es noch einmal.",
+  or_budget: "Für heute ist das Kontingent für mündliche Übungen aufgebraucht.",
+  or_result: "Rückmeldung",
+  or_grade: "{n} Notenpunkte (Übung)",
+  or_strengths: "Das hat getragen",
+  or_gaps: "Daran arbeiten",
+  or_transcript: "Gespräch nachlesen",
+  or_q: "Frage {n}",
+  or_note: "Übungsprüfung – eine Einschätzung, keine Note.",
+  or_again: "Noch eine Prüfung"
+});
+Object.assign(I18N.en, {
+  op_section: "Practise in exam format",
+  op_section_sub: "Free text + marking",
+  op_section_t: "Write your answer the way you would in the exam. You get it marked against the official expectation grid – points, model answer and what is still missing.",
+  op_section_note: "Your answers are only sent for marking and are not stored.",
+  op_write: "Write a task",
+  op_done_stat: "{n} tasks · {a}/{b} points",
+  op_unavailable: "No tasks available right now. Check your connection.",
+  op_loading: "Creating tasks",
+  op_loading_t: "This happens once per topic and takes up to two minutes. After that the tasks are there instantly.",
+  op_failed: "The tasks could not be created. Please try again later.",
+  op_budget: "This month's task budget is used up.",
+  op_tag: "{op} · level {afb} · approx. {n} min",
+  op_your_answer: "Your answer",
+  op_answer_ph: "Write full sentences, with subject terminology and your working – as in the exam.",
+  op_hint: "The expectation grid has {n} points. Mind the operator: it tells you how much detail is expected.",
+  op_submit: "Submit for marking",
+  op_other_task: "Different task",
+  op_too_short: "Write an answer first.",
+  op_grading: "Marking your answer",
+  op_grading_t: "Your answer is being compared point by point with the expectation grid. One moment.",
+  op_fb_failed: "Marking failed. Your text is still there – try again in a moment.",
+  op_fb_budget: "Today's marking budget is used up. It continues tomorrow.",
+  op_result: "Marking",
+  op_points: "points",
+  op_criteria: "Expectation grid",
+  op_operator: "Operator",
+  op_good: "This worked",
+  op_improve: "Still missing",
+  op_next: "Next",
+  op_solution: "Show model answer",
+  op_note: "Practice marking – not an official grade.",
+  op_left: "{n} markings left today.",
+  op_next_task: "Next task",
+  op_back: "Back to overview",
+  or_train: "Practise orally",
+  or_title: "Oral exam",
+  or_starting: "The exam begins",
+  or_starting_t: "Five questions on {topic}, as in a P4/P5 oral exam. Answer in full sentences.",
+  or_question: "Question {n} of {t}",
+  or_your_answer: "Your answer",
+  or_answer_ph: "Answer the way you would say it – full sentences, with the right terms.",
+  or_hint: "In the real exam you may think for a moment. Take that time here too.",
+  or_send: "Answer",
+  or_thinking: "Examiner is thinking …",
+  or_too_short: "Answer the question first.",
+  or_failed: "The connection to the exam dropped. Please try again.",
+  or_budget: "Today's budget for oral practice is used up.",
+  or_result: "Feedback",
+  or_grade: "{n} grade points (practice)",
+  or_strengths: "This held up",
+  or_gaps: "Work on this",
+  or_transcript: "Read the conversation",
+  or_q: "Question {n}",
+  or_note: "Practice exam – an estimate, not a grade.",
+  or_again: "Another exam"
+});
+Object.assign(I18N.tr, {
+  op_section: "Sınav formatında çalış",
+  op_section_sub: "Serbest metin + değerlendirme",
+  op_section_t: "Cevabını sınavda yazacağın gibi yaz. Beklenti ölçütlerine göre değerlendirilir – puanlar, örnek çözüm ve eksik kalanlar.",
+  op_section_note: "Cevapların yalnızca değerlendirme için gönderilir, saklanmaz.",
+  op_write: "Soru yaz",
+  op_done_stat: "{n} soru · {a}/{b} puan",
+  op_unavailable: "Şu an buna ait soru yok. Bağlantını kontrol et.",
+  op_loading: "Sorular hazırlanıyor",
+  op_loading_t: "Bu her konu için bir kez olur ve iki dakikaya kadar sürebilir. Sonrasında sorular hemen hazır.",
+  op_failed: "Sorular oluşturulamadı. Lütfen daha sonra tekrar dene.",
+  op_budget: "Bu ayki soru kotası doldu.",
+  op_tag: "{op} · düzey {afb} · yaklaşık {n} dk",
+  op_your_answer: "Cevabın",
+  op_answer_ph: "Tam cümlelerle, alan terimleriyle ve çözüm yoluyla yaz – sınavdaki gibi.",
+  op_hint: "Beklenti ölçütlerinde {n} puan var. Operatöre dikkat et: ne kadar ayrıntı gerektiğini o söyler.",
+  op_submit: "Gönder ve değerlendir",
+  op_other_task: "Başka soru",
+  op_too_short: "Önce bir cevap yaz.",
+  op_grading: "Cevabın değerlendiriliyor",
+  op_grading_t: "Cevabın beklenti ölçütleriyle madde madde karşılaştırılıyor. Bir dakika.",
+  op_fb_failed: "Değerlendirme başarısız oldu. Metnin duruyor – birazdan tekrar dene.",
+  op_fb_budget: "Bugünkü değerlendirme kotası doldu. Yarın devam eder.",
+  op_result: "Değerlendirme",
+  op_points: "puan",
+  op_criteria: "Beklenti ölçütleri",
+  op_operator: "Operatör",
+  op_good: "Bu iyiydi",
+  op_improve: "Hâlâ eksik",
+  op_next: "Sırada",
+  op_solution: "Örnek çözümü göster",
+  op_note: "Alıştırma değerlendirmesi – resmî bir not değil.",
+  op_left: "Bugün {n} değerlendirme kaldı.",
+  op_next_task: "Sonraki soru",
+  op_back: "Genel görünüme dön",
+  or_train: "Sözlü çalış",
+  or_title: "Sözlü sınav",
+  or_starting: "Sınav başlıyor",
+  or_starting_t: "{topic} konusunda beş soru, P4/P5 sözlü sınavındaki gibi. Tam cümlelerle cevapla.",
+  or_question: "Soru {n}/{t}",
+  or_your_answer: "Cevabın",
+  or_answer_ph: "Söyleyeceğin gibi cevapla – tam cümlelerle, doğru terimlerle.",
+  or_hint: "Gerçek sınavda kısa süre düşünebilirsin. Burada da o zamanı al.",
+  or_send: "Cevapla",
+  or_thinking: "Sınav görevlisi düşünüyor …",
+  or_too_short: "Önce soruyu cevapla.",
+  or_failed: "Sınav bağlantısı koptu. Lütfen tekrar dene.",
+  or_budget: "Bugünkü sözlü alıştırma kotası doldu.",
+  or_result: "Geri bildirim",
+  or_grade: "{n} not puanı (alıştırma)",
+  or_strengths: "Bu tuttu",
+  or_gaps: "Bunun üzerinde çalış",
+  or_transcript: "Konuşmayı oku",
+  or_q: "Soru {n}",
+  or_note: "Alıştırma sınavı – bir tahmin, not değil.",
+  or_again: "Bir sınav daha"
+});
+
+/* 3a-5. Strings for the encrypted profile sync and the local profile import. */
+Object.assign(I18N.de, {
+  sy_card: "Profil sichern & Gerät wechseln",
+  sy_card_off: "Dein Profil liegt bisher nur in diesem Browser. Mit einem Sicherungscode kannst du es verschlüsselt sichern und auf Handy, Tablet oder einem anderen Rechner weiterlernen.",
+  sy_card_on: "Gesichert unter dem Code {code} · zuletzt {when}.",
+  sy_card_setup: "Sicherung einrichten",
+  sy_card_manage: "Sicherung verwalten",
+  sy_eyebrow: "Sicherung",
+  sy_title: "Profil sichern und auf allen Geräten weiterlernen",
+  sy_intro: "Kein Konto, keine E-Mail, kein Passwort auf einem Server. Du bekommst einen Code und wählst ein eigenes Passwort. Dein Profil wird damit in diesem Browser verschlüsselt – der Server speichert nur einen unlesbaren Block.",
+  sy_how: "So funktioniert es",
+  sy_how_1: "Du wählst ein Passwort. Es verlässt dieses Gerät nie und wird nirgends gespeichert.",
+  sy_how_2: "Du bekommst einen Code wie ABCD-EFGH-JKLM. Damit findet ein anderes Gerät dein Profil wieder.",
+  sy_how_3: "Code und Passwort zusammen öffnen dein Profil. Verlierst du beides, ist die Sicherung verloren – auch wir können sie nicht öffnen.",
+  sy_create: "Sicherung einrichten",
+  sy_join: "Auf diesem Gerät mit Code laden",
+  sy_back: "Zurück",
+  sy_unavailable: "Die Sicherung braucht eine verschlüsselte Verbindung (https). Lokal oder offline steht sie nicht zur Verfügung – dein Profil bleibt aber wie immer in diesem Browser.",
+  sy_new_title: "Passwort wählen",
+  sy_new_t: "Nimm etwas, das du dir merkst und das niemand rät. Mindestens acht Zeichen. Wir können es nicht zurücksetzen.",
+  sy_pass: "Passwort",
+  sy_pass2: "Passwort wiederholen",
+  sy_pass_ph: "mindestens 8 Zeichen",
+  sy_pass_note: "Aus dem Passwort wird der Schlüssel berechnet. Es wird weder übertragen noch gespeichert.",
+  sy_create_go: "Sicherung einrichten",
+  sy_creating: "Sicherung wird eingerichtet",
+  sy_busy_t: "Einen Moment – die Daten werden verschlüsselt.",
+  sy_err_short: "Das Passwort ist zu kurz (mindestens 8 Zeichen).",
+  sy_err_match: "Die beiden Passwörter sind nicht gleich.",
+  sy_err_server: "Das hat gerade nicht geklappt. Versuch es später noch einmal.",
+  sy_err_code: "Der Code sieht nicht richtig aus. Er hat zwölf Zeichen, z. B. ABCD-EFGH-JKLM.",
+  sy_err_nopass: "Bitte gib dein Passwort ein.",
+  sy_err_pass: "Mit diesem Passwort ließ sich die Sicherung nicht öffnen.",
+  sy_err_unknown: "Zu diesem Code gibt es keine Sicherung.",
+  sy_err_data: "Die Sicherung passt nicht zu dieser Version der App.",
+  sy_done_title: "Fertig – das ist dein Code",
+  sy_done_t: "Schreib ihn dir auf oder speichere ihn im Passwortmanager. Zusammen mit deinem Passwort holst du damit dein Profil auf jedes Gerät.",
+  sy_done_note: "Ab jetzt wird dein Fortschritt automatisch gesichert, sobald sich etwas ändert.",
+  sy_done_go: "Weiterlernen",
+  sy_copy: "Code kopieren",
+  sy_copied: "Code kopiert",
+  sy_title_on: "Deine Sicherung",
+  sy_lede_on: "Dein Fortschritt wird automatisch verschlüsselt gesichert. Mit Code und Passwort kommst du auf jedem Gerät daran.",
+  sy_your_code: "Dein Code",
+  sy_code_note: "Code und Passwort zusammen öffnen dein Profil. Gib beides niemandem weiter.",
+  sy_last: "Zuletzt gesichert",
+  sy_never: "noch nie",
+  sy_just_now: "gerade eben",
+  sy_min_ago: "vor {n} Min",
+  sy_hour_ago: "vor {n} Std",
+  sy_day_ago: "vor {n} Tagen",
+  sy_push: "Jetzt sichern",
+  sy_pushing: "Wird gesichert",
+  sy_pushed: "Gesichert",
+  sy_pull: "Serverstand laden",
+  sy_pulling: "Wird geladen",
+  sy_pull_q: "Der Stand vom Server ersetzt das Profil auf diesem Gerät. Fortfahren?",
+  sy_loaded: "Profil geladen",
+  sy_conflict: "Zwei Stände gefunden",
+  sy_conflict_t: "Auf einem anderen Gerät wurde {when} gelernt. Welcher Stand soll gelten? Der andere wird überschrieben.",
+  sy_take_server: "Stand vom anderen Gerät",
+  sy_take_local: "Stand von diesem Gerät",
+  sy_off: "Auf diesem Gerät trennen",
+  sy_off_q: "Die Sicherung wird von diesem Gerät getrennt. Die Daten auf dem Server bleiben und du kommst mit Code und Passwort wieder heran. Fortfahren?",
+  sy_wipe: "Sicherung löschen",
+  sy_wipe_q: "Die Sicherung wird endgültig vom Server gelöscht. Dein Profil auf diesem Gerät bleibt erhalten. Fortfahren?",
+  sy_wiping: "Wird gelöscht",
+  sy_wiped: "Sicherung gelöscht",
+  sy_join_title: "Profil auf dieses Gerät holen",
+  sy_join_t: "Gib den Code und das Passwort ein, die du beim Einrichten bekommen hast. Das Profil auf diesem Gerät wird dabei ersetzt.",
+  sy_code: "Code",
+  sy_join_note: "Groß- und Kleinschreibung sowie Bindestriche sind egal.",
+  sy_join_go: "Verbinden und laden",
+  sy_joining: "Sicherung wird geöffnet",
+  pf_import: "Profil aus Datei laden",
+  pf_import_q: "Die Datei ersetzt dein Profil auf diesem Gerät. Fortfahren?",
+  pf_import_bad: "Das ist keine gültige abitakt-Profildatei.",
+  pf_imported: "Profil geladen"
+});
+Object.assign(I18N.en, {
+  sy_card: "Back up your profile & switch devices",
+  sy_card_off: "So far your profile only lives in this browser. With a backup code you can store it encrypted and carry on learning on your phone, tablet or another computer.",
+  sy_card_on: "Backed up under the code {code} · last {when}.",
+  sy_card_setup: "Set up backup",
+  sy_card_manage: "Manage backup",
+  sy_eyebrow: "Backup",
+  sy_title: "Back up your profile and learn on every device",
+  sy_intro: "No account, no e-mail, no password on a server. You get a code and choose your own password. Your profile is encrypted in this browser – the server only ever stores an unreadable block.",
+  sy_how: "How it works",
+  sy_how_1: "You choose a password. It never leaves this device and is stored nowhere.",
+  sy_how_2: "You get a code such as ABCD-EFGH-JKLM. Another device finds your profile with it.",
+  sy_how_3: "Code and password together open your profile. Lose both and the backup is gone – we cannot open it either.",
+  sy_create: "Set up backup",
+  sy_join: "Load onto this device with a code",
+  sy_back: "Back",
+  sy_unavailable: "The backup needs an encrypted connection (https). It is not available locally or offline – your profile stays in this browser as always.",
+  sy_new_title: "Choose a password",
+  sy_new_t: "Pick something you will remember and nobody will guess. At least eight characters. We cannot reset it.",
+  sy_pass: "Password",
+  sy_pass2: "Repeat password",
+  sy_pass_ph: "at least 8 characters",
+  sy_pass_note: "The key is derived from your password. It is neither transmitted nor stored.",
+  sy_create_go: "Set up backup",
+  sy_creating: "Setting up the backup",
+  sy_busy_t: "One moment – your data is being encrypted.",
+  sy_err_short: "That password is too short (at least 8 characters).",
+  sy_err_match: "The two passwords do not match.",
+  sy_err_server: "That did not work just now. Please try again later.",
+  sy_err_code: "That code does not look right. It has twelve characters, e.g. ABCD-EFGH-JKLM.",
+  sy_err_nopass: "Please enter your password.",
+  sy_err_pass: "The backup could not be opened with that password.",
+  sy_err_unknown: "There is no backup for that code.",
+  sy_err_data: "That backup does not fit this version of the app.",
+  sy_done_title: "Done – this is your code",
+  sy_done_t: "Write it down or save it in your password manager. Together with your password it brings your profile to any device.",
+  sy_done_note: "From now on your progress is backed up automatically whenever something changes.",
+  sy_done_go: "Carry on learning",
+  sy_copy: "Copy code",
+  sy_copied: "Code copied",
+  sy_title_on: "Your backup",
+  sy_lede_on: "Your progress is backed up automatically and encrypted. With code and password you can reach it from any device.",
+  sy_your_code: "Your code",
+  sy_code_note: "Code and password together open your profile. Do not pass either on.",
+  sy_last: "Last backed up",
+  sy_never: "never",
+  sy_just_now: "just now",
+  sy_min_ago: "{n} min ago",
+  sy_hour_ago: "{n} h ago",
+  sy_day_ago: "{n} days ago",
+  sy_push: "Back up now",
+  sy_pushing: "Backing up",
+  sy_pushed: "Backed up",
+  sy_pull: "Load server version",
+  sy_pulling: "Loading",
+  sy_pull_q: "The server version replaces the profile on this device. Continue?",
+  sy_loaded: "Profile loaded",
+  sy_conflict: "Two versions found",
+  sy_conflict_t: "Another device was used {when}. Which version should count? The other one is overwritten.",
+  sy_take_server: "Version from the other device",
+  sy_take_local: "Version from this device",
+  sy_off: "Disconnect this device",
+  sy_off_q: "The backup is disconnected from this device. The data on the server stays and you can reach it again with code and password. Continue?",
+  sy_wipe: "Delete backup",
+  sy_wipe_q: "The backup is permanently deleted from the server. Your profile on this device stays. Continue?",
+  sy_wiping: "Deleting",
+  sy_wiped: "Backup deleted",
+  sy_join_title: "Bring your profile to this device",
+  sy_join_t: "Enter the code and password you got when setting up the backup. The profile on this device will be replaced.",
+  sy_code: "Code",
+  sy_join_note: "Upper or lower case and hyphens do not matter.",
+  sy_join_go: "Connect and load",
+  sy_joining: "Opening the backup",
+  pf_import: "Load profile from file",
+  pf_import_q: "The file replaces your profile on this device. Continue?",
+  pf_import_bad: "That is not a valid abitakt profile file.",
+  pf_imported: "Profile loaded"
+});
+Object.assign(I18N.tr, {
+  sy_card: "Profilini yedekle ve cihaz değiştir",
+  sy_card_off: "Profilin şimdiye kadar yalnızca bu tarayıcıda. Bir yedek koduyla şifreli olarak saklayıp telefonda, tablette veya başka bir bilgisayarda devam edebilirsin.",
+  sy_card_on: "{code} koduyla yedeklendi · son {when}.",
+  sy_card_setup: "Yedeklemeyi kur",
+  sy_card_manage: "Yedeklemeyi yönet",
+  sy_eyebrow: "Yedekleme",
+  sy_title: "Profilini yedekle ve her cihazda devam et",
+  sy_intro: "Hesap yok, e-posta yok, sunucuda parola yok. Bir kod alırsın ve kendi parolanı seçersin. Profilin bu tarayıcıda şifrelenir – sunucu yalnızca okunamayan bir blok saklar.",
+  sy_how: "Nasıl çalışır",
+  sy_how_1: "Bir parola seçersin. Bu cihazdan asla çıkmaz ve hiçbir yerde saklanmaz.",
+  sy_how_2: "ABCD-EFGH-JKLM gibi bir kod alırsın. Başka bir cihaz profilini bununla bulur.",
+  sy_how_3: "Kod ve parola birlikte profilini açar. İkisini de kaybedersen yedek gider – biz de açamayız.",
+  sy_create: "Yedeklemeyi kur",
+  sy_join: "Kodla bu cihaza yükle",
+  sy_back: "Geri",
+  sy_unavailable: "Yedekleme şifreli bir bağlantı (https) gerektirir. Yerelde veya çevrimdışı kullanılamaz – profilin her zamanki gibi bu tarayıcıda kalır.",
+  sy_new_title: "Parola seç",
+  sy_new_t: "Hatırlayacağın ve kimsenin tahmin edemeyeceği bir şey seç. En az sekiz karakter. Sıfırlayamayız.",
+  sy_pass: "Parola",
+  sy_pass2: "Parolayı tekrarla",
+  sy_pass_ph: "en az 8 karakter",
+  sy_pass_note: "Anahtar parolandan türetilir. Ne iletilir ne de saklanır.",
+  sy_create_go: "Yedeklemeyi kur",
+  sy_creating: "Yedekleme kuruluyor",
+  sy_busy_t: "Bir dakika – verilerin şifreleniyor.",
+  sy_err_short: "Parola çok kısa (en az 8 karakter).",
+  sy_err_match: "İki parola aynı değil.",
+  sy_err_server: "Şu an olmadı. Lütfen daha sonra tekrar dene.",
+  sy_err_code: "Bu kod doğru görünmüyor. On iki karakterli, örn. ABCD-EFGH-JKLM.",
+  sy_err_nopass: "Lütfen parolanı gir.",
+  sy_err_pass: "Yedek bu parolayla açılamadı.",
+  sy_err_unknown: "Bu koda ait bir yedek yok.",
+  sy_err_data: "Bu yedek uygulamanın bu sürümüne uymuyor.",
+  sy_done_title: "Hazır – bu senin kodun",
+  sy_done_t: "Not al ya da parola yöneticine kaydet. Parolanla birlikte profilini her cihaza getirir.",
+  sy_done_note: "Bundan sonra bir şey değiştiğinde ilerlemen otomatik yedeklenir.",
+  sy_done_go: "Öğrenmeye devam",
+  sy_copy: "Kodu kopyala",
+  sy_copied: "Kod kopyalandı",
+  sy_title_on: "Yedeğin",
+  sy_lede_on: "İlerlemen otomatik ve şifreli olarak yedeklenir. Kod ve parolayla her cihazdan ulaşırsın.",
+  sy_your_code: "Kodun",
+  sy_code_note: "Kod ve parola birlikte profilini açar. İkisini de kimseye verme.",
+  sy_last: "Son yedekleme",
+  sy_never: "hiç",
+  sy_just_now: "az önce",
+  sy_min_ago: "{n} dk önce",
+  sy_hour_ago: "{n} sa önce",
+  sy_day_ago: "{n} gün önce",
+  sy_push: "Şimdi yedekle",
+  sy_pushing: "Yedekleniyor",
+  sy_pushed: "Yedeklendi",
+  sy_pull: "Sunucudaki sürümü yükle",
+  sy_pulling: "Yükleniyor",
+  sy_pull_q: "Sunucudaki sürüm bu cihazdaki profilin yerine geçer. Devam edilsin mi?",
+  sy_loaded: "Profil yüklendi",
+  sy_conflict: "İki sürüm bulundu",
+  sy_conflict_t: "Başka bir cihaz {when} kullanılmış. Hangi sürüm geçerli olsun? Diğeri üzerine yazılır.",
+  sy_take_server: "Diğer cihazdaki sürüm",
+  sy_take_local: "Bu cihazdaki sürüm",
+  sy_off: "Bu cihazda bağlantıyı kes",
+  sy_off_q: "Yedekleme bu cihazdan ayrılır. Sunucudaki veriler kalır ve kod ile parolayla tekrar ulaşabilirsin. Devam edilsin mi?",
+  sy_wipe: "Yedeği sil",
+  sy_wipe_q: "Yedek sunucudan kalıcı olarak silinir. Bu cihazdaki profilin kalır. Devam edilsin mi?",
+  sy_wiping: "Siliniyor",
+  sy_wiped: "Yedek silindi",
+  sy_join_title: "Profilini bu cihaza getir",
+  sy_join_t: "Yedeklemeyi kurarken aldığın kodu ve parolayı gir. Bu cihazdaki profil değiştirilecek.",
+  sy_code: "Kod",
+  sy_join_note: "Büyük küçük harf ve tireler önemli değil.",
+  sy_join_go: "Bağlan ve yükle",
+  sy_joining: "Yedek açılıyor",
+  pf_import: "Profili dosyadan yükle",
+  pf_import_q: "Dosya bu cihazdaki profilinin yerine geçer. Devam edilsin mi?",
+  pf_import_bad: "Bu geçerli bir abitakt profil dosyası değil.",
+  pf_imported: "Profil yüklendi"
+});
+
+/* 3a-6. Strings for the legal pages (privacy, imprint, about). */
+Object.assign(I18N.de, {
+  lg_eyebrow: "Rechtliches",
+  lg_privacy: "Datenschutz", lg_imprint: "Impressum", lg_about: "Über abitakt",
+  lg_back: "Zurück",
+  lg_todo: "noch einzutragen",
+  lg_card: "Rechtliches",
+  lg_card_t: "Was gespeichert wird, was den Browser verlässt, wer dahintersteht und was die App nicht kann.",
+  lg_p_short: "Kurz gesagt",
+  lg_p_short_t: "abitakt speichert dein Profil in deinem Browser, nicht auf einem Server. Es gibt keine Anmeldung, keine Cookies zur Wiedererkennung und kein Tracking. An den Server geht nur das, was für eine Funktion nötig ist – und dort wird davon nichts über die Anfrage hinaus gespeichert.",
+  lg_p_local: "Bleibt auf deinem Gerät",
+  lg_p_local_1: "Dein Profil: Name, Fächer, Ziele, Stundenplan, Lernzeiten, Termine, Aufgaben, Fortschritt und alle Antworten aus den Übungen.",
+  lg_p_local_2: "Die Lektionen, Aufgaben und Lernstände, die bereits geladen wurden – damit die App auch offline funktioniert.",
+  lg_p_local_3: "Alles davon kannst du jederzeit als Datei exportieren oder mit einem Klick löschen.",
+  lg_p_sent: "Was an den Server geht",
+  lg_p_sent_t: "Nur bei den KI-Funktionen, und nur das Nötige. Nichts davon ist mit deinem Profil verknüpft, weil es kein Konto gibt.",
+  lg_p_ep_lesson: "Nur die Themenkennung und das Niveau (Leistungs- oder Basisfach). Keine persönlichen Daten.",
+  lg_p_ep_feedback: "Der Text, den du zu einer Aufgabe geschrieben hast, plus die Aufgabennummer – damit die Korrektur erstellt werden kann. Die Antwort wird nicht gespeichert.",
+  lg_p_ep_oral: "Deine Antworten im laufenden Übungsgespräch, damit die nächste Frage darauf aufbauen kann. Das Gespräch wird nicht gespeichert; es liegt nur in deinem Browser.",
+  lg_p_ep_sync: "Nur ein Block, der schon in deinem Browser verschlüsselt wurde, und dein Sicherungscode. Der Server kann den Inhalt nicht lesen.",
+  lg_p_sent_note: "Schreib in Freitext-Antworten nichts, was niemanden etwas angeht – der Text wird zur Korrektur an den KI-Dienst weitergegeben.",
+  lg_p_who: "Wer beteiligt ist",
+  lg_p_who_1: "Netlify (Netlify Inc.) – Hosting der Seite, Serverfunktionen und der verschlüsselte Sicherungsspeicher.",
+  lg_p_who_2: "Anthropic – erzeugt die Lektionen und Aufgaben und schreibt die Korrekturen, über das KI-Gateway von Netlify.",
+  lg_p_who_3: "Beide Anbieter sitzen in den USA und verarbeiten die Anfragen auf ihren Servern. Deshalb geht mit jeder KI-Anfrage der Aufgabentext und deine Antwort dorthin.",
+  lg_p_logs: "Wie bei jeder Website entstehen beim Hoster technische Zugriffsdaten (IP-Adresse, Zeitpunkt, aufgerufene Adresse). Darauf hat abitakt keinen eigenen Zugriff.",
+  lg_p_no: "Was nicht passiert",
+  lg_p_no_1: "Keine Werbung, keine Weitergabe zu Werbezwecken, kein Verkauf von Daten.",
+  lg_p_no_2: "Keine Analyse- oder Tracking-Dienste, keine Einbindung sozialer Netzwerke.",
+  lg_p_no_3: "Keine Profilbildung über dich hinweg – die App wertet nur aus, was in deinem Browser liegt.",
+  lg_p_rights: "Deine Daten, deine Entscheidung",
+  lg_p_rights_t: "Weil alles lokal liegt, hast du die Daten selbst in der Hand: exportieren, löschen, auf ein anderes Gerät holen. Eine Sicherung auf dem Server kannst du im Profil jederzeit endgültig löschen. Nach der DSGVO hast du zusätzlich Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit und Widerspruch sowie ein Beschwerderecht bei einer Aufsichtsbehörde.",
+  lg_p_law: "Welches Recht gilt",
+  lg_p_law_t: "Der Anbieter sitzt in der Schweiz, dort gilt das revidierte Datenschutzgesetz (revDSG). Weil sich abitakt an Lernende in Deutschland richtet, gilt zusätzlich die DSGVO. Beschweren kannst du dich beim EDÖB in der Schweiz oder bei der Datenschutzbehörde deines Bundeslandes.",
+  lg_p_contact: "Ansprechpartner:",
+  lg_p_updated: "Diese Angaben beschreiben den Stand der App, wie er im Code steht. Sie sind keine Rechtsberatung.",
+  lg_i_provider: "Anbieter",
+  lg_i_name: "Name", lg_i_address: "Anschrift", lg_i_email: "E-Mail",
+  lg_i_note: "Anbieterkennzeichnung nach schweizerischem Recht (UWG Art. 3 Abs. 1 lit. s). Der Anbieter sitzt in der Schweiz; die App richtet sich an Lernende in Baden-Württemberg.",
+  lg_i_missing: "Noch nicht vollständig",
+  lg_i_missing_t: "Bevor die Seite öffentlich erreichbar ist, müssen hier Name, ladungsfähige Anschrift und E-Mail-Adresse stehen.",
+  lg_i_liability: "Haftung für Inhalte und Links",
+  lg_i_liability_t: "Die Lerninhalte werden sorgfältig erstellt und fachlich gegengeprüft, können aber Fehler enthalten. Verbindlich sind der Bildungsplan und die Angaben deiner Schule. Für Inhalte verlinkter Seiten sind deren Betreiber verantwortlich.",
+  lg_i_hosting: "Hosting",
+  lg_i_hosting_t: "Die Seite wird bei Netlify Inc. gehostet. Serverfunktionen und der verschlüsselte Sicherungsspeicher laufen ebenfalls dort.",
+  lg_a_what: "Was abitakt ist",
+  lg_a_what_t: "Ein Lernbegleiter für das Abitur in Baden-Württemberg 2027. Er verbindet deinen Stundenplan, deine Termine und deinen tatsächlichen Lernfortschritt zu einem konkreten Vorschlag für heute – mit Begründung, damit du sie nachvollziehen und ablehnen kannst.",
+  lg_a_limits: "Was abitakt nicht ist",
+  lg_a_lim_1: "Kein Angebot des Kultusministeriums und keiner Schule. Prüfungstermine immer mit deiner Schule abgleichen.",
+  lg_a_lim_2: "Kein Test von Intelligenz oder Persönlichkeit. Die Kurztests am Anfang stellen nur den Startpunkt ein und sagen nichts über dich als Person.",
+  lg_a_lim_3: "Keine Diagnose und keine psychologische Beratung. Wenn dir Lernen gerade wirklich schwerfällt, ist ein Mensch die bessere Adresse als eine App.",
+  lg_a_lim_4: "Keine Garantie für eine Note. Die Zeitangaben sind Schätzungen und werden mit deinen echten Daten genauer.",
+  lg_a_ai: "Wo KI mitarbeitet",
+  lg_a_ai_t: "Lektionen und Prüfungsaufgaben werden von einem KI-Modell geschrieben und von einem zweiten Durchgang fachlich gegengeprüft, bevor sie gespeichert werden. Deine Freitext-Antworten werden von der KI am Erwartungshorizont korrigiert. Das ersetzt keine Lehrkraft, und Fehler sind möglich – melde sie gern."
+});
+Object.assign(I18N.en, {
+  lg_eyebrow: "Legal",
+  lg_privacy: "Privacy", lg_imprint: "Legal notice", lg_about: "About abitakt",
+  lg_back: "Back",
+  lg_todo: "to be filled in",
+  lg_card: "Legal",
+  lg_card_t: "What is stored, what leaves your browser, who is behind this and what the app cannot do.",
+  lg_p_short: "In short",
+  lg_p_short_t: "abitakt keeps your profile in your browser, not on a server. There is no sign-up, no recognition cookies and no tracking. Only what a feature actually needs goes to the server, and nothing of it is kept beyond the request.",
+  lg_p_local: "Stays on your device",
+  lg_p_local_1: "Your profile: name, subjects, goals, timetable, study windows, dates, tasks, progress and every answer you give in practice.",
+  lg_p_local_2: "The lessons, tasks and progress already loaded – which is what lets the app work offline.",
+  lg_p_local_3: "You can export all of it as a file or delete it with one click at any time.",
+  lg_p_sent: "What goes to the server",
+  lg_p_sent_t: "Only for the AI features, and only what is needed. None of it is tied to your profile, because there is no account.",
+  lg_p_ep_lesson: "Only the topic id and the level (advanced or basic course). No personal data.",
+  lg_p_ep_feedback: "The text you wrote for a task plus the task number, so the marking can be produced. Your answer is not stored.",
+  lg_p_ep_oral: "Your answers in the running practice exam, so the next question can build on them. The conversation is not stored; it only lives in your browser.",
+  lg_p_ep_sync: "Only a block already encrypted in your browser, plus your backup code. The server cannot read the contents.",
+  lg_p_sent_note: "Do not put anything private into a free-text answer – the text is passed to the AI service for marking.",
+  lg_p_who: "Who is involved",
+  lg_p_who_1: "Netlify (Netlify Inc.) – hosting of the site, the server functions and the encrypted backup storage.",
+  lg_p_who_2: "Anthropic – writes the lessons and tasks and produces the marking, through Netlify's AI gateway.",
+  lg_p_who_3: "Both companies are based in the USA and process the requests on their servers. So every AI request takes the task text and your answer there.",
+  lg_p_logs: "As with any website, the host records technical access data (IP address, time, requested address). abitakt has no access of its own to this.",
+  lg_p_no: "What does not happen",
+  lg_p_no_1: "No advertising, no sharing for advertising purposes, no selling of data.",
+  lg_p_no_2: "No analytics or tracking services, no social network embeds.",
+  lg_p_no_3: "No profiling across users – the app only evaluates what is in your browser.",
+  lg_p_rights: "Your data, your call",
+  lg_p_rights_t: "Because everything is local, the data is in your hands: export it, delete it, move it to another device. A backup on the server can be deleted for good from your profile at any time. Under the GDPR you also have rights to access, rectification, erasure, restriction, data portability and objection, and you may complain to a supervisory authority.",
+  lg_p_law: "Which law applies",
+  lg_p_law_t: "The provider is based in Switzerland, where the revised Data Protection Act (revFADP) applies. Because abitakt is aimed at learners in Germany, the GDPR applies as well. You can complain to the Swiss FDPIC or to the data protection authority of your federal state.",
+  lg_p_contact: "Contact:",
+  lg_p_updated: "This describes the app as it is written in the code. It is not legal advice.",
+  lg_i_provider: "Provider",
+  lg_i_name: "Name", lg_i_address: "Address", lg_i_email: "E-mail",
+  lg_i_note: "Provider information under Swiss law (Unfair Competition Act, Art. 3(1)(s)). The provider is based in Switzerland; the app is aimed at learners in Baden-Württemberg.",
+  lg_i_missing: "Not complete yet",
+  lg_i_missing_t: "Before the site goes public, this needs a name, a postal address that can receive legal notices, and an e-mail address.",
+  lg_i_liability: "Liability for content and links",
+  lg_i_liability_t: "The learning content is written carefully and reviewed for accuracy, but it can still contain mistakes. The curriculum and what your school says are what count. The operators of linked sites are responsible for their own content.",
+  lg_i_hosting: "Hosting",
+  lg_i_hosting_t: "The site is hosted by Netlify Inc. The server functions and the encrypted backup storage run there as well.",
+  lg_a_what: "What abitakt is",
+  lg_a_what_t: "A study companion for the 2027 Abitur in Baden-Württemberg. It combines your timetable, your dates and your actual progress into one concrete suggestion for today – with a reason, so you can follow it or turn it down.",
+  lg_a_limits: "What abitakt is not",
+  lg_a_lim_1: "Not an offering of the ministry of education or of any school. Always check exam dates with your school.",
+  lg_a_lim_2: "Not a test of intelligence or personality. The short tests at the start only set a starting point and say nothing about you as a person.",
+  lg_a_lim_3: "Not a diagnosis and not psychological counselling. If studying is genuinely hard right now, a person is a better address than an app.",
+  lg_a_lim_4: "No guarantee of a grade. The time estimates are estimates and get better with your real data.",
+  lg_a_ai: "Where AI does the work",
+  lg_a_ai_t: "Lessons and exam tasks are written by an AI model and checked for accuracy by a second pass before they are stored. Your free-text answers are marked by the AI against the expectation grid. This does not replace a teacher, and mistakes are possible – please report them."
+});
+Object.assign(I18N.tr, {
+  lg_eyebrow: "Hukuki",
+  lg_privacy: "Gizlilik", lg_imprint: "Künye", lg_about: "abitakt hakkında",
+  lg_back: "Geri",
+  lg_todo: "henüz girilmedi",
+  lg_card: "Hukuki",
+  lg_card_t: "Ne saklanıyor, tarayıcıdan ne çıkıyor, arkasında kim var ve uygulamanın yapamadıkları.",
+  lg_p_short: "Kısaca",
+  lg_p_short_t: "abitakt profilini sunucuda değil tarayıcında saklar. Kayıt yok, tanıma çerezi yok, izleme yok. Sunucuya yalnızca bir işlev için gerekli olan gider ve orada istekten sonra hiçbiri saklanmaz.",
+  lg_p_local: "Cihazında kalır",
+  lg_p_local_1: "Profilin: ad, dersler, hedefler, ders programı, çalışma saatleri, tarihler, görevler, ilerleme ve alıştırmalardaki tüm cevapların.",
+  lg_p_local_2: "Daha önce yüklenmiş dersler, sorular ve ilerleme – uygulamanın çevrimdışı çalışmasını bu sağlar.",
+  lg_p_local_3: "Hepsini istediğin zaman dosya olarak dışa aktarabilir ya da tek tıkla silebilirsin.",
+  lg_p_sent: "Sunucuya ne gider",
+  lg_p_sent_t: "Yalnızca yapay zekâ işlevlerinde ve yalnızca gerekli olan. Hesap olmadığı için hiçbiri profilinle ilişkilendirilmez.",
+  lg_p_ep_lesson: "Yalnızca konu kimliği ve düzey (ileri ya da temel ders). Kişisel veri yok.",
+  lg_p_ep_feedback: "Bir soruya yazdığın metin ve soru numarası – değerlendirme yapılabilsin diye. Cevabın saklanmaz.",
+  lg_p_ep_oral: "Süren alıştırma sınavındaki cevapların, bir sonraki soru bunlara dayanabilsin diye. Konuşma saklanmaz; yalnızca tarayıcında durur.",
+  lg_p_ep_sync: "Yalnızca tarayıcında zaten şifrelenmiş bir blok ve yedek kodun. Sunucu içeriği okuyamaz.",
+  lg_p_sent_note: "Serbest metin cevaplarına özel hiçbir şey yazma – metin değerlendirme için yapay zekâ hizmetine iletilir.",
+  lg_p_who: "Kimler var",
+  lg_p_who_1: "Netlify (Netlify Inc.) – sitenin barındırılması, sunucu işlevleri ve şifreli yedek deposu.",
+  lg_p_who_2: "Anthropic – dersleri ve soruları yazar, değerlendirmeleri üretir; Netlify'ın yapay zekâ ağ geçidi üzerinden.",
+  lg_p_who_3: "Her iki şirket de ABD merkezlidir ve istekleri kendi sunucularında işler. Yani her yapay zekâ isteğinde soru metni ve cevabın oraya gider.",
+  lg_p_logs: "Her web sitesinde olduğu gibi barındırıcıda teknik erişim verileri oluşur (IP adresi, zaman, çağrılan adres). abitakt'ın bunlara kendi erişimi yoktur.",
+  lg_p_no: "Olmayanlar",
+  lg_p_no_1: "Reklam yok, reklam amaçlı paylaşım yok, veri satışı yok.",
+  lg_p_no_2: "Analiz ya da izleme hizmeti yok, sosyal ağ gömüsü yok.",
+  lg_p_no_3: "Kullanıcılar arası profilleme yok – uygulama yalnızca tarayıcındakini değerlendirir.",
+  lg_p_rights: "Verilerin, senin kararın",
+  lg_p_rights_t: "Her şey yerel olduğu için veriler senin elinde: dışa aktar, sil, başka cihaza taşı. Sunucudaki bir yedeği profilinden istediğin zaman kalıcı olarak silebilirsin. GDPR kapsamında ayrıca erişim, düzeltme, silme, kısıtlama, taşınabilirlik ve itiraz haklarına ve bir denetim makamına şikâyet hakkına sahipsin.",
+  lg_p_law: "Hangi hukuk geçerli",
+  lg_p_law_t: "Sağlayıcı İsviçre'de bulunur; orada revize Veri Koruma Kanunu (revDSG) geçerlidir. abitakt Almanya'daki öğrencilere yönelik olduğu için ayrıca GDPR geçerlidir. Şikâyetini İsviçre'deki EDÖB'e ya da eyaletinin veri koruma kurumuna iletebilirsin.",
+  lg_p_contact: "İletişim:",
+  lg_p_updated: "Bu bilgiler uygulamanın koddaki halini anlatır. Hukuki danışmanlık değildir.",
+  lg_i_provider: "Sağlayıcı",
+  lg_i_name: "Ad", lg_i_address: "Adres", lg_i_email: "E-posta",
+  lg_i_note: "İsviçre hukukuna göre sağlayıcı bilgileri (Haksız Rekabet Kanunu Md. 3/1-s). Sağlayıcı İsviçre'de bulunur; uygulama Baden-Württemberg'deki öğrencilere yöneliktir.",
+  lg_i_missing: "Henüz eksik",
+  lg_i_missing_t: "Site herkese açılmadan önce burada ad, tebligata elverişli adres ve e-posta adresi bulunmalıdır.",
+  lg_i_liability: "İçerik ve bağlantı sorumluluğu",
+  lg_i_liability_t: "Öğrenme içerikleri özenle hazırlanır ve doğruluk açısından ikinci kez denetlenir, yine de hata içerebilir. Bağlayıcı olan müfredat ve okulunun bildirdikleridir. Bağlantı verilen sayfaların içeriğinden işletmecileri sorumludur.",
+  lg_i_hosting: "Barındırma",
+  lg_i_hosting_t: "Site Netlify Inc. tarafından barındırılır. Sunucu işlevleri ve şifreli yedek deposu da oradadır.",
+  lg_a_what: "abitakt nedir",
+  lg_a_what_t: "Baden-Württemberg 2027 Abitur'u için bir çalışma arkadaşı. Ders programını, tarihlerini ve gerçek ilerlemeni bugün için tek bir somut öneriye bağlar – gerekçesiyle birlikte, izleyebilesin ya da reddedebilesin diye.",
+  lg_a_limits: "abitakt ne değildir",
+  lg_a_lim_1: "Eğitim bakanlığının ya da bir okulun sunduğu bir hizmet değildir. Sınav tarihlerini her zaman okulunla karşılaştır.",
+  lg_a_lim_2: "Zekâ ya da kişilik testi değildir. Başlangıçtaki kısa testler yalnızca bir başlangıç noktası ayarlar ve seni bir insan olarak tanımlamaz.",
+  lg_a_lim_3: "Teşhis ya da psikolojik danışmanlık değildir. Çalışmak şu an gerçekten zor geliyorsa, bir insan uygulamadan daha doğru adrestir.",
+  lg_a_lim_4: "Not garantisi yoktur. Süre bilgileri tahmindir ve gerçek verilerinle netleşir.",
+  lg_a_ai: "Yapay zekâ nerede devrede",
+  lg_a_ai_t: "Dersler ve sınav soruları bir yapay zekâ modeli tarafından yazılır ve kaydedilmeden önce ikinci bir geçişte doğruluk açısından denetlenir. Serbest metin cevapların beklenti ölçütlerine göre yapay zekâ tarafından değerlendirilir. Bu bir öğretmenin yerini tutmaz ve hata olabilir – bildirirsen sevinirim."
 });
 
 let LANG = "de";
@@ -2506,7 +3119,7 @@ function scrWelcome() {
         ${[1,2,3].map(n=>'<div class="welcome-step"><b aria-hidden="true">0'+n+'</b><div><h3>'+t('v2_s'+n)+'</h3><p>'+t('v2_d'+n)+'</p></div></div>').join("")}
       </section>
     </div>
-    <footer class="welcome-footer"><span>${t("v2_scope")}</span><span>${t("v2_dates")}</span></footer>
+    <footer class="welcome-footer"><span>${t("v2_scope")}</span>${legalFooterLinks()}<span>${t("v2_dates")}</span></footer>
   </div>`);
 }
 ACT.begin = () => { FLOW = { mode: "full" }; scrAssessIntro(); };
@@ -3132,6 +3745,7 @@ function readinessCard() {
 }
 
 /* 6.1 Dashboard --------------------------------------------- */
+let DASH_MORE = false;   // "numbers and progress" stays folded away until asked for
 function scrDash() {
   const plan = Engine.schedule();
   const topics = Engine.allTopics();
@@ -3166,6 +3780,10 @@ function scrDash() {
       <div class="grid g-3">${Object.entries(TOPICS).map(([id,tp])=>'<button class="task" data-act="openTopic" data-v="'+id+'"><span class="task-body"><span class="eyebrow">'+esc(tp.subject)+'</span><span class="task-title" style="margin-top:8px">'+esc(tp.name)+'</span></span><span aria-hidden="true">↗</span></button>').join("")}</div>
     </section>
     ${profileTodoCard()}
+    ${examPracticeCard()}
+    <details class="dash-more"${DASH_MORE ? " open" : ""}>
+      <summary><span>${t("db_more")}<span class="dash-more-sub" style="display:block;margin-top:3px">${t("db_more_t")}</span></span></summary>
+      <div class="dash-more-body">
     <div class="grid g-3" style="margin-bottom:16px">
       <div class="stat" style="border-color:${dLeft <= 90 ? "rgba(242,120,154,.3)" : "var(--line)"}">
         <div class="stat-k">${t("db_countdown")}</div>
@@ -3203,7 +3821,11 @@ function scrDash() {
     </div>
 
     ${readinessCard()}
+      </div>
+    </details>
   </div>`));
+  const dm = document.querySelector(".dash-more");
+  if (dm) dm.addEventListener("toggle", () => { DASH_MORE = dm.open; });
 }
 ACT.startNext = () => {
   const plan = Engine.schedule();
@@ -3360,11 +3982,14 @@ function scrProfile() {
             return `<div class="dim" style="font-size:13.5px;margin-bottom:5px">— ${esc(go ? L(go.l) : g)}</div>`;
           }).join("") || `<div class="mute" style="font-size:13.5px">${t("pf_nogoals")}</div>`}
         </div>
+        ${syncCard()}
+        ${legalCard()}
         <div class="card">
           <div class="sec-title" style="margin-bottom:11px">${t("pf_data")}</div>
           <p class="mute" style="font-size:13.2px;line-height:1.6">${t("pf_data_note")}</p>
           <div class="btn-row" style="margin-top:14px">
             <button class="btn btn-ghost" data-act="exportProfile">${t("pf_export")}</button>
+            <button class="btn btn-ghost" data-act="importProfile">${t("pf_import")}</button>
             <button class="btn btn-quiet" data-act="resetAll">${t("pf_reset")}</button></div>
         </div>
       </div>
@@ -3682,6 +4307,7 @@ function finishSession() {
     </div>
     <div class="btn-row" style="justify-content:center">
       <button class="btn btn-primary" data-act="go" data-v="dash">${t("s_back")}</button>
+      ${canOpen(SES.topicId) ? `<button class="btn btn-ghost" data-act="startOpen" data-v="${esc(SES.topicId)}">${t("op_write")}</button>` : ""}
     </div>
     ${ratingCard()}
   </div></div>`);
@@ -3985,12 +4611,28 @@ const Coach = {
     return null;
   },
 
-  /* minutes a topic still needs before a date (estimate, adjusted by readiness) */
+  /* How fast this person actually gets through a topic. Measured where there is
+     evidence (own session lengths, own mastery gain per unit), otherwise a plain
+     default that is labelled as a rough estimate in the plan. */
+  pace() {
+    const l = this.life(), st = this.stats();
+    const unit = st.done >= 5 && st.median ? clamp(st.median, 8, 45) : 20;
+    const per = {};
+    l.sessions.forEach(x => { if (x.done && x.topicId && (x.kind === "lesson" || x.kind === "open")) per[x.topicId] = (per[x.topicId] || 0) + 1; });
+    const rates = Object.keys(per)
+      .filter(id => S.progress[id] && S.progress[id].attempts >= 5)
+      .map(id => Engine.rec(id).mastery / per[id])
+      .filter(x => x > 0.01 && x < 0.6);
+    const measured = rates.length >= 3 && st.done >= 5;
+    return { unit: unit, perUnit: measured ? clamp(mean(rates), 0.05, 0.4) : 0.18, measured: measured, n: rates.length };
+  },
+
+  /* minutes a topic still needs before a date – an estimate, never a promise */
   neededMinutes(topicId) {
-    const r = S.progress[topicId];
     const ready = Readiness.topic(topicId);
-    const base = r && r.attempts ? 90 : 120;
-    return Math.round(base * (1 - ready));
+    if (ready >= 0.95) return 0;
+    const p = this.pace();
+    return Math.round(clamp((1 - ready) / p.perUnit * p.unit, 5, 300));
   },
 
   /* -- candidates: everything that could be worked on today -- */
@@ -4005,7 +4647,7 @@ const Coach = {
 
     // 1. exams and deadlines
     l.events.filter(e => !e.done && e.date >= today).forEach(e => {
-      const days = daysUntil(e.date);
+      const days = daysUntil(e.date, date);
       if (days > 21) return;
       const topics = (e.topics && e.topics.length ? e.topics : []).filter(id => S.subjects.some(s => s.topics.some(tp => tp.id === id)));
       const w = EVENT_WEIGHT[e.type] || 1;
@@ -4036,13 +4678,13 @@ const Coach = {
         score: 5 + 4 * w / (days + 1),
         title: days === 1 ? t("co_eve_title", { topic: topicName(focus.id) }) : topicName(focus.id),
         why: [t("co_why_exam", { title: e.title, when: relDays(days) }), t("co_why_gap", { topic: topicName(focus.id), n: pct(focus.ready) }),
-          t("co_why_need", { n: total, d: studyDays })],
+          t(this.pace().measured ? "co_why_need" : "co_why_need_rough", { n: total, d: studyDays })],
         tip: days === 1 ? t("co_tip_eve") : null });
     });
 
     // 2. homework / own tasks
     l.tasks.filter(x => !x.done).forEach(x => {
-      const days = x.due ? daysUntil(x.due) : 7;
+      const days = x.due ? daysUntil(x.due, date) : 7;
       if (days > 10) return;
       out.push({ key: "task:" + x.id, kind: "task", task: x, subjectId: x.subjectId, minutes: clamp(+x.minutes || 20, 5, 120),
         score: days < 0 ? 7 : 3 + 3 / (Math.max(days, 0) + 1), title: x.title,
@@ -4698,11 +5340,811 @@ function setupPromptCard() {
   </section>`;
 }
 
+
+/* ---------- 6.7 Free-text tasks with AI feedback ---------------
+   Exam-style open tasks per topic (generated once, cached server-side),
+   the learner writes an answer, the AI grades it against the stored
+   expectations. Answers are never stored on the server.
+   Mastery stays untouched – only the engine's own practice moves it. */
+const OPEN_CACHE_KEY = "abitakt.open.v1";
+let OPEN_CACHE = {};
+function loadOpenCache() { try { OPEN_CACHE = JSON.parse(localStorage.getItem(OPEN_CACHE_KEY) || "{}") || {}; } catch (e) { OPEN_CACHE = {}; } }
+function saveOpenCache() { try { localStorage.setItem(OPEN_CACHE_KEY, JSON.stringify(OPEN_CACHE)); } catch (e) {} }
+const OPEN_TOPICS = ["analysis_extrem", "neuro_ap", "gesch_teilung"].concat(AI_TOPICS);
+function openLevel(topicId) {
+  const s = S.subjects.find(x => x.topics.some(tp => tp.id === topicId));
+  if (!s) return null;
+  return (s.tag === "P1" || s.tag === "P2" || s.tag === "LF") ? "Leistungsfach" : "Basisfach";
+}
+function canOpen(topicId) { return OPEN_TOPICS.indexOf(topicId) !== -1 && !!openLevel(topicId) && aiAvailable(); }
+function openKeyOf(topicId) { return topicId + "/" + openLevel(topicId); }
+
+function openStat(topicId) {
+  if (!S.openStats[topicId]) S.openStats[topicId] = { done: 0, points: 0, max: 0, next: 0 };
+  return S.openStats[topicId];
+}
+async function openCall(method, topicId, level) {
+  const url = method === "GET" ? `/api/open?topicId=${encodeURIComponent(topicId)}&level=${encodeURIComponent(level)}` : "/api/open";
+  const res = await fetch(url, method === "GET" ? { cache: "no-store" }
+    : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ topicId: topicId, level: level }) });
+  let body = {};
+  try { body = await res.json(); } catch (e) {}
+  if (res.status === 429) return { status: "budget" };
+  if (!res.ok && res.status !== 202) return { status: "failed" };
+  return body;
+}
+let OPEN = null;
+async function startOpenTask(topicId) {
+  if (!canOpen(topicId)) { toast(`<span>○</span><span>${esc(t("op_unavailable"))}</span>`, 3600); return; }
+  const level = openLevel(topicId), key = openKeyOf(topicId);
+  if (!OPEN_CACHE[key]) {
+    const token = OPEN = { topicId: topicId, loading: true, t0: Date.now() };
+    renderOpenLoading(topicId);
+    let r;
+    try {
+      r = await openCall("POST", topicId, level);
+      while (OPEN === token && r.status === "pending" && Date.now() - token.t0 < 4 * 60 * 1000) {
+        await new Promise(res => setTimeout(res, 5000));
+        if (OPEN !== token) return;
+        r = await openCall("GET", topicId, level);
+        if (r.status === "none") r = await openCall("POST", topicId, level);
+      }
+    } catch (e) { r = { status: "failed" }; }
+    if (OPEN !== token) return;
+    if (r && r.status === "ready" && Array.isArray(r.tasks) && r.tasks.length) { OPEN_CACHE[key] = r.tasks; saveOpenCache(); }
+    else {
+      OPEN = null;
+      toast(`<span>○</span><span>${esc(t(r && r.status === "budget" ? "op_budget" : "op_failed"))}</span>`, 4200);
+      VIEW = "dash"; render(); return;
+    }
+  }
+  const tasks = OPEN_CACHE[key];
+  const st = openStat(topicId);
+  const idx = clamp(st.next % tasks.length, 0, tasks.length - 1);
+  OPEN = { topicId: topicId, level: level, idx: idx, task: tasks[idx], started: Date.now(), phase: "write" };
+  Coach.begin({ key: "open:" + topicId, kind: "open", topicId: topicId, minutes: tasks[idx].minutes,
+    subjectId: (S.subjects.find(x => x.topics.some(tp => tp.id === topicId)) || {}).id });
+  renderOpenTask();
+}
+function renderOpenLoading(topicId) {
+  stopTick(); FLOW.redraw = () => renderOpenLoading(topicId);
+  mount(`<div class="focus-top">
+      <button class="btn btn-quiet" data-act="openQuit">${t("s_exit")}</button><span></span>
+      <span class="mute" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:640">${esc(topicName(topicId))}</span>
+    </div>
+    <div class="focus-body"><div class="focus-card" style="text-align:center">
+      <div style="font-size:34px;margin-bottom:10px">✎</div>
+      <h2 role="status" aria-live="polite">${t("op_loading")}</h2>
+      <p class="lede" style="margin:12px auto 0">${t("op_loading_t")}</p>
+    </div></div>`, "focus-screen");
+}
+function renderOpenTask() {
+  stopTick(); FLOW.redraw = renderOpenTask;
+  const o = OPEN, task = o.task;
+  mount(`<div class="focus-top">
+      <button class="btn btn-quiet" data-act="openQuit">${t("s_exit")}</button><span></span>
+      <span class="mute" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:640">${esc(topicName(o.topicId))}</span>
+    </div>
+    <div class="focus-body"><div class="focus-card">
+      <div class="micro-tag">${t("op_tag", { op: esc(task.op), afb: "I".repeat(task.afb), n: task.minutes })}</div>
+      <div class="q-text">${esc(task.q)}</div>
+      <label class="label" for="op-answer">${t("op_your_answer")}</label>
+      <textarea class="field" id="op-answer" rows="9" maxlength="4000" placeholder="${esc(t("op_answer_ph"))}"></textarea>
+      <p class="hint">${t("op_hint", { n: task.expect.length })}</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" data-act="openSubmit">${t("op_submit")}</button>
+        <button class="btn btn-quiet" data-act="openSkip">${t("op_other_task")}</button>
+      </div>
+    </div></div>`, "focus-screen");
+  const ta = document.getElementById("op-answer");
+  if (ta) { ta.value = o.draft || ""; ta.focus(); ta.addEventListener("input", () => { OPEN.draft = ta.value; }); }
+}
+ACT.openSkip = () => {
+  const st = openStat(OPEN.topicId);
+  st.next = (st.next + 1) % (OPEN_CACHE[openKeyOf(OPEN.topicId)] || [1]).length;
+  Store.save();
+  OPEN.idx = st.next; OPEN.task = OPEN_CACHE[openKeyOf(OPEN.topicId)][st.next]; OPEN.draft = "";
+  renderOpenTask();
+};
+ACT.openQuit = () => {
+  if (OPEN && OPEN.started) {
+    const mins = (Date.now() - OPEN.started) / 60000;
+    if (mins >= 0.5) Coach.record({ kind: "open", topicId: OPEN.topicId, minutes: mins, done: false });
+    else Coach.active = null;
+  }
+  OPEN = null; stopTick(); VIEW = "dash"; render();
+};
+ACT.openSubmit = async () => {
+  const ta = document.getElementById("op-answer");
+  const answer = (ta && ta.value || "").trim();
+  if (answer.length < 10) { toast(`<span>!</span><span>${esc(t("op_too_short"))}</span>`); return; }
+  const o = OPEN;
+  o.draft = answer;
+  o.phase = "grading";
+  renderOpenGrading();
+  let r;
+  try {
+    const res = await fetch("/api/feedback", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topicId: o.topicId, level: o.level, taskIndex: o.idx, answer: answer }) });
+    r = await res.json().catch(() => ({}));
+    if (res.status === 429) r = { status: "budget" };
+    else if (!res.ok) r = { status: "failed" };
+  } catch (e) { r = { status: "failed" }; }
+  if (OPEN !== o) return;
+  if (!r || r.status !== "ready" || !r.feedback) {
+    o.phase = "write";
+    toast(`<span>○</span><span>${esc(t(r && r.status === "budget" ? "op_fb_budget" : "op_fb_failed"))}</span>`, 4600);
+    renderOpenTask();
+    return;
+  }
+  const st = openStat(o.topicId);
+  st.done++; st.points += r.feedback.points; st.max += r.feedback.max; st.next = (o.idx + 1) % (OPEN_CACHE[openKeyOf(o.topicId)] || [1]).length;
+  S.lastPractice[o.topicId] = Date.now();
+  Coach.record({ kind: "open", topicId: o.topicId, minutes: (Date.now() - o.started) / 60000, done: true });
+  Store.save();
+  o.feedback = r.feedback; o.left = r.left; o.phase = "result";
+  renderOpenResult();
+};
+function renderOpenGrading() {
+  stopTick(); FLOW.redraw = renderOpenGrading;
+  mount(`<div class="focus-top"><span></span><span></span>
+      <span class="mute" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:640">${esc(topicName(OPEN.topicId))}</span></div>
+    <div class="focus-body"><div class="focus-card" style="text-align:center">
+      <div style="font-size:34px;margin-bottom:10px">✎</div>
+      <h2 role="status" aria-live="polite">${t("op_grading")}</h2>
+      <p class="lede" style="margin:12px auto 0">${t("op_grading_t")}</p>
+    </div></div>`, "focus-screen");
+}
+function renderOpenResult() {
+  stopTick(); FLOW.redraw = renderOpenResult;
+  const f = OPEN.feedback, task = OPEN.task;
+  const pctP = f.max ? f.points / f.max : 0;
+  const color = pctP >= 0.75 ? "var(--teal)" : pctP >= 0.4 ? "var(--amber)" : "var(--rose)";
+  mount(`<div class="center-wrap"><div class="stage" style="max-width:760px">
+    <div class="eyebrow">${t("op_result")} · ${esc(task.op)} · AFB ${"I".repeat(task.afb)}</div>
+    <h1 style="margin-top:8px"><span style="color:${color}">${f.points}</span> / ${f.max} ${t("op_points")}</h1>
+    <div class="card" style="margin-top:20px">
+      <div class="sec-title" style="margin-bottom:10px">${t("op_criteria")}</div>
+      ${f.criteria.map(c => `<div class="kv" style="align-items:flex-start;gap:10px">
+        <span class="kv-k" style="flex:0 0 26px;color:${c.hit ? "var(--teal)" : "var(--tx-mute)"};font-weight:700">${c.hit ? "✓" : "○"}</span>
+        <span style="flex:1 1 240px;font-size:14px;line-height:1.55;color:var(--tx)">${esc(c.t)}
+          ${c.quote ? `<span class="mute" style="display:block;font-size:12.5px;margin-top:3px">„${esc(c.quote)}“</span>` : ""}</span>
+        <span class="kv-v mono">${c.hit ? c.p : 0}/${c.p}</span></div>`).join("")}
+      <p class="hint">${t("op_operator")}: ${esc(f.operator)}</p>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="sec-title" style="margin-bottom:8px">${t("op_good")}</div>
+      <p style="margin:0;font-size:14.5px;line-height:1.6">${esc(f.good)}</p>
+      <div class="sec-title" style="margin:16px 0 8px">${t("op_improve")}</div>
+      <ul class="coach-why" style="margin-top:0">${f.improve.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
+      <p class="hint">${t("op_next")}: ${esc(f.next)}</p>
+    </div>
+    <details class="card" style="margin-top:14px">
+      <summary style="cursor:pointer;font-weight:600">${t("op_solution")}</summary>
+      <p style="margin:12px 0 0;font-size:14.5px;line-height:1.65;white-space:pre-wrap">${esc(f.solution)}</p>
+    </details>
+    <p class="hint">${t("op_note")}${typeof OPEN.left === "number" ? " " + t("op_left", { n: OPEN.left }) : ""}</p>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-act="openNext">${t("op_next_task")}</button>
+      <button class="btn btn-ghost" data-act="openDone">${t("op_back")}</button>
+    </div>
+    ${ratingCard()}
+  </div></div>`);
+}
+ACT.openNext = () => { const id = OPEN.topicId; OPEN = null; startOpenTask(id); };
+ACT.openDone = () => { OPEN = null; VIEW = "dash"; render(); };
+
+/* ---------- 6.8 Oral exam trainer (P4/P5) -------------------- */
+let ORAL = null;
+function canOral(topicId) { return canOpen(topicId); }
+async function startOral(topicId) {
+  if (!canOral(topicId)) { toast(`<span>○</span><span>${esc(t("op_unavailable"))}</span>`, 3600); return; }
+  ORAL = { topicId: topicId, level: openLevel(topicId), history: [], started: Date.now(), turn: null, busy: true };
+  Coach.begin({ key: "oral:" + topicId, kind: "oral", topicId: topicId, minutes: 12,
+    subjectId: (S.subjects.find(x => x.topics.some(tp => tp.id === topicId)) || {}).id });
+  renderOral();
+  await oralStep();
+}
+async function oralStep(answer) {
+  const o = ORAL;
+  if (answer != null && o.turn) o.history.push({ q: o.turn.say, a: answer });
+  o.busy = true; renderOral();
+  let r;
+  try {
+    const res = await fetch("/api/oral", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topicId: o.topicId, level: o.level, history: o.history }) });
+    r = await res.json().catch(() => ({}));
+    if (res.status === 429) r = { status: "budget" };
+    else if (!res.ok) r = { status: "failed" };
+  } catch (e) { r = { status: "failed" }; }
+  if (ORAL !== o) return;
+  o.busy = false;
+  if (!r || r.status !== "ready" || !r.turn) {
+    toast(`<span>○</span><span>${esc(t(r && r.status === "budget" ? "or_budget" : "or_failed"))}</span>`, 4600);
+    if (!o.turn) { ORAL = null; VIEW = "dash"; render(); return; }
+    renderOral(); return;
+  }
+  o.turn = r.turn; o.left = r.left;
+  if (r.turn.done) {
+    Coach.record({ kind: "oral", topicId: o.topicId, minutes: (Date.now() - o.started) / 60000, done: true });
+    S.lastPractice[o.topicId] = Date.now();
+    Store.save();
+  }
+  renderOral();
+}
+function renderOral() {
+  stopTick(); FLOW.redraw = renderOral;
+  const o = ORAL, turn = o.turn;
+  const head = `<div class="focus-top">
+      <button class="btn btn-quiet" data-act="oralQuit">${t("s_exit")}</button>
+      <div class="step-pips">${Array.from({ length: 5 }, (_, i) => `<span class="pip ${i < o.history.length ? "done" : i === o.history.length ? "on" : ""}"></span>`).join("")}</div>
+      <span class="mute" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:640">${t("or_title")}</span>
+    </div>`;
+  if (o.busy && !turn) {
+    mount(head + `<div class="focus-body"><div class="focus-card" style="text-align:center">
+      <div style="font-size:34px;margin-bottom:10px">🗣</div><h2 role="status" aria-live="polite">${t("or_starting")}</h2>
+      <p class="lede" style="margin:12px auto 0">${t("or_starting_t", { topic: esc(topicName(o.topicId)) })}</p></div></div>`, "focus-screen");
+    return;
+  }
+  if (turn && turn.done) {
+    mount(`<div class="center-wrap"><div class="stage" style="max-width:720px">
+      <div class="eyebrow">${t("or_result")}</div>
+      <h1 style="margin-top:8px">${turn.grade != null ? t("or_grade", { n: turn.grade }) : t("or_result")}</h1>
+      <p class="lede" style="margin-top:12px">${esc(turn.say)}</p>
+      ${turn.strengths.length ? `<div class="card" style="margin-top:18px"><div class="sec-title" style="margin-bottom:8px">${t("or_strengths")}</div>
+        <ul class="coach-why" style="margin-top:0">${turn.strengths.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>` : ""}
+      ${turn.gaps.length ? `<div class="card" style="margin-top:14px"><div class="sec-title" style="margin-bottom:8px">${t("or_gaps")}</div>
+        <ul class="coach-why" style="margin-top:0">${turn.gaps.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>` : ""}
+      <details class="card" style="margin-top:14px"><summary style="cursor:pointer;font-weight:600">${t("or_transcript")}</summary>
+        ${o.history.map((h, i) => `<div style="margin-top:12px"><div class="sec-title" style="margin-bottom:4px">${t("or_q", { n: i + 1 })}</div>
+          <p style="margin:0;font-size:14px">${esc(h.q)}</p>
+          <p class="dim" style="margin:6px 0 0;font-size:14px;white-space:pre-wrap">${esc(h.a)}</p></div>`).join("")}
+      </details>
+      <p class="hint">${t("or_note")}</p>
+      <div class="btn-row"><button class="btn btn-primary" data-act="oralAgain">${t("or_again")}</button>
+        <button class="btn btn-ghost" data-act="oralDone">${t("op_back")}</button></div>
+      ${ratingCard()}
+    </div></div>`);
+    return;
+  }
+  mount(head + `<div class="focus-body"><div class="focus-card">
+      <div class="micro-tag">${t("or_question", { n: o.history.length + 1, t: 5 })}</div>
+      <div class="q-text">${esc(turn ? turn.say : "")}</div>
+      <label class="label" for="or-answer">${t("or_your_answer")}</label>
+      <textarea class="field" id="or-answer" rows="6" maxlength="2000" placeholder="${esc(t("or_answer_ph"))}" ${o.busy ? "disabled" : ""}></textarea>
+      <p class="hint">${t("or_hint")}</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" data-act="oralSend" ${o.busy ? "disabled" : ""}>${o.busy ? t("or_thinking") : t("or_send")}</button>
+      </div>
+    </div></div>`, "focus-screen");
+  const ta = document.getElementById("or-answer");
+  if (ta && !o.busy) { ta.value = o.draft || ""; ta.focus(); ta.addEventListener("input", () => { ORAL.draft = ta.value; }); }
+}
+ACT.oralSend = () => {
+  const ta = document.getElementById("or-answer");
+  const a = (ta && ta.value || "").trim();
+  if (a.length < 3) { toast(`<span>!</span><span>${esc(t("or_too_short"))}</span>`); return; }
+  ORAL.draft = "";
+  oralStep(a);
+};
+ACT.oralQuit = () => {
+  if (ORAL && ORAL.history.length) Coach.record({ kind: "oral", topicId: ORAL.topicId, minutes: (Date.now() - ORAL.started) / 60000, done: false });
+  else Coach.active = null;
+  ORAL = null; VIEW = "dash"; render();
+};
+ACT.oralAgain = () => { const id = ORAL.topicId; ORAL = null; startOral(id); };
+ACT.oralDone = () => { ORAL = null; VIEW = "dash"; render(); };
+ACT.startOpen = (el, d) => startOpenTask(d.v);
+ACT.startOral = (el, d) => startOral(d.v);
+
+/* practice picker: which topics can be trained in exam style right now */
+function examPracticeCard() {
+  const topics = [];
+  S.subjects.forEach(s => s.topics.forEach(tp => { if (OPEN_TOPICS.indexOf(tp.id) !== -1) topics.push({ id: tp.id, name: tp.name, subject: s.name, tag: s.tag }); }));
+  if (!topics.length) return "";
+  const ranked = topics.sort((a, b) => (Readiness.topic(b.id) - Readiness.topic(a.id)));
+  const list = [], perSubject = {};
+  for (let round = 1; round <= 3 && list.length < 6; round++)
+    ranked.forEach(x => { if (list.length < 6 && (perSubject[x.subject] || 0) < round && list.indexOf(x) === -1) { perSubject[x.subject] = round; list.push(x); } });
+  return `<section class="card" style="margin-bottom:20px">
+    <div class="sec-head"><span class="sec-title">${t("op_section")}</span>
+      <span class="mute" style="font-size:12.5px">${t("op_section_sub")}</span></div>
+    <p class="hint" style="margin:6px 0 14px">${t("op_section_t")}</p>
+    ${list.map(x => {
+      const st = S.openStats[x.id];
+      return `<div class="kv" style="flex-wrap:wrap;gap:10px">
+        <span class="kv-k" style="flex:1 1 220px;color:var(--tx)"><strong>${esc(x.name)}</strong>
+          <span class="mute" style="display:block;font-size:12.5px">${esc(x.subject)}${st && st.done ? " · " + t("op_done_stat", { n: st.done, a: st.points, b: st.max }) : ""}</span></span>
+        <span class="btn-row" style="margin:0;gap:8px">
+          <button class="btn btn-ghost" data-act="startOpen" data-v="${esc(x.id)}">${t("op_write")}</button>
+          ${x.tag === "P4" || x.tag === "P5" ? `<button class="btn btn-ghost" data-act="startOral" data-v="${esc(x.id)}">${t("or_train")}</button>` : ""}
+        </span></div>`;
+    }).join("")}
+    <p class="hint">${t("op_section_note")}</p>
+  </section>`;
+}
+
+/* ---------- 6.9 Encrypted sync ("Anmelden") ------------------
+   No account, no e-mail, no password on a server. The profile is encrypted in
+   the browser with a key derived from a passphrase that never leaves the
+   device; the server only ever stores an opaque blob under a random code.
+   Losing both the code and the passphrase means the data is gone – that is the
+   price of the server not being able to read anything. */
+const SYNC_KEY_STORE = "abitakt.sync.v1";
+const SYNC_API = "/api/sync";
+const PBKDF2_ROUNDS = 210000;
+let SYNC = null;          // { id, rev, key (base64 raw), salt (base64), at }
+let SYNC_BUSY = false;
+let SYNC_TIMER = null;
+
+function syncAvailable() { return !!(window.crypto && crypto.subtle) && window.isSecureContext === true; }
+function syncLoad() { try { SYNC = JSON.parse(localStorage.getItem(SYNC_KEY_STORE) || "null"); } catch (e) { SYNC = null; } }
+function syncStore() { try { SYNC ? localStorage.setItem(SYNC_KEY_STORE, JSON.stringify(SYNC)) : localStorage.removeItem(SYNC_KEY_STORE); } catch (e) {} }
+
+const b64 = buf => { let s = ""; new Uint8Array(buf).forEach(b => s += String.fromCharCode(b)); return btoa(s); };
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+async function deriveKey(pass, salt) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: PBKDF2_ROUNDS, hash: "SHA-256" },
+    base, { name: "AES-GCM", length: 256 }, true, ["encrypt", "decrypt"]);
+}
+const importKey = raw => crypto.subtle.importKey("raw", unb64(raw), "AES-GCM", true, ["encrypt", "decrypt"]);
+
+/* blob = base64( salt(16) || iv(12) || ciphertext ). The salt is not secret and
+   travels in the clear so a new device can rebuild the key from the passphrase. */
+async function syncEncrypt(key, saltB64, obj) {
+  const salt = unb64(saltB64);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const data = new TextEncoder().encode(JSON.stringify(obj));
+  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, data);
+  const out = new Uint8Array(28 + ct.byteLength);
+  out.set(salt, 0); out.set(iv, 16); out.set(new Uint8Array(ct), 28);
+  return b64(out);
+}
+const saltOf = blob => unb64(blob).slice(0, 16);
+async function syncDecrypt(key, blob) {
+  const raw = unb64(blob);
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: raw.slice(16, 28) }, key, raw.slice(28));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+async function syncApi(method, body, qs) {
+  const res = await fetch(SYNC_API + (qs || ""), method === "GET" ? { cache: "no-store" }
+    : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  let out = {};
+  try { out = await res.json(); } catch (e) {}
+  out.httpStatus = res.status;
+  return out;
+}
+/* what actually travels: the profile plus the payload version, nothing else */
+function syncPayload() { return { v: 1, at: Date.now(), profile: S }; }
+
+/* Store.save() calls this; the upload is debounced so typing does not hammer
+   the network, and a failure never blocks anything local. */
+function syncTouch() {
+  if (!SYNC || !SYNC.key || !syncAvailable() || navigator.onLine === false) return;
+  clearTimeout(SYNC_TIMER);
+  SYNC_TIMER = setTimeout(() => { syncPush().catch(() => {}); }, 4000);
+}
+async function syncPush(opts) {
+  if (!SYNC || !SYNC.key || SYNC_BUSY) return { status: "skipped" };
+  SYNC_BUSY = true;
+  try {
+    const key = await importKey(SYNC.key);
+    const blob = await syncEncrypt(key, SYNC.salt, syncPayload());
+    let r = await syncApi("POST", { action: "put", id: SYNC.id, blob: blob, rev: SYNC.rev });
+    if (r.status === "conflict") {
+      if (opts && opts.force) {
+        r = await syncApi("POST", { action: "put", id: SYNC.id, blob: blob, rev: r.rev });
+      } else {
+        SYNC.conflictRev = r.rev; SYNC.conflictAt = r.updated; syncStore();
+        return { status: "conflict" };
+      }
+    }
+    if (r.status !== "ok") return { status: r.status === "none" ? "gone" : "failed" };
+    SYNC.rev = r.rev; SYNC.at = r.updated; delete SYNC.conflictRev; delete SYNC.conflictAt; syncStore();
+    return { status: "ok" };
+  } catch (e) { return { status: "failed" }; }
+  finally { SYNC_BUSY = false; }
+}
+function applyProfile(data) {
+  if (!data || data.v !== 1 || !data.profile || data.profile.v !== 1) return false;
+  const lang = LANG;
+  S = Object.assign(BLANK(), data.profile);
+  S.lang = S.lang || lang;
+  Store.save();
+  return true;
+}
+async function syncPull() {
+  if (!SYNC || !SYNC.key) return { status: "failed" };
+  try {
+    const r = await syncApi("GET", null, "?id=" + encodeURIComponent(SYNC.id));
+    if (r.status !== "ready" || !r.blob) return { status: r.status === "none" ? "gone" : "failed" };
+    const data = await syncDecrypt(await importKey(SYNC.key), r.blob);
+    if (!applyProfile(data)) return { status: "failed" };
+    SYNC.rev = r.rev; SYNC.at = r.updated; delete SYNC.conflictRev; delete SYNC.conflictAt; syncStore();
+    return { status: "ok" };
+  } catch (e) { return { status: "failed" }; }
+}
+
+/* ---------- sync screens ---------- */
+function syncBack() { VIEW = "prof"; render(); }
+function syncShell(title, lede, inner) {
+  mount(`<div class="center-wrap"><div class="stage" style="max-width:640px">
+    <div class="eyebrow">${t("sy_eyebrow")}</div>
+    <h1 style="margin-top:8px">${title}</h1>
+    <p class="lede" style="margin-top:12px">${lede}</p>
+    ${inner}
+  </div></div>`);
+}
+function fmtWhen(ts) {
+  if (!ts) return t("sy_never");
+  const mins = Math.round((Date.now() - ts) / 60000);
+  if (mins < 1) return t("sy_just_now");
+  if (mins < 60) return t("sy_min_ago", { n: mins });
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24) return t("sy_hour_ago", { n: hrs });
+  return t("sy_day_ago", { n: Math.round(hrs / 24) });
+}
+function scrSync() {
+  stopTick(); FLOW.redraw = scrSync;
+  if (!syncAvailable()) {
+    return syncShell(t("sy_title"), t("sy_unavailable"),
+      `<div class="btn-row"><button class="btn btn-ghost" data-act="syncBack">${t("sy_back")}</button></div>`);
+  }
+  if (!SYNC) {
+    return syncShell(t("sy_title"), t("sy_intro"), `
+      <div class="card" style="margin-top:20px;text-align:left">
+        <div class="sec-title" style="margin-bottom:8px">${t("sy_how")}</div>
+        <ul class="coach-why" style="margin-top:0">
+          <li>${t("sy_how_1")}</li><li>${t("sy_how_2")}</li><li>${t("sy_how_3")}</li></ul>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" data-act="syncNew">${t("sy_create")}</button>
+        <button class="btn btn-ghost" data-act="syncJoin">${t("sy_join")}</button>
+        <button class="btn btn-quiet" data-act="syncBack">${t("sy_back")}</button>
+      </div>`);
+  }
+  const conflict = SYNC.conflictRev != null;
+  syncShell(t("sy_title_on"), t("sy_lede_on"), `
+    <div class="card" style="margin-top:20px;text-align:left">
+      <div class="sec-title" style="margin-bottom:8px">${t("sy_your_code")}</div>
+      <div class="mono" id="sync-code" style="font-size:26px;letter-spacing:.14em;font-weight:640">${esc(SYNC.id)}</div>
+      <p class="hint">${t("sy_code_note")}</p>
+      <div class="kv" style="margin-top:12px"><span class="kv-k">${t("sy_last")}</span>
+        <span class="kv-v">${fmtWhen(SYNC.at)}</span></div>
+    </div>
+    ${conflict ? `<div class="card-2" style="margin-top:14px;text-align:left;border-color:var(--amber)">
+      <div class="sec-title" style="margin-bottom:8px">${t("sy_conflict")}</div>
+      <p class="dim" style="font-size:14px;line-height:1.6;margin:0">${t("sy_conflict_t", { when: fmtWhen(SYNC.conflictAt) })}</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" data-act="syncTakeServer">${t("sy_take_server")}</button>
+        <button class="btn btn-ghost" data-act="syncTakeLocal">${t("sy_take_local")}</button>
+      </div></div>` : ""}
+    <div class="btn-row">
+      <button class="btn btn-primary" data-act="syncPushNow">${t("sy_push")}</button>
+      <button class="btn btn-ghost" data-act="syncPullNow">${t("sy_pull")}</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-quiet" data-act="syncCopy">${t("sy_copy")}</button>
+      <button class="btn btn-quiet" data-act="syncOff">${t("sy_off")}</button>
+      <button class="btn btn-quiet" data-act="syncWipe">${t("sy_wipe")}</button>
+      <button class="btn btn-quiet" data-act="syncBack">${t("sy_back")}</button>
+    </div>`);
+}
+function scrSyncNew(err) {
+  stopTick(); FLOW.redraw = () => scrSyncNew(err);
+  syncShell(t("sy_new_title"), t("sy_new_t"), `
+    <div class="card" style="margin-top:20px;text-align:left">
+      <label class="label" for="sy-p1" style="margin-top:0">${t("sy_pass")}</label>
+      <input class="field" id="sy-p1" type="password" autocomplete="new-password" placeholder="${esc(t("sy_pass_ph"))}">
+      <label class="label" for="sy-p2">${t("sy_pass2")}</label>
+      <input class="field" id="sy-p2" type="password" autocomplete="new-password">
+      <p class="hint">${t("sy_pass_note")}</p>
+      ${err ? `<p class="hint" style="color:var(--rose)">${esc(err)}</p>` : ""}
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-act="syncCreate">${t("sy_create_go")}</button>
+      <button class="btn btn-quiet" data-act="syncOpen">${t("sy_back")}</button>
+    </div>`);
+  const f = document.getElementById("sy-p1"); if (f) f.focus();
+}
+function scrSyncJoin(err) {
+  stopTick(); FLOW.redraw = () => scrSyncJoin(err);
+  syncShell(t("sy_join_title"), t("sy_join_t"), `
+    <div class="card" style="margin-top:20px;text-align:left">
+      <label class="label" for="sy-code" style="margin-top:0">${t("sy_code")}</label>
+      <input class="field mono" id="sy-code" autocapitalize="characters" autocomplete="off" spellcheck="false"
+        style="letter-spacing:.12em;text-transform:uppercase" placeholder="ABCD-EFGH-JKLM">
+      <label class="label" for="sy-pass">${t("sy_pass")}</label>
+      <input class="field" id="sy-pass" type="password" autocomplete="current-password">
+      <p class="hint">${t("sy_join_note")}</p>
+      ${err ? `<p class="hint" style="color:var(--rose)">${esc(err)}</p>` : ""}
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-act="syncDoJoin">${t("sy_join_go")}</button>
+      <button class="btn btn-quiet" data-act="syncOpen">${t("sy_back")}</button>
+    </div>`);
+  const f = document.getElementById("sy-code"); if (f) f.focus();
+}
+function scrSyncBusy(msg) {
+  stopTick(); FLOW.redraw = () => scrSyncBusy(msg);
+  syncShell(msg, t("sy_busy_t"), `<div class="card" style="margin-top:20px"><div class="bar"><div class="bar-fill" style="width:60%"></div></div></div>`);
+}
+function scrSyncCode() {
+  stopTick(); FLOW.redraw = scrSyncCode;
+  syncShell(t("sy_done_title"), t("sy_done_t"), `
+    <div class="card" style="margin-top:20px">
+      <div class="mono" id="sync-code" style="font-size:30px;letter-spacing:.16em;font-weight:640">${esc(SYNC.id)}</div>
+      <p class="hint">${t("sy_done_note")}</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" data-act="syncCopy">${t("sy_copy")}</button>
+      <button class="btn btn-primary" data-act="syncBack">${t("sy_done_go")}</button>
+    </div>`);
+}
+ACT.syncOpen = () => scrSync();
+ACT.syncBack = () => syncBack();
+ACT.syncNew = () => scrSyncNew();
+ACT.syncJoin = () => scrSyncJoin();
+ACT.syncCopy = () => {
+  const code = SYNC && SYNC.id;
+  if (!code) return;
+  const done = () => toast(`<span>✓</span><span>${esc(t("sy_copied"))}</span>`);
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, () => {});
+  else done();
+};
+ACT.syncCreate = async () => {
+  const p1 = (document.getElementById("sy-p1") || {}).value || "";
+  const p2 = (document.getElementById("sy-p2") || {}).value || "";
+  if (p1.length < 8) return scrSyncNew(t("sy_err_short"));
+  if (p1 !== p2) return scrSyncNew(t("sy_err_match"));
+  scrSyncBusy(t("sy_creating"));
+  try {
+    const r = await syncApi("POST", { action: "create" });
+    if (r.status !== "ok" || !r.id) return scrSyncNew(t("sy_err_server"));
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const key = await deriveKey(p1, salt);
+    SYNC = { id: r.id, rev: r.rev || 0, salt: b64(salt), key: b64(await crypto.subtle.exportKey("raw", key)), at: null };
+    syncStore();
+    const up = await syncPush();
+    if (up.status !== "ok") { SYNC = null; syncStore(); return scrSyncNew(t("sy_err_server")); }
+    scrSyncCode();
+  } catch (e) { SYNC = null; syncStore(); scrSyncNew(t("sy_err_server")); }
+};
+ACT.syncDoJoin = async () => {
+  const code = ((document.getElementById("sy-code") || {}).value || "").toUpperCase().replace(/[^A-Z0-9]/g, "").replace(/(.{4})(?=.)/g, "$1-");
+  const pass = (document.getElementById("sy-pass") || {}).value || "";
+  if (!/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) return scrSyncJoin(t("sy_err_code"));
+  if (!pass) return scrSyncJoin(t("sy_err_nopass"));
+  scrSyncBusy(t("sy_joining"));
+  try {
+    const r = await syncApi("GET", null, "?id=" + encodeURIComponent(code));
+    if (r.status !== "ready" || !r.blob) return scrSyncJoin(t(r.status === "none" ? "sy_err_unknown" : "sy_err_server"));
+    const salt = saltOf(r.blob);
+    const key = await deriveKey(pass, salt);
+    let data = null;
+    try { data = await syncDecrypt(key, r.blob); } catch (e) { data = null; }
+    if (!data) return scrSyncJoin(t("sy_err_pass"));
+    if (!applyProfile(data)) return scrSyncJoin(t("sy_err_data"));
+    SYNC = { id: code, rev: r.rev, salt: b64(salt), key: b64(await crypto.subtle.exportKey("raw", key)), at: r.updated };
+    syncStore();
+    if (S.lang && I18N[S.lang]) setLang(S.lang);
+    toast(`<span>\u2713</span><span>${esc(t("sy_loaded"))}</span>`, 3600);
+    VIEW = "dash"; render();
+  } catch (e) { scrSyncJoin(t("sy_err_server")); }
+};
+ACT.syncPushNow = async () => {
+  scrSyncBusy(t("sy_pushing"));
+  const r = await syncPush();
+  if (r.status === "ok") toast(`<span>✓</span><span>${esc(t("sy_pushed"))}</span>`);
+  else if (r.status === "conflict") toast(`<span>!</span><span>${esc(t("sy_conflict"))}</span>`, 4200);
+  else toast(`<span>○</span><span>${esc(t(r.status === "gone" ? "sy_err_unknown" : "sy_err_server"))}</span>`, 4200);
+  scrSync();
+};
+ACT.syncPullNow = async () => {
+  if (!confirm(t("sy_pull_q"))) return;
+  scrSyncBusy(t("sy_pulling"));
+  const r = await syncPull();
+  if (r.status === "ok") { toast(`<span>✓</span><span>${esc(t("sy_loaded"))}</span>`); VIEW = "dash"; render(); return; }
+  toast(`<span>○</span><span>${esc(t(r.status === "gone" ? "sy_err_unknown" : "sy_err_server"))}</span>`, 4200);
+  scrSync();
+};
+ACT.syncTakeServer = () => ACT.syncPullNow();
+ACT.syncTakeLocal = async () => {
+  scrSyncBusy(t("sy_pushing"));
+  const r = await syncPush({ force: true });
+  toast(r.status === "ok" ? `<span>✓</span><span>${esc(t("sy_pushed"))}</span>` : `<span>○</span><span>${esc(t("sy_err_server"))}</span>`, 3600);
+  scrSync();
+};
+ACT.syncOff = () => {
+  if (!confirm(t("sy_off_q"))) return;
+  SYNC = null; syncStore(); scrSync();
+};
+ACT.syncWipe = async () => {
+  if (!confirm(t("sy_wipe_q"))) return;
+  const id = SYNC && SYNC.id;
+  scrSyncBusy(t("sy_wiping"));
+  try { await syncApi("POST", { action: "delete", id: id }); } catch (e) {}
+  SYNC = null; syncStore();
+  toast(`<span>✓</span><span>${esc(t("sy_wiped"))}</span>`);
+  scrSync();
+};
+
+/* profile card + local file import/export */
+function syncCard() {
+  const on = !!SYNC;
+  return `<div class="card">
+    <div class="sec-title" style="margin-bottom:11px">${t("sy_card")}</div>
+    <p class="mute" style="font-size:13.2px;line-height:1.6">${on ? t("sy_card_on", { code: esc(SYNC.id), when: fmtWhen(SYNC.at) }) : t("sy_card_off")}</p>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn ${on ? "btn-ghost" : "btn-primary"}" data-act="syncOpen">${on ? t("sy_card_manage") : t("sy_card_setup")}</button>
+    </div>
+  </div>`;
+}
+ACT.importProfile = () => {
+  const inp = document.createElement("input");
+  inp.type = "file"; inp.accept = "application/json,.json";
+  inp.addEventListener("change", () => {
+    const file = inp.files && inp.files[0];
+    if (!file) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      let d = null;
+      try { d = JSON.parse(String(rd.result)); } catch (e) {}
+      if (!d || d.v !== 1 || !Array.isArray(d.subjects)) { toast(`<span>○</span><span>${esc(t("pf_import_bad"))}</span>`, 4200); return; }
+      if (!confirm(t("pf_import_q"))) return;
+      S = Object.assign(BLANK(), d);
+      Store.save();
+      toast(`<span>✓</span><span>${esc(t("pf_imported"))}</span>`);
+      VIEW = "dash"; render();
+    };
+    rd.readAsText(file);
+  });
+  inp.click();
+};
+
+/* ---------- 6.10 Legal pages (privacy, imprint, about) --------
+   Everything here describes what the app actually does. If the code changes
+   what leaves the device, this text has to change with it.
+   OPERATOR is filled in by whoever publishes the app – see BUILD-GUIDE. */
+const OPERATOR = {
+  name: "",            // z. B. "Vorname Nachname"
+  street: "",          // z. B. "Musterweg 1"
+  city: "",            // z. B. "8000 Musterstadt"
+  country: "Schweiz",
+  email: "",           // z. B. "kontakt@example.ch"
+  site: "abifix.netlify.app"
+};
+const operatorReady = () => !!(OPERATOR.name && OPERATOR.street && OPERATOR.city && OPERATOR.email);
+
+let LEGAL_TAB = "privacy";
+function legalLine(label, value) {
+  return `<div class="kv"><span class="kv-k">${esc(label)}</span><span class="kv-v">${value ? esc(value) : `<span style="color:var(--amber)">${esc(t("lg_todo"))}</span>`}</span></div>`;
+}
+function scrLegal(tab) {
+  LEGAL_TAB = tab || LEGAL_TAB;
+  stopTick(); FLOW.redraw = () => scrLegal();
+  const tabs = [["privacy", "lg_privacy"], ["imprint", "lg_imprint"], ["about", "lg_about"]];
+  mount(`<div class="center-wrap"><div class="stage" style="max-width:760px;text-align:left">
+    <div class="eyebrow">${t("lg_eyebrow")}</div>
+    <h1 style="margin-top:8px">${t("lg_" + LEGAL_TAB)}</h1>
+    <div class="btn-row" style="margin-top:16px">
+      ${tabs.map(([k, l]) => `<button class="btn ${LEGAL_TAB === k ? "btn-primary" : "btn-quiet"}" data-act="legal" data-v="${k}">${t(l)}</button>`).join("")}
+    </div>
+    ${LEGAL_TAB === "privacy" ? legalPrivacy() : LEGAL_TAB === "imprint" ? legalImprint() : legalAbout()}
+    <div class="btn-row"><button class="btn btn-ghost" data-act="legalBack">${t("lg_back")}</button></div>
+  </div></div>`);
+}
+function legalPrivacy() {
+  return `
+  <div class="card" style="margin-top:20px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_p_short")}</div>
+    <p style="margin:0;font-size:14.5px;line-height:1.65">${t("lg_p_short_t")}</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_p_local")}</div>
+    <ul class="coach-why" style="margin-top:0">
+      <li>${t("lg_p_local_1")}</li><li>${t("lg_p_local_2")}</li><li>${t("lg_p_local_3")}</li></ul>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_p_sent")}</div>
+    <p class="dim" style="font-size:14px;line-height:1.6;margin:0 0 12px">${t("lg_p_sent_t")}</p>
+    <div class="kv"><span class="kv-k" style="flex:1 1 220px">/api/lesson · /api/open</span><span class="kv-v" style="flex:2 1 300px;font-weight:400;text-align:left">${t("lg_p_ep_lesson")}</span></div>
+    <div class="kv"><span class="kv-k" style="flex:1 1 220px">/api/feedback</span><span class="kv-v" style="flex:2 1 300px;font-weight:400;text-align:left">${t("lg_p_ep_feedback")}</span></div>
+    <div class="kv"><span class="kv-k" style="flex:1 1 220px">/api/oral</span><span class="kv-v" style="flex:2 1 300px;font-weight:400;text-align:left">${t("lg_p_ep_oral")}</span></div>
+    <div class="kv"><span class="kv-k" style="flex:1 1 220px">/api/sync</span><span class="kv-v" style="flex:2 1 300px;font-weight:400;text-align:left">${t("lg_p_ep_sync")}</span></div>
+    <p class="hint">${t("lg_p_sent_note")}</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_p_who")}</div>
+    <ul class="coach-why" style="margin-top:0"><li>${t("lg_p_who_1")}</li><li>${t("lg_p_who_2")}</li><li>${t("lg_p_who_3")}</li></ul>
+    <p class="hint">${t("lg_p_logs")}</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_p_no")}</div>
+    <ul class="coach-why" style="margin-top:0">
+      <li>${t("lg_p_no_1")}</li><li>${t("lg_p_no_2")}</li><li>${t("lg_p_no_3")}</li></ul>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_p_law")}</div>
+    <p style="margin:0;font-size:14.5px;line-height:1.65">${t("lg_p_law_t")}</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_p_rights")}</div>
+    <p style="margin:0 0 12px;font-size:14.5px;line-height:1.65">${t("lg_p_rights_t")}</p>
+    <div class="btn-row" style="margin-top:0">
+      <button class="btn btn-ghost" data-act="exportProfile">${t("pf_export")}</button>
+      <button class="btn btn-quiet" data-act="resetAll">${t("pf_reset")}</button>
+    </div>
+    <p class="hint">${t("lg_p_contact")} ${OPERATOR.email ? esc(OPERATOR.email) : `<span style="color:var(--amber)">${esc(t("lg_todo"))}</span>`}</p>
+  </div>
+  <p class="hint">${t("lg_p_updated")}</p>`;
+}
+function legalImprint() {
+  return `
+  ${operatorReady() ? "" : `<div class="card-2" style="margin-top:20px;border-color:var(--amber)">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_i_missing")}</div>
+    <p class="dim" style="font-size:14px;line-height:1.6;margin:0">${t("lg_i_missing_t")}</p></div>`}
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:10px">${t("lg_i_provider")}</div>
+    ${legalLine(t("lg_i_name"), OPERATOR.name)}
+    ${legalLine(t("lg_i_address"), [OPERATOR.street, OPERATOR.city, OPERATOR.country].filter(Boolean).join(", "))}
+    ${legalLine(t("lg_i_email"), OPERATOR.email)}
+    <p class="hint">${t("lg_i_note")}</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_i_liability")}</div>
+    <p style="margin:0;font-size:14.5px;line-height:1.65">${t("lg_i_liability_t")}</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_i_hosting")}</div>
+    <p style="margin:0;font-size:14.5px;line-height:1.65">${t("lg_i_hosting_t")}</p>
+  </div>`;
+}
+function legalAbout() {
+  return `
+  <div class="card" style="margin-top:20px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_a_what")}</div>
+    <p style="margin:0;font-size:14.5px;line-height:1.65">${t("lg_a_what_t")}</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_a_limits")}</div>
+    <ul class="coach-why" style="margin-top:0">
+      <li>${t("lg_a_lim_1")}</li><li>${t("lg_a_lim_2")}</li><li>${t("lg_a_lim_3")}</li><li>${t("lg_a_lim_4")}</li></ul>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-title" style="margin-bottom:8px">${t("lg_a_ai")}</div>
+    <p style="margin:0;font-size:14.5px;line-height:1.65">${t("lg_a_ai_t")}</p>
+  </div>`;
+}
+ACT.legal = (el, d) => scrLegal(d.v);
+ACT.legalBack = () => { if (S.stage === "app") { VIEW = "prof"; render(); } else scrWelcome(); };
+function legalFooterLinks() {
+  return `<span style="display:flex;gap:16px;flex-wrap:wrap">
+    <a href="#" data-act="legal" data-v="privacy" style="color:inherit">${t("lg_privacy")}</a>
+    <a href="#" data-act="legal" data-v="imprint" style="color:inherit">${t("lg_imprint")}</a>
+    <a href="#" data-act="legal" data-v="about" style="color:inherit">${t("lg_about")}</a></span>`;
+}
+function legalCard() {
+  return `<div class="card">
+    <div class="sec-title" style="margin-bottom:11px">${t("lg_card")}</div>
+    <p class="mute" style="font-size:13.2px;line-height:1.6">${t("lg_card_t")}</p>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-quiet" data-act="legal" data-v="privacy">${t("lg_privacy")}</button>
+      <button class="btn btn-quiet" data-act="legal" data-v="imprint">${t("lg_imprint")}</button>
+      <button class="btn btn-quiet" data-act="legal" data-v="about">${t("lg_about")}</button>
+    </div>
+  </div>`;
+}
+
 /* ---------- 7. BOOT --------------------------------------- */
 function boot() {
+  syncLoad();
   const had = Store.load();
   backfillLastPractice();
   loadAiCache();
+  loadOpenCache();
   syncTopicCatalogue();
   if (S.lang && I18N[S.lang]) LANG = S.lang;
   else {

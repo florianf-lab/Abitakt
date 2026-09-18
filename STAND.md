@@ -1,15 +1,24 @@
-# Arbeitsstand – 17.09.2026, abends
+# Arbeitsstand – 18.09.2026
 
 Live: https://abifix.netlify.app (Netlify deployt automatisch aus GitHub `main`).
+**Achtung: der Stand unten liegt noch nicht auf GitHub.** Die Live-Seite zeigt weiterhin `7bb2709`.
 
-Fertig und getestet:
+Fertig und getestet (Browser-Tests mit simulierten Serverantworten):
 - Design V2, Lernbegleiter (Alltag, Check-in, Tagesplan mit Begründung, Planer, Fokus-Timer,
   Bewertung, Beobachtungen), Schnellstart, Prüfungsbereitschaft, Operatoren, Offline-App
-- KI-Lektionen mit Fachprüfer-Durchgang; erste Lektion (Stochastik LF) erzeugt und nachgerechnet
-- Agent-Setup im Repo: CLAUDE.md, .claude/agents (builder, fachpruefer, test-agent, waechter),
-  .claude/skills/lektion-pruefen, Hook: Engine-Prüfsumme nach jeder Datei-Änderung
+- KI-Lektionen mit Fachprüfer-Durchgang; eine echte Lektion (Stochastik LF) erzeugt und nachgerechnet
+- Freitext-Aufgaben im Abiturformat mit Korrektur am Erwartungshorizont (`/api/open`, `/api/feedback`)
+- Mündlicher Prüfungstrainer P4/P5 (`/api/oral`)
+- Verschlüsselte Profil-Sicherung ohne Konto (`/api/sync`), Profil-Import aus Datei
+- Datenschutz, Impressum und „Über abitakt“ als eigene Seiten in DE/EN/TR
+- Budget-Reservierung und Job-Sperren per Compare-and-Swap (`netlify/lib/atomic.mts`)
+- Icons, Theme-Farbe und Teilen-Vorschau im Papier-/Waldgrün-Design
+- Agent-Setup im Repo: CLAUDE.md, .claude/agents, .claude/skills/lektion-pruefen, Hook
 
 Offen:
-1. Lektionen für die übrigen Mathe-Themen erzeugen und prüfen (Budget: 8 pro Monat)
-2. Ideen aus Florians TikTok-Videos (Inhalt muss Florian beschreiben)
-3. Später: Freitext-Aufgaben mit KI-Feedback, Trainer für die mündliche Prüfung, weitere Fächer
+1. `OPERATOR` in `index.html` (Abschnitt 6.10) ausfüllen – Impressumspflicht
+2. Diesen Stand nach GitHub `main` bringen und live prüfen
+3. Erste echte Läufe der neuen Endpunkte mit der Abrechnung abgleichen
+4. Lektionen für die übrigen Mathe-Themen erzeugen und prüfen (Budget 8/Monat)
+5. Ideen aus Florians TikTok-Videos (Inhalt muss Florian beschreiben)
+6. Inhalte für weitere Fächer
