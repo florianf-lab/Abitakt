@@ -8,6 +8,7 @@ export const AUTHORED_TOPICS: Record<string, { name: string; subject: string }> 
   neuro_ap: { name: "Neurobiologie: Das Aktionspotential", subject: "Biologie" },
   genetik_pbs: { name: "Genetik: Proteinbiosynthese", subject: "Biologie" },
   eroerterung: { name: "Erörterung literarischer Texte", subject: "Deutsch" },
+  gesch_ns: { name: "Der Nationalsozialismus 1933–1945", subject: "Geschichte" },
   gesch_teilung: { name: "Deutschland 1945–1990", subject: "Geschichte" },
 };
 export function topicInfo(topicId: string): { name: string; subject: string } | null {
