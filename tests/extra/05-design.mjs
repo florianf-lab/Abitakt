@@ -27,7 +27,9 @@ export default async function ({ newPage, ok, act, click, runSession }) {
     await act(p, 'quitSession');
     await p.waitForTimeout(2800);
     ok(await p.locator('nav.topbar').count() === 1, `[${lang}] quitting during feedback stays on dashboard`);
-    ok(await p.locator('section [data-act="openTopic"]').count() === 3, `[${lang}] three real lessons available`);
+    const authored = await p.evaluate(() => Object.keys(TOPICS).length);
+    ok(await p.locator('section [data-act="openTopic"]').count() === authored, `[${lang}] alle ${authored} ausgearbeiteten Lektionen aufgeführt`);
+    ok((await p.evaluate(() => document.body.innerText)).includes(authored + " ausgearbeitete Lektionen") || lang !== "de", `[${lang}] die Anzahl im Text stimmt`);
     const before = await p.evaluate(() => JSON.stringify({log:S.log,xp:S.xp,progress:S.progress}));
     await p.evaluate(() => startSession('geometrie_ebenen'));
     ok(await p.locator('[data-act="ansPractice"]').count() === 0, `[${lang}] unavailable topic has no fake exercise`);
