@@ -378,7 +378,7 @@ h1{font-weight:650;letter-spacing:-.045em}h2{letter-spacing:-.03em}
 .welcome-step{display:flex;gap:16px;padding:20px 0;border-top:1px solid #c6d3bd}.welcome-step b{font-family:Georgia,serif;font-size:25px;color:var(--accent);font-weight:400}.welcome-step h3{font-size:16px;margin:2px 0 6px}.welcome-step p{font-size:14px;color:var(--tx-dim)}
 .welcome-footer{border-top:1px solid var(--line);margin-top:48px;padding-top:20px;display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--tx-mute)}
 @media(min-width:961px){.g-3{grid-template-columns:repeat(3,minmax(0,1fr))}.g-2-1{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}}
-@media(max-width:800px){.welcome-grid{grid-template-columns:1fr;gap:32px}.welcome-v2{padding:84px 24px 32px}.welcome-brand{margin-bottom:30px}.welcome-copy h1{max-width:12ch}.welcome-copy .btn-row{max-width:none}.welcome-sheet{padding:24px}.rhythm-art{height:70px}.welcome-footer{flex-direction:column;gap:8px}.topbar-right{font-size:12px}.topbar .nav{position:fixed;bottom:0;left:0;right:0;z-index:80;display:grid;grid-template-columns:repeat(5,1fr);padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line)}.topbar .nav button{font-size:13px}.nav-symbol{display:block;margin:0;font-size:20px;line-height:1.2}.dash{padding-bottom:112px}.topbar{padding:18px 18px 18px 160px;min-height:84px}.topbar-right{display:none}.langbar{left:16px}.dash-hero{padding:24px}.dash-hero .btn{width:100%}.focus-card{padding:26px}.focus-top{padding:82px 16px 16px;gap:12px;flex-wrap:wrap}.focus-top .step-pips{order:3;flex-basis:100%;justify-content:center}.focus-top>span{max-width:65%;text-align:right}.focus-body{padding:24px 16px 40px}.center-wrap{padding:100px 18px 32px}.step-label{left:auto;right:20px;transform:none}.reward{bottom:95px}}
+@media(max-width:800px){.welcome-grid{grid-template-columns:1fr;gap:32px}.welcome-v2{padding:84px 24px 32px}.welcome-brand{margin-bottom:30px}.welcome-copy h1{max-width:12ch}.welcome-copy .btn-row{max-width:none}.welcome-sheet{padding:24px}.rhythm-art{height:70px}.welcome-footer{flex-direction:column;gap:8px}.topbar-right{font-size:12px}.topbar .nav{position:fixed;bottom:0;left:0;right:0;z-index:80;display:grid;grid-template-columns:repeat(6,1fr);padding:10px 4px calc(10px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line)}.topbar .nav button{font-size:11px;padding:8px 2px;letter-spacing:-.01em}.nav-symbol{display:block;margin:0;font-size:20px;line-height:1.2}.dash{padding-bottom:112px}.topbar{padding:18px 18px 18px 160px;min-height:84px}.topbar-right{display:none}.langbar{left:16px}.dash-hero{padding:24px}.dash-hero .btn{width:100%}.focus-card{padding:26px}.focus-top{padding:82px 16px 16px;gap:12px;flex-wrap:wrap}.focus-top .step-pips{order:3;flex-basis:100%;justify-content:center}.focus-top>span{max-width:65%;text-align:right}.focus-body{padding:24px 16px 40px}.center-wrap{padding:100px 18px 32px}.step-label{left:auto;right:20px;transform:none}.reward{bottom:95px}}
 @media(max-width:420px){.welcome-v2{padding-left:18px;padding-right:18px}.welcome-copy h1{font-size:48px}.card{padding:20px}.task{gap:9px;padding:16px 4px}.task-time{width:40px;font-size:11px}.task-meta{gap:5px}.kv{font-size:12px}.focus-card{padding:20px}.btn-row>.btn{max-width:100%}.g-3{gap:10px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
@@ -444,6 +444,7 @@ const BLANK = () => ({
   quick: false,               // true = started via quick start, profile still incomplete
   opStats: {},                // operator -> [correct, total] from the operator trainer
   openStats: {},              // topicId -> {done, points, max, next} from the free-text trainer
+  misses: [],                 // wrong practice answers, kept until answered right twice
   life: null,                 // personal coach data (see Coach.life)
   lastPractice: {}            // topicId -> timestamp of the last practice answer (kept outside the engine)
 });
@@ -2062,6 +2063,118 @@ Object.assign(I18N.tr, {
   lg_a_ai_t: "Dersler ve sınav soruları bir yapay zekâ modeli tarafından yazılır ve kaydedilmeden önce ikinci bir geçişte doğruluk açısından denetlenir. Serbest metin cevapların beklenti ölçütlerine göre yapay zekâ tarafından değerlendirilir. Bu bir öğretmenin yerini tutmaz ve hata olabilir – bildirirsen sevinirim."
 });
 
+/* 3a-7. Strings for the "stumbling blocks" list – your own wrong answers. */
+Object.assign(I18N.de, {
+  nav_miss: "Fehler",
+  ms_title: "Stolpersteine",
+  ms_sub: "Jede Aufgabe, die du falsch hattest, landet hier – mit deiner Antwort, der richtigen und dem Grund. Wer sie zweimal hintereinander trifft, ist sie los.",
+  ms_none: "Noch keine Stolpersteine",
+  ms_none_t: "Hier sammeln sich die Aufgaben, die du falsch beantwortet hast. Solange die Liste leer ist, gibt es nichts nachzuholen.",
+  ms_card_t: "Fehler, die du noch nicht sicher hast. Genau die bringen am meisten, weil du bei ihnen wirklich etwas lernst.",
+  ms_count: "{n} offen",
+  ms_drill_all: "{n} Stolpersteine üben",
+  ms_drill_topic: "Nur dieses Thema üben",
+  ms_show_all: "Alle ansehen",
+  ms_q: "Stolperstein {n} von {t}",
+  ms_your_answer: "Deine Antwort",
+  ms_right_answer: "Richtig wäre",
+  ms_times: "{n}-mal falsch gehabt",
+  ms_once: "einmal falsch gehabt",
+  ms_streak: "{n} von {t} richtig in Folge",
+  ms_done_title: "Durchgang geschafft",
+  ms_done_t: "{a} von {b} richtig.",
+  ms_solved: "Erledigt in diesem Durchgang",
+  ms_open: "Noch offen",
+  ms_rule: "Ein Stolperstein verschwindet erst, wenn du ihn {n}-mal hintereinander triffst.",
+  ms_again: "Nächster Durchgang",
+  ms_back: "Zur Liste",
+  ms_note: "Der Drill zählt als Lernzeit, verändert aber deinen fachlichen Stand nicht. Dieselbe Frage zweimal zu treffen zeigt, dass dieser eine Fehler weg ist – nicht, dass du das Thema kannst."
+});
+Object.assign(I18N.en, {
+  nav_miss: "Mistakes",
+  ms_title: "Sticking points",
+  ms_sub: "Every question you got wrong ends up here – with your answer, the right one and the reason. Get it right twice in a row and it is gone.",
+  ms_none: "No sticking points yet",
+  ms_none_t: "Questions you answer incorrectly collect here. While the list is empty there is nothing to catch up on.",
+  ms_card_t: "Mistakes you have not settled yet. These are worth the most, because this is where you actually learn something.",
+  ms_count: "{n} open",
+  ms_drill_all: "Practise {n} sticking points",
+  ms_drill_topic: "Practise this topic only",
+  ms_show_all: "See all",
+  ms_q: "Sticking point {n} of {t}",
+  ms_your_answer: "Your answer",
+  ms_right_answer: "Correct answer",
+  ms_times: "got it wrong {n} times",
+  ms_once: "got it wrong once",
+  ms_streak: "{n} of {t} right in a row",
+  ms_done_title: "Round complete",
+  ms_done_t: "{a} of {b} correct.",
+  ms_solved: "Cleared this round",
+  ms_open: "Still open",
+  ms_rule: "A sticking point only disappears once you get it right {n} times in a row.",
+  ms_again: "Next round",
+  ms_back: "Back to the list",
+  ms_note: "The drill counts as study time but does not change your mastery. Getting the same question right twice shows that this one mistake is gone – not that you know the topic."
+});
+Object.assign(I18N.tr, {
+  nav_miss: "Hatalar",
+  ms_title: "Takıldığın yerler",
+  ms_sub: "Yanlış cevapladığın her soru burada toplanır – kendi cevabın, doğrusu ve nedeniyle. Üst üste iki kez doğru yaparsan listeden çıkar.",
+  ms_none: "Henüz takıldığın yer yok",
+  ms_none_t: "Yanlış cevapladığın sorular burada birikir. Liste boş olduğu sürece telafi edilecek bir şey yok.",
+  ms_card_t: "Henüz oturmamış hatalar. En çok bunlar işe yarar, çünkü asıl öğrenme burada olur.",
+  ms_count: "{n} açık",
+  ms_drill_all: "{n} soruyu çalış",
+  ms_drill_topic: "Sadece bu konuyu çalış",
+  ms_show_all: "Hepsini gör",
+  ms_q: "Soru {n}/{t}",
+  ms_your_answer: "Senin cevabın",
+  ms_right_answer: "Doğrusu",
+  ms_times: "{n} kez yanlış yaptın",
+  ms_once: "bir kez yanlış yaptın",
+  ms_streak: "üst üste {t} doğrudan {n} tamam",
+  ms_done_title: "Tur tamamlandı",
+  ms_done_t: "{b} sorudan {a} doğru.",
+  ms_solved: "Bu turda çözülen",
+  ms_open: "Hâlâ açık",
+  ms_rule: "Bir soru ancak üst üste {n} kez doğru yapılınca listeden çıkar.",
+  ms_again: "Sonraki tur",
+  ms_back: "Listeye dön",
+  ms_note: "Bu çalışma süre olarak sayılır ama seviyeni değiştirmez. Aynı soruyu iki kez doğru yapmak o hatanın geçtiğini gösterir, konuyu bildiğini değil."
+});
+
+/* 3a-8. Strings for the calendar export. */
+Object.assign(I18N.de, {
+  ics_export: "In den Kalender",
+  ics_done: "Kalenderdatei gespeichert",
+  ics_nothing: "Es gibt gerade nichts zu exportieren – trag Lernzeiten, Termine oder Aufgaben ein.",
+  ics_calname: "abitakt – Lernplan",
+  ics_unit: "Lernen: {title}",
+  ics_task: "Fällig: {title}",
+  ics_source: "Aus abitakt exportiert. Änderungen in abitakt wirken sich nicht mehr auf diesen Eintrag aus.",
+  ics_note: "Lädt eine .ics-Datei herunter, die du in Apple Kalender, Google Kalender oder Outlook öffnen kannst. Es wird nichts hochgeladen und kein Konto verbunden."
+});
+Object.assign(I18N.en, {
+  ics_export: "Add to calendar",
+  ics_done: "Calendar file saved",
+  ics_nothing: "There is nothing to export right now – add study windows, dates or tasks first.",
+  ics_calname: "abitakt – study plan",
+  ics_unit: "Study: {title}",
+  ics_task: "Due: {title}",
+  ics_source: "Exported from abitakt. Later changes in abitakt will not update this entry.",
+  ics_note: "Downloads an .ics file you can open in Apple Calendar, Google Calendar or Outlook. Nothing is uploaded and no account is connected."
+});
+Object.assign(I18N.tr, {
+  ics_export: "Takvime ekle",
+  ics_done: "Takvim dosyası kaydedildi",
+  ics_nothing: "Şu an dışa aktarılacak bir şey yok – önce çalışma saatleri, tarihler veya görevler ekle.",
+  ics_calname: "abitakt – çalışma planı",
+  ics_unit: "Çalışma: {title}",
+  ics_task: "Teslim: {title}",
+  ics_source: "abitakt'tan dışa aktarıldı. Sonraki değişiklikler bu kaydı güncellemez.",
+  ics_note: "Apple Takvim, Google Takvim veya Outlook'ta açabileceğin bir .ics dosyası indirir. Hiçbir şey yüklenmez ve hesap bağlanmaz."
+});
+
 let LANG = "de";
 /* t("key", {n: 3}) — falls back to German, then to the key itself, so a
    missing translation degrades visibly rather than rendering "undefined". */
@@ -2830,6 +2943,118 @@ const TOPICS = {
       { d: .7, op: "überprüfen", q: "Ein Absatz lautet: „Ferdinand ist misstrauisch. Er sagt: ‚Ich glaube dir nicht‘ (Z. 812).“ Was fehlt?", opts: ["Die Deutung, also der Bezug des Belegs zur Fragestellung", "Die Zeilenangabe", "Das Zitat", "Die These"], a: "Die Deutung, also der Bezug des Belegs zur Fragestellung", why: "Nach jedem Zitat gehört der Satz, der sagt, was es für die Frage bedeutet.", wrong: { "Die Zeilenangabe": "Die steht mit (Z. 812) bereits da." } },
       { d: .8, op: "begründen", q: "Warum schreibt man über literarische Texte im Präsens?", opts: ["Weil das Dargestellte bei jeder Lektüre erneut gegenwärtig ist", "Weil der Text in der Vergangenheit erschienen ist", "Weil der Konjunktiv sonst nicht möglich wäre", "Weil das Präteritum in Klausuren verboten ist"], a: "Weil das Dargestellte bei jeder Lektüre erneut gegenwärtig ist", why: "Das literarische Präsens gilt für Handlung und Aussagen des Textes; Entstehungsangaben stehen dagegen im Präteritum.", wrong: { "Weil das Präteritum in Klausuren verboten ist": "Verboten ist es nicht – für die Entstehungsgeschichte ist es sogar richtig." } },
       { d: .85, op: "beurteilen", q: "In einer Erörterung stehen fünf Pro-Argumente und kein Gegenargument. Wie ist das zu bewerten?", opts: ["Der Operator ist verfehlt – ohne geprüfte Gegenposition liegt keine Erörterung vor", "Das ist ideal, weil die eigene Position klar wird", "Das ist zulässig, wenn alle Argumente belegt sind", "Das ist nur bei linearen Erörterungen ein Fehler"], a: "Der Operator ist verfehlt – ohne geprüfte Gegenposition liegt keine Erörterung vor", why: "Auch die lineare Erörterung muss naheliegende Einwände aufgreifen und entkräften.", wrong: { "Das ist zulässig, wenn alle Argumente belegt sind": "Belege ersetzen die Auseinandersetzung mit der Gegenposition nicht." } }
+    ]
+  },
+  gesch_ns: {
+    subject: "Geschichte", name: "Der Nationalsozialismus 1933–1945", load: 4, lf: false,
+    steps: [
+      { t: "1933: In Wochen von der Republik zur Diktatur",
+        visual: `<p>Zwischen der Ernennung und dem Ende des Rechtsstaats liegen keine Jahre. Es sind acht Wochen.</p>
+          <div class="visual-box"><div style="display:grid;gap:7px;font-size:13px">
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--accent)">30.01.33</span><span>Hitler wird von Hindenburg zum Reichskanzler ernannt</span></div>
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--accent)">28.02.33</span><span>Reichstagsbrandverordnung: Grundrechte außer Kraft</span></div>
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--accent)">05.03.33</span><span>Reichstagswahl unter Terror: NSDAP 43,9 %</span></div>
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--accent)">23.03.33</span><span>Ermächtigungsgesetz: Regierung darf Gesetze allein erlassen</span></div>
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--accent)">14.07.33</span><span>Verbot der Neubildung von Parteien</span></div>
+          </div></div>
+          <p>Selbst nach der Wahl vom März hatte die NSDAP keine Mehrheit. Die Diktatur entstand nicht durch Stimmen, sondern durch Notverordnungen, Terror und Zustimmung anderer Parteien.</p>`,
+        auditory: `<p>Zwei Daten, die man sicher können muss – und ihre Wirkung:</p>
+          <div class="audio-box"><p style="margin:0"><em>„28. Februar: keine Grundrechte mehr. 23. März: kein Parlament mehr.“</em></p></div>
+          <p>Die <strong>Reichstagsbrandverordnung</strong> setzte die Grundrechte der Weimarer Verfassung „bis auf weiteres“ außer Kraft – Pressefreiheit, Versammlungsfreiheit, Briefgeheimnis, Schutz vor willkürlicher Verhaftung. Sie galt bis 1945.</p>
+          <p>Das <strong>Ermächtigungsgesetz</strong> erlaubte der Regierung, Gesetze ohne Reichstag und ohne Reichspräsidenten zu erlassen, auch abweichend von der Verfassung. Die KPD-Abgeordneten waren bereits verhaftet oder geflohen, ihre Mandate annulliert. Gegen das Gesetz stimmte nur die SPD.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Denk kurz nach.</strong> Warum spricht man von „Machtübertragung“ und nicht von „Machtergreifung“?</p></div>
+          <p>Weil Hitler nicht putschte, sondern ernannt wurde. Konservative um Papen und Hugenberg glaubten, ihn in einem Kabinett mit nur drei NSDAP-Ministern „einrahmen“ zu können. Diese Fehleinschätzung ist ein Kernpunkt jeder Abituraufgabe zu 1933.</p>
+          <p>Trotzdem greift der Begriff allein zu kurz: Straßenterror der SA, Propaganda und die Ausschaltung der Gegner gehören ebenso dazu. Deshalb schreibt die Forschung meist <strong>„Machtübertragung und Machtsicherung“</strong> – beides zusammen.</p>
+          <p>Wenn du in einer Klausur urteilen sollst: Nenne beide Seiten und entscheide begründet. Ein reines Entweder-Oder verfehlt den Anforderungsbereich III.</p>`,
+        textual: `<p><strong>Die Etablierung der Diktatur, Januar bis Juli 1933.</strong></p>
+          <p><strong>30.01.1933:</strong> Ernennung Hitlers zum Reichskanzler durch Reichspräsident von Hindenburg. Das Kabinett enthält zunächst nur drei Nationalsozialisten.</p>
+          <p><strong>28.02.1933:</strong> „Verordnung des Reichspräsidenten zum Schutz von Volk und Staat“ (Reichstagsbrandverordnung) nach Art. 48 WRV. Sie suspendiert zentrale Grundrechte und bleibt bis 1945 in Kraft; sie ist die Rechtsgrundlage der „Schutzhaft“.</p>
+          <p><strong>05.03.1933:</strong> Reichstagswahl unter massivem Druck; NSDAP 43,9 %, absolute Mehrheit erst mit der DNVP.</p>
+          <p><strong>23.03.1933:</strong> „Gesetz zur Behebung der Not von Volk und Reich“ (Ermächtigungsgesetz). Es überträgt die Gesetzgebung auf die Regierung. Annahme mit Zweidrittelmehrheit, nachdem KPD-Mandate annulliert wurden; einzig die SPD stimmt dagegen (Rede Otto Wels).</p>
+          <p><strong>Gleichschaltung:</strong> Länder (März/April), Gewerkschaften (02.05.), Parteien (Verbot der Neubildung, 14.07.). Am 02.08.1934 vereinigt Hitler nach Hindenburgs Tod Kanzler- und Präsidentenamt; die Reichswehr wird auf ihn persönlich vereidigt.</p>` },
+
+      { t: "Wie die Herrschaft funktionierte",
+        visual: `<p>Drei Säulen – und sie stützen einander.</p>
+          <div class="visual-box"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12.5px;text-align:center">
+          <div style="padding:12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)"><strong>Terror</strong><br><span class="mute">Gestapo, SS, Lager, „Schutzhaft“</span></div>
+          <div style="padding:12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)"><strong>Propaganda</strong><br><span class="mute">Radio, Film, Aufmärsche, Feindbilder</span></div>
+          <div style="padding:12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)"><strong>Zustimmung</strong><br><span class="mute">Arbeit, Aufstieg, „Volksgemeinschaft“</span></div>
+          </div></div>
+          <p>Wer nur den Terror sieht, erklärt nicht, warum so viele mitmachten. Wer nur die Zustimmung sieht, verharmlost, was mit den anderen geschah.</p>`,
+        auditory: `<p>Der Begriff, der das System zusammenhält:</p>
+          <div class="audio-box"><p style="margin:0"><em>„Führerprinzip: Befehl von oben, Gehorsam nach unten – Verantwortung nirgends.“</em></p></div>
+          <p>Neben den staatlichen Behörden entstanden Partei- und SS-Stellen mit unklaren Zuständigkeiten. Wer den Willen des „Führers“ am entschlossensten vorwegnahm, setzte sich durch. Diese <strong>Ämterkonkurrenz</strong> war kein Betriebsunfall, sondern Teil der Funktionsweise – und sie trieb die Radikalisierung voran.</p>
+          <p>Die <strong>Propaganda</strong> unter Goebbels arbeitete mit dem Volksempfänger, dem Film und der Inszenierung von Massen. Sie erfand keine neuen Feindbilder, sie verstärkte vorhandene.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Ordne zu.</strong> Was gehört zum Terror, was zur Zustimmung: „Kraft durch Freude“ · „Schutzhaft“ · Volksempfänger · Konzentrationslager Dachau?</p></div>
+          <p><strong>Zustimmung:</strong> „Kraft durch Freude“ (organisierte Freizeit und Reisen), Volksempfänger (billiges Radio, gelenkte Information).<br>
+          <strong>Terror:</strong> „Schutzhaft“ (Haft ohne Gericht und ohne Frist), Konzentrationslager Dachau (ab März 1933, zunächst für politische Gegner).</p>
+          <p>Und die Verbindung, die im Abitur den Unterschied macht: Die „Volksgemeinschaft“ versprach Zugehörigkeit – aber sie war <em>von Anfang an</em> über Ausschluss definiert. Wer dazugehörte, merkte den Terror kaum. Wer ausgeschlossen war, erlebte ihn sofort.</p>`,
+        textual: `<p><strong>Herrschaftsinstrumente.</strong></p>
+          <p><strong>Führerprinzip:</strong> Ersetzung rechtsstaatlicher Verfahren durch persönliche Gefolgschaft. Der „Führerwille“ gilt als oberste Rechtsquelle.</p>
+          <p><strong>Terrorapparat:</strong> Gestapo (1933 in Preußen), SS unter Himmler, ab 1939 im Reichssicherheitshauptamt gebündelt. Instrumente: „Schutzhaft“ ohne richterliche Kontrolle, Konzentrationslager (Dachau ab März 1933), Sondergerichte, Volksgerichtshof (1934).</p>
+          <p><strong>Propaganda:</strong> Reichsministerium für Volksaufklärung und Propaganda (März 1933, Goebbels); Gleichschaltung von Presse und Rundfunk, Reichskulturkammer, Massenmedien Volksempfänger und Film.</p>
+          <p><strong>Erfassung und Bindung:</strong> HJ und BDM, Deutsche Arbeitsfront statt Gewerkschaften, „Kraft durch Freude“, Reichsarbeitsdienst.</p>
+          <p><strong>Polykratie:</strong> Konkurrierende Partei-, Staats- und SS-Instanzen ohne klare Kompetenzabgrenzung. Das „Dem Führer entgegenarbeiten“ (Ian Kershaw) beschreibt, wie Untergebene Entscheidungen vorwegnahmen und die Politik dadurch radikaler wurde.</p>` },
+
+      { t: "Ausgrenzung, Verfolgung, Vernichtung",
+        visual: `<p>Die Verfolgung verlief in Stufen. Jede Stufe machte die nächste denkbar.</p>
+          <div class="visual-box"><div style="display:grid;gap:7px;font-size:13px">
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--accent)">01.04.33</span><span>Boykott jüdischer Geschäfte</span></div>
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--accent)">07.04.33</span><span>Berufsbeamtengesetz: Entlassung aus dem Staatsdienst</span></div>
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--accent)">15.09.35</span><span>Nürnberger Gesetze: Entzug der Bürgerrechte</span></div>
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--accent)">09.11.38</span><span>Novemberpogrome: offene Gewalt im ganzen Reich</span></div>
+          <div style="display:flex;gap:12px"><span class="mono" style="min-width:74px;color:var(--rose)">ab 1941</span><span>Deportationen und systematische Ermordung</span></div>
+          </div></div>
+          <p>Von der Ausgrenzung im Alltag über den Rechtsentzug zur Gewalt und schließlich zum Völkermord – der Weg war nicht zwangsläufig, aber jede Stufe senkte die Hemmschwelle für die nächste.</p>`,
+        auditory: `<p>Zwei Gesetze, ein Datum:</p>
+          <div class="audio-box"><p style="margin:0"><em>„Nürnberg 1935: Reichsbürgergesetz und Blutschutzgesetz.“</em></p></div>
+          <p>Das <strong>Reichsbürgergesetz</strong> teilte die Bevölkerung in „Reichsbürger“ und bloße „Staatsangehörige“ – jüdische Deutsche verloren damit ihre politischen Rechte. Das sogenannte <strong>Blutschutzgesetz</strong> verbot Eheschließungen und Beziehungen zwischen Jüdinnen und Juden und „Deutschblütigen“. Beide machten Rassismus zu geltendem Recht.</p>
+          <p>Bei den <strong>Novemberpogromen</strong> 1938 wurden Synagogen angezündet, Geschäfte zerstört, etwa 30 000 jüdische Männer in Konzentrationslager verschleppt. Der verharmlosende Begriff „Reichskristallnacht“ stammt aus der NS-Zeit; in Schule und Wissenschaft spricht man von Pogromen.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Prüf eine Behauptung.</strong> „Die Verfolgung kam 1941 plötzlich.“ Stimmt das?</p></div>
+          <p><strong>Nein.</strong> Schon 1933 begann der Ausschluss aus Beruf, Bildung und Öffentlichkeit, 1935 folgte der Entzug der Bürgerrechte, 1938 die offene Gewalt. Die Ermordung ab 1941 setzte eine acht Jahre lange Entrechtung fort.</p>
+          <p>Wenn du das in einer Klausur brauchst: Nenne mindestens drei Stufen mit Jahreszahl und zeige, wie jede die nächste vorbereitete. Genau diese Verknüpfung ist die Leistung im Anforderungsbereich II und III – nicht das Aufzählen von Daten.</p>
+          <p>Verfolgt wurden außerdem Sinti und Roma, Menschen mit Behinderungen (Krankenmorde ab 1939), politische Gegner, Zeugen Jehovas und homosexuelle Männer.</p>`,
+        textual: `<p><strong>Stufen der Verfolgung.</strong></p>
+          <p><strong>1933:</strong> Boykott jüdischer Geschäfte (1. April); „Gesetz zur Wiederherstellung des Berufsbeamtentums“ (7. April) als Grundlage für Entlassungen; Bücherverbrennungen (Mai).</p>
+          <p><strong>1935:</strong> Nürnberger Gesetze – Reichsbürgergesetz und „Gesetz zum Schutze des deutschen Blutes und der deutschen Ehre“. Rassistische Kategorien werden geltendes Recht.</p>
+          <p><strong>1938:</strong> Novemberpogrome am 9./10. November: Zerstörung von Synagogen und Geschäften, rund 30 000 Verhaftungen. Anschließend wirtschaftliche Ausplünderung („Arisierung“).</p>
+          <p><strong>Ab 1939/41:</strong> Krankenmorde („Aktion T4“), Ghettoisierung im besetzten Polen, ab 1941 Massenerschießungen und Deportationen in Vernichtungslager. Die Wannsee-Konferenz (Januar 1942) diente der Koordination bereits laufender Mordaktionen, nicht ihrem Beschluss.</p>
+          <p><strong>Weitere Verfolgtengruppen:</strong> Sinti und Roma, Menschen mit Behinderungen, politische Gegner, Zeugen Jehovas, homosexuelle Männer, Kriegsgefangene und Zwangsarbeiterinnen und Zwangsarbeiter.</p>` },
+
+      { t: "Wie die Forschung darüber streitet",
+        visual: `<p>Zwei Erklärungsrichtungen, die sich seit Jahrzehnten ergänzen und widersprechen.</p>
+          <div class="visual-box"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12.5px">
+          <div style="padding:12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)">
+            <strong>Intentionalismus</strong><br><span class="mute">Der Plan war da. Die Ideologie und Hitlers Absicht treiben die Ereignisse.</span></div>
+          <div style="padding:12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)">
+            <strong>Funktionalismus</strong><br><span class="mute">Die Struktur trieb. Ämterkonkurrenz und Eigendynamik radikalisierten die Politik.</span></div>
+          </div></div>
+          <p>Die heutige Forschung verbindet beides: Ideologie gab die Richtung vor, die Strukturen bestimmten das Tempo.</p>`,
+        auditory: `<p>Die Streitfrage in einem Satz:</p>
+          <div class="audio-box"><p style="margin:0"><em>„War der Weg geplant – oder hat er sich radikalisiert?“</em></p></div>
+          <p>Intentionalisten verweisen auf die früh formulierte Ideologie und die Kontinuität der Feindbilder. Funktionalisten verweisen darauf, dass es für die Ermordung keinen schriftlichen Befehl Hitlers gibt und dass Initiativen oft von unten kamen.</p>
+          <p>Für eine Klausur gilt: Beide Positionen benennen, mit einem Beleg versehen, dann begründet gewichten. Ein Urteil ohne Gegenposition erfüllt den Operator „beurteilen“ nicht.</p>`,
+        kinesthetic: `<div class="kinetic-box"><p style="margin:0"><strong>Ordne ein.</strong> Zu welcher Richtung passt das Argument: „Die Deportationen begannen regional unterschiedlich, oft auf Initiative örtlicher Stellen“?</p></div>
+          <p><strong>Funktionalismus.</strong> Regionale Unterschiede und Eigeninitiative sprechen gegen einen zentral abgearbeiteten Plan.</p>
+          <p>Und die Gegenprobe: „Die Feindbilder standen schon in den 1920er Jahren fest“ ist ein <strong>intentionalistisches</strong> Argument.</p>
+          <p>Ein zweiter Streitpunkt, der oft drankommt: Wie viel wusste die Bevölkerung? Die Forschung geht heute von einem weit verbreiteten „ungefähren Wissen“ aus – nicht von Detailkenntnis, aber auch nicht von Unwissenheit. Deportationen fanden öffentlich statt, Eigentum wurde öffentlich versteigert.</p>`,
+        textual: `<p><strong>Deutungsdebatten.</strong></p>
+          <p><strong>Intentionalismus:</strong> Ideologie und Absichten der Führung, insbesondere Hitlers, erklären den Verlauf. Kontinuität von den frühen Programmschriften bis zur Vernichtungspolitik.</p>
+          <p><strong>Funktionalismus/Strukturalismus:</strong> Konkurrierende Machtzentren, Eigendynamik der Bürokratie und Initiativen nachgeordneter Stellen erklären die Radikalisierung („kumulative Radikalisierung“, Hans Mommsen).</p>
+          <p><strong>Synthese:</strong> Weitgehender Konsens ist heute, dass ideologische Zielsetzung und strukturelle Dynamik zusammenwirkten.</p>
+          <p><strong>„Volksgemeinschaft“:</strong> in der Forschung kein Zustand, sondern ein Versprechen mit Ausschlusscharakter. Der Begriff wird in Anführungszeichen verwendet, weil er NS-Sprache ist.</p>
+          <p><strong>Sprachliche Sorgfalt:</strong> NS-Begriffe wie „Machtergreifung“, „Reichskristallnacht“, „Endlösung“ oder „Sonderbehandlung“ sind Quellenbegriffe. Sie gehören in Anführungszeichen oder werden durch beschreibende Begriffe ersetzt.</p>` }
+    ],
+    practice: [
+      { d: .2, op: "angeben", q: "Wie kam Hitler am 30. Januar 1933 ins Amt?", opts: ["Er wurde von Reichspräsident Hindenburg zum Reichskanzler ernannt", "Er gewann eine absolute Mehrheit bei der Reichstagswahl", "Er wurde direkt zum Reichspräsidenten gewählt", "Er kam durch einen bewaffneten Putsch an die Macht"], a: "Er wurde von Reichspräsident Hindenburg zum Reichskanzler ernannt", why: "Deshalb spricht die Forschung von Machtübertragung – die NSDAP hatte nie eine absolute Mehrheit erreicht.", wrong: { "Er kam durch einen bewaffneten Putsch an die Macht": "Der Putschversuch von 1923 war gescheitert; 1933 lief es über eine Ernennung." } },
+      { d: .3, op: "benennen", q: "Was bewirkte die Reichstagsbrandverordnung vom 28. Februar 1933?", opts: ["Sie setzte zentrale Grundrechte der Weimarer Verfassung außer Kraft", "Sie löste den Reichstag dauerhaft auf", "Sie verbot alle Parteien außer der NSDAP", "Sie übertrug die Gesetzgebung auf die Regierung"], a: "Sie setzte zentrale Grundrechte der Weimarer Verfassung außer Kraft", why: "Sie schuf die Grundlage der „Schutzhaft“ und galt bis 1945.", wrong: { "Sie übertrug die Gesetzgebung auf die Regierung": "Das war das Ermächtigungsgesetz vom 23. März." } },
+      { d: .35, op: "bestimmen", q: "Welche Partei stimmte am 23. März 1933 gegen das Ermächtigungsgesetz?", opts: ["Die SPD", "Das Zentrum", "Die DNVP", "Die DDP"], a: "Die SPD", why: "Otto Wels begründete das Nein in seiner Rede; die KPD-Mandate waren zuvor annulliert worden.", wrong: { "Das Zentrum": "Das Zentrum stimmte zu – ein in der Forschung viel diskutierter Punkt." } },
+      { d: .45, op: "erklären", q: "Was bezeichnet der Begriff „Gleichschaltung“?", opts: ["Die Unterwerfung von Ländern, Verbänden und Medien unter die NSDAP", "Die Angleichung der Löhne im ganzen Reich", "Die Vereinheitlichung der Schulbücher", "Den Zusammenschluss von SA und SS"], a: "Die Unterwerfung von Ländern, Verbänden und Medien unter die NSDAP", why: "Betroffen waren 1933 unter anderem die Länder, die Gewerkschaften und die Presse.", wrong: { "Die Vereinheitlichung der Schulbücher": "Das war eine Folge der Gleichschaltung, nicht ihr Kern." } },
+      { d: .55, op: "erläutern", q: "Was regelten die Nürnberger Gesetze von 1935?", opts: ["Sie entzogen jüdischen Deutschen die Bürgerrechte und verboten Ehen mit „Deutschblütigen“", "Sie verboten die SPD und die KPD", "Sie führten die Wehrpflicht wieder ein", "Sie ordneten die Deportationen an"], a: "Sie entzogen jüdischen Deutschen die Bürgerrechte und verboten Ehen mit „Deutschblütigen“", why: "Reichsbürgergesetz und „Blutschutzgesetz“ machten Rassismus zu geltendem Recht.", wrong: { "Sie ordneten die Deportationen an": "Die begannen erst ab 1941 – die Gesetze von 1935 bereiteten den Weg." } },
+      { d: .6, op: "unterscheiden", q: "Warum vermeidet man den Begriff „Reichskristallnacht“?", opts: ["Weil er aus der NS-Zeit stammt und die Gewalt verharmlost", "Weil das Ereignis erst 1939 stattfand", "Weil er von den Alliierten erfunden wurde", "Weil er nur die Zerstörung in Berlin bezeichnet"], a: "Weil er aus der NS-Zeit stammt und die Gewalt verharmlost", why: "Üblich ist „Novemberpogrome“: Synagogen brannten, rund 30 000 Männer wurden verschleppt.", wrong: { "Weil er von den Alliierten erfunden wurde": "Der Begriff stammt aus dem deutschen Sprachgebrauch der NS-Zeit." } },
+      { d: .7, op: "erläutern", q: "Was meint „Polykratie“ als Beschreibung des NS-Herrschaftssystems?", opts: ["Konkurrierende Partei-, Staats- und SS-Instanzen ohne klare Zuständigkeiten", "Die Herrschaft mehrerer gleichberechtigter Parteien", "Die Aufteilung des Reiches in selbstständige Länder", "Die Kontrolle der Regierung durch das Militär"], a: "Konkurrierende Partei-, Staats- und SS-Instanzen ohne klare Zuständigkeiten", why: "Wer den „Führerwillen“ am entschlossensten vorwegnahm, setzte sich durch – das trieb die Radikalisierung.", wrong: { "Die Herrschaft mehrerer gleichberechtigter Parteien": "Andere Parteien waren ab Juli 1933 verboten." } },
+      { d: .8, op: "zuordnen", q: "„Die Deportationen begannen regional unterschiedlich, oft auf Initiative örtlicher Stellen.“ Zu welcher Deutung passt dieses Argument?", opts: ["Zum Funktionalismus", "Zum Intentionalismus", "Zur Totalitarismustheorie", "Zur Sonderwegsthese"], a: "Zum Funktionalismus", why: "Regionale Eigeninitiative spricht gegen einen zentral abgearbeiteten Plan.", wrong: { "Zum Intentionalismus": "Der betont gerade die durchgehende Absicht der Führung." } },
+      { d: .85, op: "beurteilen", q: "Wie ist die Aussage „Die Deutschen wussten nichts von der Verfolgung“ nach heutigem Forschungsstand zu bewerten?", opts: ["Sie ist nicht haltbar: Ausgrenzung, Pogrome und Deportationen fanden öffentlich statt", "Sie trifft zu, weil alles geheim gehalten wurde", "Sie lässt sich nicht beurteilen, weil es keine Quellen gibt", "Sie trifft nur für die Zeit vor 1935 zu"], a: "Sie ist nicht haltbar: Ausgrenzung, Pogrome und Deportationen fanden öffentlich statt", why: "Die Forschung geht von weit verbreitetem ungefährem Wissen aus – nicht von Detailkenntnis, aber auch nicht von Unwissenheit.", wrong: { "Sie trifft zu, weil alles geheim gehalten wurde": "Geheim gehalten wurden Einzelheiten der Vernichtungslager, nicht die Entrechtung im Alltag." } }
     ]
   },
   gesch_teilung: {
@@ -3875,11 +4100,11 @@ function scrDone() {
 /* ---------- 6. APP VIEWS ---------------------------------- */
 let VIEW = "dash";
 function chrome(inner) {
-  const nav = [["dash", "nav_today"], ["plan", "nav_plan"], ["prog", "nav_prog"], ["ops", "nav_ops"], ["prof", "nav_prof"]];
+  const nav = [["dash", "nav_today"], ["plan", "nav_plan"], ["prog", "nav_prog"], ["miss", "nav_miss"], ["ops", "nav_ops"], ["prof", "nav_prof"]];
   return `<nav class="topbar" aria-label="abitakt">
     <div class="brand"><span class="brand-mark">a</span><span>abitakt</span></div>
     <div class="nav">${nav.map(([k, lk]) =>
-      `<button type="button" class="${VIEW === k ? "on" : ""}"${VIEW === k ? ' aria-current="page"' : ""} data-act="go" data-v="${k}">${({dash:"<span class=\"nav-symbol\" aria-hidden=\"true\">◷</span>",prog:"<span class=\"nav-symbol\" aria-hidden=\"true\">▥</span>",plan:"<span class=\"nav-symbol\" aria-hidden=\"true\">▦</span>",ops:"<span class=\"nav-symbol\" aria-hidden=\"true\">§</span>",prof:"<span class=\"nav-symbol\" aria-hidden=\"true\">○</span>"})[k] || ""}${t(lk)}</button>`).join("")}</div>
+      `<button type="button" class="${VIEW === k ? "on" : ""}"${VIEW === k ? ' aria-current="page"' : ""} data-act="go" data-v="${k}">${({dash:"<span class=\"nav-symbol\" aria-hidden=\"true\">◷</span>",prog:"<span class=\"nav-symbol\" aria-hidden=\"true\">▥</span>",plan:"<span class=\"nav-symbol\" aria-hidden=\"true\">▦</span>",miss:"<span class=\"nav-symbol\" aria-hidden=\"true\">△</span>",ops:"<span class=\"nav-symbol\" aria-hidden=\"true\">§</span>",prof:"<span class=\"nav-symbol\" aria-hidden=\"true\">○</span>"})[k] || ""}${t(lk)}</button>`).join("")}</div>
     <div class="topbar-right">
       <span class="streak">🔥 ${S.streak}</span>
       <span class="mono mute" style="font-size:13px">Lv ${S.level} · ${S.xp} XP</span>
@@ -3893,6 +4118,7 @@ function render() {
   else if (VIEW === "prog") scrProgress();
   else if (VIEW === "ops") scrOperators();
   else if (VIEW === "plan") scrPlanner();
+  else if (VIEW === "miss") scrMisses();
   else scrProfile();
 }
 function paceWhy(p) { return t(p.why); }
@@ -4030,6 +4256,7 @@ function scrDash() {
       <div class="grid g-3">${Object.entries(TOPICS).map(([id,tp])=>'<button class="task" data-act="openTopic" data-v="'+id+'"><span class="task-body"><span class="eyebrow">'+esc(tp.subject)+'</span><span class="task-title" style="margin-top:8px">'+esc(tp.name)+'</span></span><span aria-hidden="true">↗</span></button>').join("")}</div>
     </section>
     ${profileTodoCard()}
+    ${missCard()}
     ${examPracticeCard()}
     <details class="dash-more"${DASH_MORE ? " open" : ""}>
       <summary><span>${t("db_more")}<span class="dash-more-sub" style="display:block;margin-top:3px">${t("db_more_t")}</span></span></summary>
@@ -4475,6 +4702,7 @@ ACT.ansPractice = (el, d) => {
   FLOW.redraw = null;
   S.lastPractice[SES.topicId] = Date.now();
   Engine.updateMastery(SES.topicId, correct, ms, q.d, SES.mode);   // saves state
+  recordAnswer(SES.topicId, q, d.v, correct);                      // keeps the wrong ones for later
   if (correct) SES.correct++;
   document.querySelectorAll(".opt").forEach(o => {
     if (o.dataset.v === q.a) o.classList.add("correct");
@@ -5130,6 +5358,8 @@ function coachTimeline(plan) {
       : `<div class="empty">${plan.timed ? t("co_nothing_timed") : t("co_nothing")}</div>`}
     ${plan.pending ? `<p class="hint">${t("co_pending", { n: plan.pending })}</p>` : ""}
     ${!plan.timed ? `<p class="hint">${t("co_untimed_note")}</p>` : ""}
+    ${rows.length || Coach.life().events.length ? `<div class="btn-row" style="margin-top:14px">${icsButton()}</div>
+      <p class="hint">${t("ics_note")}</p>` : ""}
   </section>`;
 }
 function coachUpcomingCard() {
@@ -5600,7 +5830,7 @@ const OPEN_CACHE_KEY = "abitakt.open.v1";
 let OPEN_CACHE = {};
 function loadOpenCache() { try { OPEN_CACHE = JSON.parse(localStorage.getItem(OPEN_CACHE_KEY) || "{}") || {}; } catch (e) { OPEN_CACHE = {}; } }
 function saveOpenCache() { try { localStorage.setItem(OPEN_CACHE_KEY, JSON.stringify(OPEN_CACHE)); } catch (e) {} }
-const OPEN_TOPICS = ["analysis_extrem", "neuro_ap", "genetik_pbs", "eroerterung", "gesch_teilung"].concat(AI_TOPICS);
+const OPEN_TOPICS = ["analysis_extrem", "neuro_ap", "genetik_pbs", "eroerterung", "gesch_ns", "gesch_teilung"].concat(AI_TOPICS);
 function openLevel(topicId) {
   const s = S.subjects.find(x => x.topics.some(tp => tp.id === topicId));
   if (!s) return null;
@@ -6386,6 +6616,286 @@ function legalCard() {
       <button class="btn btn-quiet" data-act="legal" data-v="about">${t("lg_about")}</button>
     </div>
   </div>`;
+}
+
+/* ---------- 6.11 Stolpersteine – die eigenen Fehler wiederfinden ----
+   Jede falsch beantwortete Übungsaufgabe wird lokal aufbewahrt, samt der
+   gewählten Antwort und der Erklärung. Wer sie zweimal hintereinander richtig
+   hat, ist sie los. Der Drill verändert die Beherrschung nicht – dieselbe Frage
+   zweimal zu treffen ist kein neuer Beleg für Können, sondern ein Beleg dafür,
+   dass genau dieser Fehler behoben ist. */
+const MISS_MAX = 150, MISS_SOLVE_AT = 2;
+function missId(q) {
+  let h = 5381;
+  const s = String(q.q || "");
+  for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+function misses() { if (!Array.isArray(S.misses)) S.misses = []; return S.misses; }
+function recordAnswer(topicId, q, chosen, correct) {
+  const list = misses(), id = missId(q);
+  const at = list.findIndex(m => m.id === id);
+  if (!correct) {
+    const row = at >= 0 ? list[at] : { id: id, topicId: topicId, q: q.q, opts: q.opts.slice(), a: q.a, why: q.why || "", n: 0 };
+    row.topicId = topicId;
+    row.chosen = chosen;
+    row.hint = (q.wrong && q.wrong[chosen]) || "";
+    row.n++; row.streak = 0; row.at = Date.now();
+    if (at >= 0) list.splice(at, 1);
+    list.unshift(row);
+    if (list.length > MISS_MAX) list.length = MISS_MAX;
+  } else if (at >= 0) {
+    list[at].streak = (list[at].streak || 0) + 1;
+    list[at].at = Date.now();
+    if (list[at].streak >= MISS_SOLVE_AT) list.splice(at, 1);
+  }
+  Store.save();
+}
+function missesFor(topicId) { return misses().filter(m => m.topicId === topicId); }
+function missSubject(topicId) {
+  const s = S.subjects.find(x => x.topics.some(tp => tp.id === topicId));
+  return s ? s.name : (TOPICS[topicId] ? TOPICS[topicId].subject : "");
+}
+
+let DRILL = null;
+function startDrill(scope) {
+  const pool = (scope && scope !== "all" ? missesFor(scope) : misses()).slice();
+  if (!pool.length) { VIEW = "miss"; render(); return; }
+  DRILL = { scope: scope || "all", queue: shuffle(pool).slice(0, 12), pos: 0, right: 0, solved: [], started: Date.now() };
+  Coach.begin({ key: "drill:" + (scope || "all"), kind: "review", topicId: scope && scope !== "all" ? scope : null, minutes: Math.max(5, DRILL.queue.length * 1.5),
+    subjectId: (S.subjects.find(x => x.topics.some(tp => tp.id === scope)) || {}).id });
+  renderDrill();
+}
+function renderDrill() {
+  stopTick(); FLOW.redraw = renderDrill;
+  const d = DRILL, m = d.queue[d.pos];
+  mount(`<div class="focus-top">
+      <button class="btn btn-quiet" data-act="drillQuit">${t("s_exit")}</button>
+      <div class="step-pips">${d.queue.map((_, i) => `<span class="pip ${i < d.pos ? "done" : i === d.pos ? "on" : ""}"></span>`).join("")}</div>
+      <span class="mute" style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:640">${t("ms_title")}</span>
+    </div>
+    <div class="focus-body"><div class="focus-card">
+      <div class="micro-tag">${t("ms_q", { n: d.pos + 1, t: d.queue.length })} · ${esc(topicName(m.topicId))}</div>
+      <div class="q-text">${esc(m.q)}</div>
+      <div class="opts">${shuffle(m.opts).map((o, i) =>
+        `<button class="opt" data-act="drillAns" data-v="${esc(o)}"><span class="opt-key">${"ABCD"[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+      <p class="hint">${m.n > 1 ? t("ms_times", { n: m.n }) : t("ms_once")}${(m.streak || 0) ? " · " + t("ms_streak", { n: m.streak, t: MISS_SOLVE_AT }) : ""}</p>
+    </div></div>`, "focus-screen");
+}
+ACT.drillAns = (el, d) => {
+  const m = DRILL.queue[DRILL.pos];
+  const correct = d.v === m.a;
+  FLOW.redraw = null;
+  if (correct) DRILL.right++;
+  S.lastPractice[m.topicId] = Date.now();
+  const before = misses().length;
+  recordAnswer(m.topicId, { q: m.q, opts: m.opts, a: m.a, why: m.why, wrong: m.hint ? { [m.chosen]: m.hint } : null }, d.v, correct);
+  if (misses().length < before) DRILL.solved.push(m.id);
+  document.querySelectorAll(".opt").forEach(o => {
+    if (o.dataset.v === m.a) o.classList.add("correct");
+    else if (o.dataset.v === d.v) o.classList.add("wrong");
+    o.removeAttribute("data-act");
+  });
+  const card = document.querySelector(".focus-card");
+  if (card) {
+    const n = document.createElement("div");
+    n.className = "card-2";
+    n.style.cssText = "margin-top:18px;animation:fadeIn .35s;border-color:" + (correct ? "rgba(111,224,140,.3)" : "rgba(242,177,121,.32)");
+    n.innerHTML = `<div style="font-size:14.5px;line-height:1.6">
+      <strong style="color:${correct ? "var(--green)" : "var(--amber)"}">${correct ? t("s_correct") : t("s_wrong")}</strong>
+      — ${!correct && m.hint ? esc(m.hint) + " " : ""}${esc(m.why)}</div>`;
+    card.appendChild(n);
+  }
+  const token = DRILL;
+  setTimeout(() => {
+    if (DRILL !== token) return;
+    DRILL.pos++;
+    if (DRILL.pos < DRILL.queue.length) renderDrill(); else finishDrill();
+  }, correct ? 1400 : 2600);
+};
+function finishDrill() {
+  const d = DRILL;
+  Coach.record({ kind: "review", topicId: d.scope !== "all" ? d.scope : null, minutes: (Date.now() - d.started) / 60000, done: true,
+    correct: d.right, answered: d.queue.length });
+  Store.save();
+  stopTick(); FLOW.redraw = finishDrill;
+  mount(`<div class="center-wrap"><div class="stage" style="text-align:center;max-width:640px">
+    <div style="font-size:34px;margin-bottom:8px">${d.solved.length ? "✦" : "✓"}</div>
+    <h1>${t("ms_done_title")}</h1>
+    <p class="lede" style="margin:12px auto 0">${t("ms_done_t", { a: d.right, b: d.queue.length })}</p>
+    <div class="card" style="margin-top:24px;text-align:left">
+      <div class="kv"><span class="kv-k">${t("ms_solved")}</span><span class="kv-v">${d.solved.length}</span></div>
+      <div class="kv"><span class="kv-k">${t("ms_open")}</span><span class="kv-v">${misses().length}</span></div>
+      <p class="hint">${t("ms_rule", { n: MISS_SOLVE_AT })}</p>
+    </div>
+    <div class="btn-row" style="justify-content:center">
+      ${misses().length ? `<button class="btn btn-primary" data-act="drillAgain">${t("ms_again")}</button>` : ""}
+      <button class="btn btn-ghost" data-act="drillDone">${t("ms_back")}</button>
+    </div>
+    ${ratingCard()}
+  </div></div>`);
+  DRILL = null;
+}
+ACT.drillAgain = () => { const s = DRILL ? DRILL.scope : "all"; DRILL = null; startDrill(s); };
+ACT.drillDone = () => { DRILL = null; VIEW = "miss"; render(); };
+ACT.drillQuit = () => {
+  if (DRILL && DRILL.pos) Coach.record({ kind: "review", topicId: DRILL.scope !== "all" ? DRILL.scope : null,
+    minutes: (Date.now() - DRILL.started) / 60000, done: false, correct: DRILL.right, answered: DRILL.pos });
+  else Coach.active = null;
+  DRILL = null; VIEW = "miss"; render();
+};
+ACT.startDrill = (el, d) => startDrill(d.v);
+
+/* the list itself */
+function scrMisses() {
+  const list = misses();
+  const byTopic = {};
+  list.forEach(m => { (byTopic[m.topicId] = byTopic[m.topicId] || []).push(m); });
+  const groups = Object.keys(byTopic).sort((a, b) => byTopic[b].length - byTopic[a].length);
+  mount(chrome(`<div class="dash stage-wide">
+    <h1>${t("ms_title")}</h1>
+    <p class="lede" style="margin-top:8px">${t("ms_sub")}</p>
+    ${!list.length ? `<section class="card" style="margin-top:24px">
+        <div class="sec-title" style="margin-bottom:8px">${t("ms_none")}</div>
+        <p class="hint" style="margin:0">${t("ms_none_t")}</p></section>`
+    : `<div class="btn-row" style="margin-top:18px">
+        <button class="btn btn-primary" data-act="startDrill" data-v="all">${t("ms_drill_all", { n: Math.min(12, list.length) })}</button>
+      </div>
+      ${groups.map(tid => `<section class="card" style="margin-top:16px">
+        <div class="sec-head"><span class="sec-title">${esc(topicName(tid))}</span>
+          <span class="mute" style="font-size:12.5px">${esc(missSubject(tid))} · ${t("ms_count", { n: byTopic[tid].length })}</span></div>
+        ${byTopic[tid].map(m => `<div style="padding:12px 0;border-top:1px solid var(--line)">
+          <div style="font-size:14.5px;line-height:1.5;color:var(--tx)">${esc(m.q)}</div>
+          <div class="kv" style="margin-top:8px;flex-wrap:wrap;gap:8px">
+            <span class="kv-k" style="flex:1 1 200px">${t("ms_your_answer")}: <span style="color:var(--rose)">${esc(m.chosen || "—")}</span></span>
+            <span class="kv-k" style="flex:1 1 200px">${t("ms_right_answer")}: <span style="color:var(--green)">${esc(m.a)}</span></span>
+          </div>
+          ${m.hint ? `<p class="hint" style="margin-top:6px">${esc(m.hint)}</p>` : ""}
+          <p class="hint" style="margin-top:4px">${esc(m.why)}</p>
+          <p class="hint" style="margin-top:4px">${m.n > 1 ? t("ms_times", { n: m.n }) : t("ms_once")}${(m.streak || 0) ? " · " + t("ms_streak", { n: m.streak, t: MISS_SOLVE_AT }) : ""}</p>
+        </div>`).join("")}
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-ghost" data-act="startDrill" data-v="${esc(tid)}">${t("ms_drill_topic")}</button>
+        </div>
+      </section>`).join("")}
+      <p class="hint" style="margin-top:16px">${t("ms_note")}</p>`}
+  </div>`));
+}
+function missCard() {
+  const n = misses().length;
+  if (!n) return "";
+  return `<section class="card" style="margin-bottom:20px">
+    <div class="sec-head"><span class="sec-title">${t("ms_title")}</span>
+      <span class="mute" style="font-size:12.5px">${t("ms_count", { n: n })}</span></div>
+    <p class="hint" style="margin:6px 0 14px">${t("ms_card_t")}</p>
+    <div class="btn-row" style="margin-top:0">
+      <button class="btn btn-primary" data-act="startDrill" data-v="all">${t("ms_drill_all", { n: Math.min(12, n) })}</button>
+      <button class="btn btn-ghost" data-act="go" data-v="miss">${t("ms_show_all")}</button>
+    </div>
+  </section>`;
+}
+
+/* ---------- 6.12 Kalender-Export (.ics) ----------------------
+   Der Tagesplan und die anstehenden Termine als Kalenderdatei, damit der Plan
+   dort landet, wo der Rest des Lebens schon steht. Reine Ausgabe – es wird
+   nichts hochgeladen und kein Kalender verbunden. */
+function icsEscape(s) {
+  return String(s == null ? "" : s).replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+}
+/* RFC 5545: Zeilen dürfen höchstens 75 Oktette lang sein. */
+function icsFold(line) {
+  const bytes = new TextEncoder().encode(line);
+  if (bytes.length <= 75) return line;
+  const out = [];
+  let cur = "", curLen = 0, limit = 75;
+  for (const ch of line) {
+    const n = new TextEncoder().encode(ch).length;
+    if (curLen + n > limit) { out.push(cur); cur = " "; curLen = 1; limit = 75; }
+    cur += ch; curLen += n;
+  }
+  out.push(cur);
+  return out.join("\r\n");
+}
+const icsPad = n => String(n).padStart(2, "0");
+function icsLocal(date, minutes) {
+  const d = new Date(date);
+  if (minutes != null) { d.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0); }
+  return `${d.getFullYear()}${icsPad(d.getMonth() + 1)}${icsPad(d.getDate())}T${icsPad(d.getHours())}${icsPad(d.getMinutes())}00`;
+}
+const icsDay = iso => iso.replace(/-/g, "");
+function icsStamp() {
+  const d = new Date();
+  return `${d.getUTCFullYear()}${icsPad(d.getUTCMonth() + 1)}${icsPad(d.getUTCDate())}T${icsPad(d.getUTCHours())}${icsPad(d.getUTCMinutes())}${icsPad(d.getUTCSeconds())}Z`;
+}
+function icsAddDays(iso, n) {
+  const d = new Date(iso + "T00:00:00");
+  d.setDate(d.getDate() + n);
+  return `${d.getFullYear()}${icsPad(d.getMonth() + 1)}${icsPad(d.getDate())}`;
+}
+
+/* Baut die Kalenderdatei: geplante Lerneinheiten von heute + alle offenen Termine. */
+function buildIcs() {
+  const stamp = icsStamp(), lines = [];
+  const l = Coach.life();
+  const plan = Coach.plan();   // immer frisch rechnen, nie einen alten Plan exportieren
+  let n = 0;
+  const ev = (parts) => { parts.forEach(p => lines.push(icsFold(p))); };
+
+  if (plan.timed) {
+    plan.items.filter(it => it.start != null).forEach(it => {
+      const why = (it.why || []).join(" ");
+      ev(["BEGIN:VEVENT",
+        `UID:abitakt-plan-${Date.now()}-${n++}@abitakt`,
+        `DTSTAMP:${stamp}`,
+        `DTSTART:${icsLocal(new Date(), it.start)}`,
+        `DTEND:${icsLocal(new Date(), it.end)}`,
+        `SUMMARY:${icsEscape(t("ics_unit", { title: it.title }))}`,
+        `DESCRIPTION:${icsEscape(why + (why ? "\n\n" : "") + t("ics_source"))}`,
+        "END:VEVENT"]);
+    });
+  }
+  (l.events || []).filter(e => !e.done && e.date >= isoDay()).forEach(e => {
+    ev(["BEGIN:VEVENT",
+      `UID:abitakt-event-${e.id}@abitakt`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${icsDay(e.date)}`,
+      `DTEND;VALUE=DATE:${icsAddDays(e.date, 1)}`,
+      `SUMMARY:${icsEscape(t("co_type_" + e.type) + ": " + e.title)}`,
+      `DESCRIPTION:${icsEscape(subjectName(e.subjectId) + "\n" + t("ics_source"))}`,
+      "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY",
+      `DESCRIPTION:${icsEscape(t("co_type_" + e.type) + ": " + e.title)}`, "END:VALARM",
+      "END:VEVENT"]);
+    n++;
+  });
+  (l.tasks || []).filter(x => !x.done && x.due && x.due >= isoDay()).forEach(x => {
+    ev(["BEGIN:VEVENT",
+      `UID:abitakt-task-${x.id}@abitakt`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${icsDay(x.due)}`,
+      `DTEND;VALUE=DATE:${icsAddDays(x.due, 1)}`,
+      `SUMMARY:${icsEscape(t("ics_task", { title: x.title }))}`,
+      `DESCRIPTION:${icsEscape(subjectName(x.subjectId) + "\n" + t("ics_source"))}`,
+      "END:VEVENT"]);
+    n++;
+  });
+  if (!n) return null;
+  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//abitakt//Lernplan//DE",
+    "CALSCALE:GREGORIAN", "METHOD:PUBLISH", `X-WR-CALNAME:${icsEscape(t("ics_calname"))}`]
+    .map(icsFold).concat(lines, ["END:VCALENDAR"]).join("\r\n") + "\r\n";
+}
+ACT.exportIcs = () => {
+  const text = buildIcs();
+  if (!text) { toast(`<span>○</span><span>${esc(t("ics_nothing"))}</span>`, 4200); return; }
+  const blob = new Blob([text], { type: "text/calendar;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "abitakt-lernplan.ics";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast(`<span>✓</span><span>${esc(t("ics_done"))}</span>`, 3600);
+};
+function icsButton(cls) {
+  return `<button class="btn ${cls || "btn-quiet"}" data-act="exportIcs">${t("ics_export")}</button>`;
 }
 
 /* ---------- 7. BOOT --------------------------------------- */
