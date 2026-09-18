@@ -30,7 +30,7 @@ const normalizeId = (s: unknown) => String(s || "").toUpperCase().replace(/[^A-Z
 
 async function countDay(store: any, name: string, max: number) {
   const day = new Date().toISOString().slice(0, 10);
-  const rec: any = (await store.get(name, { type: "json" })) || { day: "", n: 0 };
+  const rec: any = (await store.get(name, { type: "json", consistency: "strong" })) || { day: "", n: 0 };
   if (rec.day !== day) { rec.day = day; rec.n = 0; }
   if (rec.n >= max) return false;
   rec.n++;
@@ -45,7 +45,7 @@ export default async (req: Request) => {
   if (req.method === "GET") {
     const id = normalizeId(new URL(req.url).searchParams.get("id"));
     if (!ID_RE.test(id)) return json(400, { status: "bad_id" });
-    const rec: any = await store.get("v1/" + id, { type: "json" });
+    const rec: any = await store.get("v1/" + id, { type: "json", consistency: "strong" });
     if (!rec) return json(404, { status: "none" });
     return json(200, { status: "ready", blob: rec.blob, rev: rec.rev, updated: rec.updated });
   }
@@ -59,7 +59,7 @@ export default async (req: Request) => {
       return json(429, { status: "busy" });
     for (let i = 0; i < 5; i++) {
       const id = newId();
-      if (await store.get("v1/" + id, { type: "json" })) continue;
+      if (await store.get("v1/" + id, { type: "json", consistency: "strong" })) continue;
       await store.setJSON("v1/" + id, { blob: "", rev: 0, updated: Date.now(), created: Date.now() });
       return json(200, { status: "ok", id, rev: 0 });
     }
@@ -69,7 +69,7 @@ export default async (req: Request) => {
   const id = normalizeId(body.id);
   if (!ID_RE.test(id)) return json(400, { status: "bad_id" });
   const key = "v1/" + id;
-  const rec: any = await store.get(key, { type: "json" });
+  const rec: any = await store.get(key, { type: "json", consistency: "strong" });
   if (!rec) return json(404, { status: "none" });
 
   if (action === "put") {

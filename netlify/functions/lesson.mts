@@ -42,7 +42,7 @@ export default async (req: Request) => {
   const cached = await lessons.get(key, { type: "json" });
   if (cached) return json(200, { status: "ready", lesson: cached });
 
-  const job: any = await jobs.get(key, { type: "json" });
+  const job: any = await jobs.get(key, { type: "json", consistency: "strong" });
   const now = Date.now();
   if (job?.state === "running" && now - job.started < LOCK_MS) return json(202, { status: "pending" });
   if (job?.state === "failed" && now - job.at < RETRY_AFTER_FAIL_MS) return json(200, { status: "failed" });
